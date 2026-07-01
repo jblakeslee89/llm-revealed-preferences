@@ -1,0 +1,286 @@
+\documentclass[11pt]{article}
+
+% ---- Packages ----
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+% ---- Light formatting ----
+\definecolor{moss}{HTML}{758C58}
+\titleformat{\section}{\large\bfseries\color{moss}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\setlist{itemsep=2pt, topsep=4pt}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+
+% ---- Title block ----
+\title{\vspace{-1.5em}\textbf{Revealed Preferences of Large Language Models}\\[0.3em]
+\large A Structural Estimation Approach to Model Behavior}
+\author{J. Blakeslee \\ \small Pardee RAND Graduate School}
+\date{\small Summer OJT Practicum (Course 1012) \\ \small Faculty: Todd Richmond \\ \small June 29 -- September 4, 2026}
+
+\begin{document}
+\maketitle
+
+\hrule
+\vspace{0.5em}
+
+\section*{Abstract}
+\noindent
+This project treats a frontier large language model as an economic agent and recovers its
+preference primitives from its choices. I elicit thousands of incentivized decisions from the
+model under controlled experimental variation, then fit a structural discrete-choice model to
+the resulting data. The warm-up estimates a single risk-aversion parameter from lottery choices.
+The main study estimates loss aversion and a reference point from systematically framed gains and
+losses, testing whether the model's behavior obeys reference-dependent preferences in the sense of
+Kahneman and Tversky and Kőszegi and Rabin. The deliverable is a reproducible pipeline,
+a clean dataset of model choices, and a short working paper reporting estimated parameters with
+confidence intervals. The central finding will be a quantitative answer to one question: does a
+frontier model carry stable, human-like behavioral preferences, and do those preferences survive
+reframing?
+
+\vspace{0.5em}
+\hrule
+\vspace{0.8em}
+
+\section{The Research Question}
+
+The project answers one question and a tightly related follow-up:
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+  \item \textbf{Do frontier language models exhibit stable, structured economic preferences?}
+  Concretely: when a model makes risky choices, can its behavior be summarized by interpretable
+  primitives (a risk-aversion coefficient, a loss-aversion parameter, a reference point), the way
+  a human subject's choices can?
+  \item \textbf{Are those preferences consistent under reframing?} The same underlying choice, framed
+  once as a gain and once as a loss, should produce the same decision from a rational agent. Humans
+  famously violate this. Does the model?
+\end{enumerate}
+
+The answer is a small set of estimated numbers with standard errors and a clear verdict: the model
+is risk-averse with coefficient $r$; its loss-aversion parameter $\lambda$ is (or is not)
+statistically distinguishable from the rational benchmark of one; its choices do (or do not) flip
+when the frame moves. Each of those is a real, reportable result.
+
+\section{Why This Question Matters}
+
+\subsection{Models are becoming economic agents}
+Language models increasingly make allocative decisions in deployment: pricing, resource allocation,
+negotiation, portfolio and risk judgments inside agentic systems. The behavior of an agent that
+acts on the world is a governance object. Before we can reason about an automated agent's market or
+policy effects, we need to know what it actually prefers when it chooses. Revealed-preference
+estimation is the discipline economics built for exactly this purpose, and it has barely been
+pointed at models.
+
+\subsection{Behavioral consistency is an alignment property}
+A model whose choices reverse when a problem is reframed is, in a precise sense, manipulable. The
+same susceptibility that makes a human buy the extended warranty makes a model exploitable by an
+adversarial prompt or an interface designed to steer it. Measuring whether a model's preferences are
+frame-invariant is therefore a safety and evaluations result, stated in the rigorous language of
+choice theory rather than as an anecdote. ``Does this model's risk attitude survive reframing'' is a
+real robustness question that current evals largely do not answer.
+
+\subsection{It tells us what alignment training does to behavior}
+If a base model is roughly frame-invariant and a fine-tuned model exhibits human-like loss aversion,
+that is evidence that reinforcement learning from human feedback transferred human cognitive biases
+into the model along with human values. If the reverse holds, that is equally informative. Either way,
+the estimate speaks to a question alignment teams care about and rarely quantify: what kind of agent
+does post-training actually produce?
+
+\subsection{The contribution is structural, which buys counterfactuals}
+Showing that a model behaves oddly in one experiment is a description. Recovering the primitives
+behind its behavior lets me predict its choices in environments I never ran. That is the difference
+between ``the model gambled here'' and ``the model has a CRRA coefficient of $r$, so it will do the
+following in any lottery you hand it.'' The structural step is what makes the result generalize, and
+it is the part most adjacent work omits.
+
+\subsection{Positioning against the existing literature}
+A growing body of work asks whether models display human biases (Horton's ``homo silicus,''
+Binz and Schulz's cognitive-psychology probes, Mei and coauthors' behavioral Turing test). That
+literature largely documents biases qualitatively. The gap, and this project's niche, is the
+\emph{structural estimation} of reference-dependent preferences with a likelihood, confidence
+intervals, and an explicit test against the rational benchmark, combined with the question of whether
+post-training instilled the bias. The aim is a measured parameter, not another demonstration that
+models can be nudged.
+
+\section{Methodology}
+
+The project runs in two phases. The first is a deliberately easy warm-up that de-risks the entire
+pipeline. The second is the real study and reuses the same machinery with one added primitive.
+
+\subsection{Phase 1 (warm-up): risk preferences from lottery menus}
+Following the multiple-price-list tradition (Holt and Laury; Andersen, Harrison, Lau, and Rutström),
+I present the model with paired gambles across a grid of stakes and probabilities, for example a sure
+\$50 against a 50\% chance of \$120. Each trial is an independent call with no memory of prior choices.
+I model utility as constant relative risk aversion,
+\[
+  u(x) = \frac{x^{1-r}}{1-r},
+\]
+and assume a logit (Fechner) choice error, so the probability of choosing lottery $B$ over option $A$ is
+\[
+  \Pr(B) = \frac{1}{1 + \exp\!\big(-\,(EU_B - EU_A)/\mu\big)},
+\]
+where $EU$ is expected utility and $\mu$ is a noise parameter. I estimate $r$ and $\mu$ by maximum
+likelihood. This is the canonical structural exercise; its answer can be checked against any
+first-year problem set, which is precisely why it is the right place to debug elicitation before the
+stakes rise.
+
+\subsection{Phase 2 (main study): reference dependence and loss aversion}
+The same lottery is now presented twice: once framed as a gain from a low reference point and once as
+a loss from a high reference point (``you start with \$120; option $B$ risks losing all of it''). The
+underlying payoffs are identical; only the frame moves. I extend the utility specification to carry a
+reference point $\rho$ and a loss-aversion parameter $\lambda$, in the spirit of Tversky and Kahneman
+and Kőszegi and Rabin:
+\[
+  v(x \mid \rho) =
+  \begin{cases}
+    (x - \rho)^{\alpha}, & x \ge \rho \\[4pt]
+    -\lambda\,(\rho - x)^{\beta}, & x < \rho.
+  \end{cases}
+\]
+I estimate $\lambda$, the reference point's sensitivity to the frame, and the curvature terms, again
+by maximum likelihood on the binary choices. The headline tests are sharp hypotheses:
+\begin{itemize}
+  \item $H_0: \lambda = 1$ (no loss aversion; the rational benchmark).
+  \item $H_0:$ the estimated reference point does not move with the frame (frame invariance).
+\end{itemize}
+Rejecting the first says the model is loss-averse. Rejecting the second says its choices are
+manipulable by framing. Failing to reject either is itself a clean and reportable result.
+
+\subsection{Elicitation hygiene: where the new skill lives}
+Valid estimation depends on a clean dataset, and producing one from a non-human subject is the genuinely
+new craft this project teaches. Four controls matter:
+\begin{itemize}
+  \item \textbf{Forced parseable output.} The model is constrained to emit a single option label, via
+  structured output or a first-token rule, and every response is validated; malformed responses are
+  logged and re-run, with the discard rate tracked as a diagnostic.
+  \item \textbf{Randomized labels and order.} The mapping from option letters to gambles, and the order
+  in which options appear, are randomized per trial and recorded, so a positional or label bias cannot
+  masquerade as a preference.
+  \item \textbf{Stochasticity by design.} Running at a moderate temperature makes choices genuinely
+  stochastic, which gives the logit error term its meaning and supplies within-condition variance for
+  estimation.
+  \item \textbf{Independence.} Each trial is a fresh context with no conversation history, so the draws
+  are independent and the static choice model is valid.
+\end{itemize}
+A full Phase 2 dataset is roughly 40 gambles $\times$ 2 frames $\times$ 25 repetitions, on the order of
+2{,}000 calls, which costs a few dollars and runs in under an hour. The generous repetition count is what
+makes the confidence intervals tight.
+
+\section{What I Will Learn}
+
+This project is chosen as a skill-building artifact. It sits one deliberate notch past my current
+toolkit on two axes at once.
+
+\begin{itemize}
+  \item \textbf{Model elicitation and experimental design on AI systems.} Designing controlled
+  experiments for a model rather than a human: API orchestration, output forcing, randomization
+  hygiene, the role of temperature, and independence. This is the foreign skill, and it is the one
+  that makes a frontier lab read the work as ``this person can design and run model evaluations.''
+  \item \textbf{Structural estimation of preference primitives.} My empirical training is reduced-form
+  and causal (difference-in-differences, synthetic control, instrumental variables). Estimating a
+  behavioral model's primitives from choice data, then doing counterfactuals the data never saw, is
+  the structural step beyond that. It is the credential that is hard to fake and that compounds with
+  everything else I do.
+  \item \textbf{The bridge between behavioral economics and AI evaluation.} Learning to state an
+  alignment-relevant property (frame invariance, manipulability) as a hypothesis test on estimated
+  parameters, so that a behavioral question becomes a measured result.
+  \item \textbf{Reproducible research engineering.} A clean, public pipeline from elicitation to dataset
+  to estimation to writeup, the kind of artifact that is legible and re-runnable by a reviewer.
+\end{itemize}
+
+\section{Timeline}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Weeks} & \textbf{Milestone} \\
+\midrule
+1--2 & Literature scan; build the elicitation harness; first lottery dataset out of a model. \\
+3    & Estimate Phase 1 risk aversion; warm-up result and full pipeline locked. \\
+4--5 & Design Phase 2: framing templates, reference-point manipulation, hypothesis structure. \\
+6    & Run Phase 2 elicitation; assemble the reference-dependence dataset. \\
+7--8 & Estimate loss aversion and reference point; run the two sharp hypothesis tests. \\
+9    & Robustness (temperature, label randomization, a second model family if time); draft writeup. \\
+10   & Final briefing to the cohort; publish a clean, reproducible notebook and short paper. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A presentable result exists by week three regardless of how Phase 2 unfolds, so the finished
+deliverable is secured early and the remaining weeks add ambition rather than risk.
+
+\section{Deliverables}
+
+\begin{itemize}
+  \item A reproducible code repository: elicitation harness plus estimation, runnable end to end.
+  \item A clean, documented dataset of the model's choices under every condition.
+  \item A short working paper reporting the estimated parameters, confidence intervals, and the verdict
+  on consistency under reframing.
+  \item The final sprint briefing, with a public-facing explainer of the headline finding.
+\end{itemize}
+
+\section{Fit with the Sprint}
+
+The practicum asks for applications work that informs implications work. This project is exactly that
+loop in miniature: the application is a working model-evaluation pipeline I build and run; the
+implication is a governance-relevant claim about whether frontier agents carry stable, manipulable
+preferences. The technical build produces the evidence, and the evidence produces the argument. The
+result is legible across the audiences the sprint serves: a lab evaluations or economics team reads it
+as rigorous model elicitation; a policy reader reads it as a concrete statement about how an automated
+economic agent behaves under pressure.
+
+\vspace{1em}
+\hrule
+\vspace{0.5em}
+
+\begin{thebibliography}{9}
+\small
+
+\bibitem{andersen2008}
+Andersen, S., Harrison, G. W., Lau, M. I., and Rutström, E. E. (2008).
+Eliciting Risk and Time Preferences. \textit{Econometrica}, 76(3), 583--618.
+
+\bibitem{binz2023}
+Binz, M., and Schulz, E. (2023).
+Using Cognitive Psychology to Understand GPT-3. \textit{Proceedings of the National Academy of Sciences}, 120(6).
+
+\bibitem{holt2002}
+Holt, C. A., and Laury, S. K. (2002).
+Risk Aversion and Incentive Effects. \textit{American Economic Review}, 92(5), 1644--1655.
+
+\bibitem{horton2023}
+Horton, J. J. (2023).
+Large Language Models as Simulated Economic Agents: What Can We Learn from Homo Silicus?
+\textit{NBER Working Paper} 31122.
+
+\bibitem{kahneman1979}
+Kahneman, D., and Tversky, A. (1979).
+Prospect Theory: An Analysis of Decision under Risk. \textit{Econometrica}, 47(2), 263--291.
+
+\bibitem{koszegi2006}
+Kőszegi, B., and Rabin, M. (2006).
+A Model of Reference-Dependent Preferences. \textit{Quarterly Journal of Economics}, 121(4), 1133--1165.
+
+\bibitem{mei2024}
+Mei, Q., Xie, Y., Yuan, W., and Jackson, M. O. (2024).
+A Turing Test of Whether AI Chatbots Are Behaviorally Similar to Humans.
+\textit{Proceedings of the National Academy of Sciences}, 121(9).
+
+\bibitem{train2009}
+Train, K. E. (2009).
+\textit{Discrete Choice Methods with Simulation} (2nd ed.). Cambridge University Press.
+
+\bibitem{tversky1991}
+Tversky, A., and Kahneman, D. (1991).
+Loss Aversion in Riskless Choice: A Reference-Dependent Model.
+\textit{Quarterly Journal of Economics}, 106(4), 1039--1061.
+
+\end{thebibliography}
+
+\end{document}
