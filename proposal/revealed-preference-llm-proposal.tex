@@ -19,8 +19,8 @@
 \setlength{\parindent}{0pt}
 
 % ---- Title block ----
-\title{\vspace{-1.5em}\textbf{Revealed Preferences of Large Language Models}\\[0.3em]
-\large A Structural Estimation Approach to Model Behavior}
+\title{\vspace{-1.5em}\textbf{Did Post-Training Make Models Loss-Averse?}\\[0.3em]
+\large Structural Estimation of Reference-Dependent Preferences in Large Language Models}
 \author{J. Blakeslee \\ \small Pardee RAND Graduate School}
 \date{\small Summer OJT Practicum (Course 1012) \\ \small Faculty: Todd Richmond \\ \small June 29 -- September 4, 2026}
 
@@ -32,166 +32,205 @@
 
 \section*{Abstract}
 \noindent
-This project treats a frontier large language model as an economic agent and recovers its
-preference primitives from its choices. I elicit thousands of incentivized decisions from the
-model under controlled experimental variation, then fit a structural discrete-choice model to
-the resulting data. The warm-up estimates a single risk-aversion parameter from lottery choices.
-The main study estimates loss aversion and a reference point from systematically framed gains and
-losses, testing whether the model's behavior obeys reference-dependent preferences in the sense of
-Kahneman and Tversky and Kőszegi and Rabin. The deliverable is a reproducible pipeline,
-a clean dataset of model choices, and a short working paper reporting estimated parameters with
-confidence intervals. The central finding will be a quantitative answer to one question: does a
-frontier model carry stable, human-like behavioral preferences, and do those preferences survive
-reframing?
+This project treats large language models as economic agents and recovers their preference
+primitives from their choices. I elicit thousands of binary risky choices under controlled
+experimental variation, then estimate structural discrete-choice models on the resulting data:
+first a risk-aversion coefficient from lottery menus, then loss aversion and an endogenous
+reference point from systematically framed gains and losses, in the tradition of Kahneman and
+Tversky and K\H{o}szegi and Rabin. Recent work has shown, descriptively, that instruction-tuned
+models display weak and unstable loss aversion. This project asks the question that work leaves
+open: \emph{where do these preferences come from?} By running the identical elicitation on
+matched base and instruction-tuned versions of open-weight models, I test whether post-training
+(instruction tuning and RLHF) instills or amplifies reference-dependent behavior. The design is
+built around the measurement problems now documented in this literature: training-data
+contamination, position bias, prompt-template sensitivity, and the questionable mapping from
+sampling stochasticity to choice noise. The deliverables are a reproducible elicitation-to-estimation
+pipeline, a documented dataset of model choices, and a short working paper reporting estimated
+parameters, confidence intervals, and the base-versus-instruct contrast.
 
 \vspace{0.5em}
 \hrule
 \vspace{0.8em}
 
-\section{The Research Question}
+\section{The Research Questions}
 
-The project answers one question and a tightly related follow-up:
+The project answers three questions, in ascending order of novelty:
 
 \begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
-  \item \textbf{Do frontier language models exhibit stable, structured economic preferences?}
-  Concretely: when a model makes risky choices, can its behavior be summarized by interpretable
-  primitives (a risk-aversion coefficient, a loss-aversion parameter, a reference point), the way
-  a human subject's choices can?
+  \item \textbf{Do language models exhibit stable, structured risk preferences?} When a model makes
+  risky choices, can its behavior be summarized by interpretable primitives (a risk-aversion
+  coefficient, a loss-aversion parameter, a reference point) recovered by maximum likelihood at the
+  level of individual choices?
   \item \textbf{Are those preferences consistent under reframing?} The same underlying choice, framed
   once as a gain and once as a loss, should produce the same decision from a rational agent. Humans
-  famously violate this. Does the model?
+  famously violate this. Does the model, and by how much in estimated-parameter terms?
+  \item \textbf{Did post-training put the preferences there?} (Headline.) Running the identical
+  elicitation on matched base and instruction-tuned versions of the same open-weight model attributes
+  any estimated loss aversion or frame sensitivity to post-training. If the base model is roughly
+  frame-invariant and the instruct model is loss-averse, alignment training transferred a human
+  cognitive bias into the model along with human values. Either direction of the result is informative.
 \end{enumerate}
 
-The answer is a small set of estimated numbers with standard errors and a clear verdict: the model
-is risk-averse with coefficient $r$; its loss-aversion parameter $\lambda$ is (or is not)
-statistically distinguishable from the rational benchmark of one; its choices do (or do not) flip
-when the frame moves. Each of those is a real, reportable result.
+Each question resolves to estimated numbers with standard errors and a sharp hypothesis test, and a
+clean null is itself a reportable finding.
 
-\section{Why This Question Matters}
+\section{Why These Questions Matter}
 
 \subsection{Models are becoming economic agents}
 Language models increasingly make allocative decisions in deployment: pricing, resource allocation,
-negotiation, portfolio and risk judgments inside agentic systems. The behavior of an agent that
-acts on the world is a governance object. Before we can reason about an automated agent's market or
-policy effects, we need to know what it actually prefers when it chooses. Revealed-preference
-estimation is the discipline economics built for exactly this purpose, and it has barely been
-pointed at models.
+negotiation, and risk judgments inside agentic systems. The behavior of an agent that acts on the
+world is a governance object. Revealed-preference estimation is the discipline economics built for
+exactly this purpose, and it has only begun to be pointed at models.
 
 \subsection{Behavioral consistency is an alignment property}
 A model whose choices reverse when a problem is reframed is, in a precise sense, manipulable. The
 same susceptibility that makes a human buy the extended warranty makes a model exploitable by an
-adversarial prompt or an interface designed to steer it. Measuring whether a model's preferences are
-frame-invariant is therefore a safety and evaluations result, stated in the rigorous language of
-choice theory rather than as an anecdote. ``Does this model's risk attitude survive reframing'' is a
-real robustness question that current evals largely do not answer.
+adversarial prompt or an interface designed to steer it. Measuring frame invariance in estimated-parameter
+terms turns an anecdote into a robustness result stated in the language of choice theory.
 
-\subsection{It tells us what alignment training does to behavior}
-If a base model is roughly frame-invariant and a fine-tuned model exhibits human-like loss aversion,
-that is evidence that reinforcement learning from human feedback transferred human cognitive biases
-into the model along with human values. If the reverse holds, that is equally informative. Either way,
-the estimate speaks to a question alignment teams care about and rarely quantify: what kind of agent
-does post-training actually produce?
+\subsection{Attribution to post-training is the open causal question}
+Itzhak, Stanovsky, Rosenfeld, and Belinkov (2024) showed qualitatively that instruction tuning
+introduces or amplifies cognitive biases (decoy, certainty, belief bias) relative to base models. No
+one has made that attribution \emph{structurally}, for risk and loss preferences, with parameters
+estimated from choices. That is the causal question alignment teams care about: what kind of economic
+agent does post-training actually produce? This project's base-versus-instruct arm answers it with an
+estimated $\lambda$ on each side of the training intervention.
 
 \subsection{The contribution is structural, which buys counterfactuals}
 Showing that a model behaves oddly in one experiment is a description. Recovering the primitives
-behind its behavior lets me predict its choices in environments I never ran. That is the difference
-between ``the model gambled here'' and ``the model has a CRRA coefficient of $r$, so it will do the
-following in any lottery you hand it.'' The structural step is what makes the result generalize, and
-it is the part most adjacent work omits.
+behind its behavior lets me predict its choices in environments I never ran. The structural step is
+what makes the result generalize, and it is the step most adjacent work omits.
 
-\subsection{Positioning against the existing literature}
-A growing body of work asks whether models display human biases (Horton's ``homo silicus,''
-Binz and Schulz's cognitive-psychology probes, Mei and coauthors' behavioral Turing test). That
-literature largely documents biases qualitatively. The gap, and this project's niche, is the
-\emph{structural estimation} of reference-dependent preferences with a likelihood, confidence
-intervals, and an explicit test against the rational benchmark, combined with the question of whether
-post-training instilled the bias. The aim is a measured parameter, not another demonstration that
-models can be nudged.
+\subsection{Positioning in the literature (as of mid-2026)}
+The descriptive generation of this literature is complete: Horton (2023) and Binz and Schulz (2023)
+established that models qualitatively reproduce classic behavioral results; Mei et al.\ (2024) showed
+broad distributional similarity to humans; Chen, Liu, Shan, and Zhong (2023) found GPT-4 highly
+consistent with utility maximization by revealed-preference (GARP) tests; and Bini, Cong, Huang, and
+Jin (2026) survey the space of LLM biases at econ-venue scale, descriptively.
+
+A structural generation is now emerging, and this project extends its two incumbents. Liu, Yang, and
+Tam (2025) fit prospect-theory parameters to LLM certainty equivalents by curve-fitting and report
+preferences unstable across prompts and temperatures. A 2025 cumulative-prospect-theory study
+(arXiv:2508.08992) estimates full CPT parameters on instruct models and finds loss aversion far below
+human benchmarks and unstable ($\lambda$ ranging from near 0 to $\approx$1.9 against a human
+$\approx$2.6). Mazeika et al.\ (2025) fit Thurstonian random-utility models to LLM binary choices,
+though over general outcomes rather than lotteries. Related calibration work (Yee and Koh 2026)
+likewise documents attenuated loss aversion at baseline in finance settings.
+
+What no paper combines, and where this project sits: (i) choice-level maximum-likelihood estimation on
+binary lottery choices, rather than curve-fitting to derived certainty equivalents; (ii) a
+K\H{o}szegi-Rabin loss-aversion parameter \emph{and endogenous reference point} identified from
+explicit gain/loss frame manipulation; (iii) a formal frame-invariance test; and (iv) a matched
+base-versus-instruct contrast that attributes the estimated parameters to post-training. Given the
+incumbents' findings, my prior is that instruct models will show attenuated, unstable loss aversion;
+the contribution is not re-documenting that fact. The contribution is the attribution design and the
+measurement-honest estimation behind it.
 
 \section{Methodology}
 
-The project runs in two phases. The first is a deliberately easy warm-up that de-risks the entire
-pipeline. The second is the real study and reuses the same machinery with one added primitive.
+The project runs in three phases. The first is a deliberately easy warm-up that de-risks the entire
+pipeline. The second adds the framing manipulation. The third carries the identical instruments to
+matched base and instruct models.
 
 \subsection{Phase 1 (warm-up): risk preferences from lottery menus}
-Following the multiple-price-list tradition (Holt and Laury; Andersen, Harrison, Lau, and Rutström),
-I present the model with paired gambles across a grid of stakes and probabilities, for example a sure
-\$50 against a 50\% chance of \$120. Each trial is an independent call with no memory of prior choices.
-I model utility as constant relative risk aversion,
+Following the multiple-price-list tradition (Holt and Laury 2002; Andersen et al.\ 2008) in structure
+but never in wording (see \S3.4), I present the model with paired gambles across a procedurally
+generated grid of stakes and probabilities. Each trial is an independent call with no memory of prior
+choices. I model utility as constant relative risk aversion,
 \[
   u(x) = \frac{x^{1-r}}{1-r},
 \]
-and assume a logit (Fechner) choice error, so the probability of choosing lottery $B$ over option $A$ is
+with a logit (Fechner) choice error, so the probability of choosing lottery $B$ over option $A$ is
 \[
   \Pr(B) = \frac{1}{1 + \exp\!\big(-\,(EU_B - EU_A)/\mu\big)},
 \]
-where $EU$ is expected utility and $\mu$ is a noise parameter. I estimate $r$ and $\mu$ by maximum
-likelihood. This is the canonical structural exercise; its answer can be checked against any
-first-year problem set, which is precisely why it is the right place to debug elicitation before the
-stakes rise.
+and estimate $r$ and $\mu$ by maximum likelihood on the individual choices. This is the canonical
+structural exercise, checkable against any first-year problem set, which is why it is the right place
+to debug elicitation before the stakes rise.
 
 \subsection{Phase 2 (main study): reference dependence and loss aversion}
-The same lottery is now presented twice: once framed as a gain from a low reference point and once as
-a loss from a high reference point (``you start with \$120; option $B$ risks losing all of it''). The
+The same lottery is presented twice: once framed as a gain from a low reference point and once as a
+loss from a high reference point (``you start with \$117; option $B$ risks losing all of it''). The
 underlying payoffs are identical; only the frame moves. I extend the utility specification to carry a
 reference point $\rho$ and a loss-aversion parameter $\lambda$, in the spirit of Tversky and Kahneman
-and Kőszegi and Rabin:
+(1991) and K\H{o}szegi and Rabin (2006):
 \[
   v(x \mid \rho) =
   \begin{cases}
     (x - \rho)^{\alpha}, & x \ge \rho \\[4pt]
-    -\lambda\,(\rho - x)^{\beta}, & x < \rho.
+    -\lambda\,(\rho - x)^{\beta}, & x < \rho,
   \end{cases}
 \]
-I estimate $\lambda$, the reference point's sensitivity to the frame, and the curvature terms, again
-by maximum likelihood on the binary choices. The headline tests are sharp hypotheses:
+and estimate $\lambda$, the reference point's sensitivity to the frame, and the curvature terms by
+maximum likelihood. The headline tests are sharp hypotheses:
 \begin{itemize}
   \item $H_0: \lambda = 1$ (no loss aversion; the rational benchmark).
   \item $H_0:$ the estimated reference point does not move with the frame (frame invariance).
 \end{itemize}
-Rejecting the first says the model is loss-averse. Rejecting the second says its choices are
-manipulable by framing. Failing to reject either is itself a clean and reportable result.
+Because recent work suggests frontier instruct models may show weak framing effects, a null here is a
+plausible \emph{true} result. The design therefore includes a positive control: a manipulation with a
+documented large effect, so that a weak framing estimate is interpretable as a finding about the model
+rather than a failure of the instrument.
 
-\subsection{Elicitation hygiene: where the new skill lives}
-Valid estimation depends on a clean dataset, and producing one from a non-human subject is the genuinely
-new craft this project teaches. Four controls matter:
+\subsection{Phase 3 (attribution): base versus instruct}
+The identical instruments run on matched open-weight pairs (e.g., Llama-3.1-8B base and instruct, or a
+Qwen pair), giving estimated $(r, \lambda, \rho)$ on each side of the post-training intervention.
+Base models do not follow instructions, so this arm elicits choices through few-shot completion
+formatting and reads choice probabilities directly from token log-probabilities rather than sampled
+letters. Logprob elicitation is also a methodological upgrade in its own right: it measures
+$\Pr(\text{choose } B)$, the exact quantity the logit likelihood is built on, in a single call.
+
+\subsection{Design commitments: the measurement model taken seriously}
+The validity threats in this literature are now documented, and the design treats them as first-order
+rather than as robustness afterthoughts.
 \begin{itemize}
-  \item \textbf{Forced parseable output.} The model is constrained to emit a single option label, via
-  structured output or a first-token rule, and every response is validated; malformed responses are
-  logged and re-run, with the discard rate tracked as a diagnostic.
-  \item \textbf{Randomized labels and order.} The mapping from option letters to gambles, and the order
-  in which options appear, are randomized per trial and recorded, so a positional or label bias cannot
-  masquerade as a preference.
-  \item \textbf{Stochasticity by design.} Running at a moderate temperature makes choices genuinely
-  stochastic, which gives the logit error term its meaning and supplies within-condition variance for
-  estimation.
-  \item \textbf{Independence.} Each trial is a fresh context with no conversation history, so the draws
-  are independent and the static choice model is valid.
+  \item \textbf{Contamination-safe instruments.} Canonical vignettes (Holt-Laury menus, Ellsberg urns,
+  Asian-disease framing) are almost certainly in training corpora, so a verbatim replication risks
+  recovering a memorized textbook answer. Every lottery in this study is procedurally generated with
+  randomized, non-round payoffs and probabilities inside novel cover stories, and an explicit
+  contamination probe documents that the instruments are not being recited.
+  \item \textbf{Counterbalanced position and labels.} First-option bias is among the largest documented
+  LLM artifacts. Each choice is presented in both orders with safe/risky roles swapped; the residual
+  position effect is estimated as a nuisance parameter rather than assumed away.
+  \item \textbf{Prompt template as an experimental factor.} Elicited preferences are known to shift
+  under paraphrase. Each lottery is drawn under five or more semantically equivalent templates, with the
+  template entering the choice model as a random effect and between-template variance reported alongside
+  the point estimates.
+  \item \textbf{Honest treatment of choice stochasticity.} Sampling at temperature is not a validated
+  random-utility error process. Where log-probabilities are available (open models), choice
+  probabilities are read directly and debiased for token priors; for closed models, sampled frequencies
+  are collected at two temperatures and the sensitivity of the error structure to the sampling knob is
+  reported.
+  \item \textbf{Reproducibility and framing of inference.} Every run pins a dated model snapshot logged
+  in the released dataset, and a calibration battery re-runs on a second snapshot to bound drift.
+  Recovered parameters are presented as properties of the model's conditional text distribution under
+  this protocol, following emerging best practice for LLM-as-subject studies, with an internal-consistency
+  (transitivity) check as validation.
 \end{itemize}
-A full Phase 2 dataset is roughly 40 gambles $\times$ 2 frames $\times$ 25 repetitions, on the order of
-2{,}000 calls, which costs a few dollars and runs in under an hour. The generous repetition count is what
-makes the confidence intervals tight.
+A full Phase 2 dataset is roughly 40 gambles $\times$ 2 frames $\times$ 5 templates $\times$
+counterbalanced orders $\times$ repetitions, on the order of a few thousand calls per model, which
+costs a few dollars and runs in about an hour.
 
 \section{What I Will Learn}
 
-This project is chosen as a skill-building artifact. It sits one deliberate notch past my current
-toolkit on two axes at once.
+This project is chosen as a skill-building artifact, one deliberate notch past my current toolkit on
+two axes at once.
 
 \begin{itemize}
   \item \textbf{Model elicitation and experimental design on AI systems.} Designing controlled
-  experiments for a model rather than a human: API orchestration, output forcing, randomization
-  hygiene, the role of temperature, and independence. This is the foreign skill, and it is the one
-  that makes a frontier lab read the work as ``this person can design and run model evaluations.''
+  experiments for a model rather than a human: contamination-proofing, counterbalancing, template
+  randomization, forced structured output, logprob elicitation, and the treatment of sampling
+  stochasticity. This is the skill that makes the work legible to a lab evaluations team.
   \item \textbf{Structural estimation of preference primitives.} My empirical training is reduced-form
-  and causal (difference-in-differences, synthetic control, instrumental variables). Estimating a
-  behavioral model's primitives from choice data, then doing counterfactuals the data never saw, is
-  the structural step beyond that. It is the credential that is hard to fake and that compounds with
-  everything else I do.
-  \item \textbf{The bridge between behavioral economics and AI evaluation.} Learning to state an
-  alignment-relevant property (frame invariance, manipulability) as a hypothesis test on estimated
-  parameters, so that a behavioral question becomes a measured result.
-  \item \textbf{Reproducible research engineering.} A clean, public pipeline from elicitation to dataset
-  to estimation to writeup, the kind of artifact that is legible and re-runnable by a reviewer.
+  and causal (difference-in-differences, synthetic control, instrumental variables). This project
+  requires likelihood-based recovery of behavioral primitives, and the design commitments push the
+  econometrics further: nuisance parameters, template random effects (a mixed-logit structure), and
+  variance decomposition. That is a deeper structural education than a plain logit fit.
+  \item \textbf{The bridge between behavioral economics and AI evaluation.} Stating an
+  alignment-relevant property (frame invariance, manipulability, post-training attribution) as a
+  hypothesis test on estimated parameters.
+  \item \textbf{Reproducible research engineering.} A public pipeline from elicitation to dataset to
+  estimation to writeup, re-runnable by a reviewer against pinned model snapshots.
 \end{itemize}
 
 \section{Timeline}
@@ -201,54 +240,67 @@ toolkit on two axes at once.
 \toprule
 \textbf{Weeks} & \textbf{Milestone} \\
 \midrule
-1--2 & Literature scan; build the elicitation harness; first lottery dataset out of a model. \\
-3    & Estimate Phase 1 risk aversion; warm-up result and full pipeline locked. \\
-4--5 & Design Phase 2: framing templates, reference-point manipulation, hypothesis structure. \\
-6    & Run Phase 2 elicitation; assemble the reference-dependence dataset. \\
-7--8 & Estimate loss aversion and reference point; run the two sharp hypothesis tests. \\
-9    & Robustness (temperature, label randomization, a second model family if time); draft writeup. \\
-10   & Final briefing to the cohort; publish a clean, reproducible notebook and short paper. \\
+1--2 & Harness with design commitments built in (procedural instruments, counterbalancing, \\
+     & templates); pilot data from Claude; contamination probe run. \\
+3    & Phase 1 CRRA estimate on Claude; validation checks pass; warm-up result locked. \\
+4--5 & Phase 2 design: frames, positive control, pre-registered analysis plan; Phase 2 run. \\
+6    & Phase 3: few-shot/logprob elicitation on a matched base--instruct open-model pair. \\
+7--8 & Estimation: mixed-logit with template random effects; $\lambda$ and reference point; \\
+     & the two sharp hypothesis tests; the base-versus-instruct contrast. \\
+9    & Robustness: second snapshot, two temperatures, reason-then-answer arm as time allows; \\
+     & draft writeup. \\
+10   & Final briefing to the cohort; public reproducible repository and short paper. \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-A presentable result exists by week three regardless of how Phase 2 unfolds, so the finished
+A presentable result exists by week three regardless of how the later phases unfold, so the finished
 deliverable is secured early and the remaining weeks add ambition rather than risk.
 
 \section{Deliverables}
 
 \begin{itemize}
-  \item A reproducible code repository: elicitation harness plus estimation, runnable end to end.
-  \item A clean, documented dataset of the model's choices under every condition.
-  \item A short working paper reporting the estimated parameters, confidence intervals, and the verdict
-  on consistency under reframing.
+  \item A reproducible code repository: elicitation harness plus estimation, runnable end to end
+  against pinned model snapshots.
+  \item A documented dataset of model choices under every condition, with snapshot IDs, seeds, and
+  discard diagnostics.
+  \item A short working paper reporting estimated parameters, confidence intervals, the frame-invariance
+  verdict, and the base-versus-instruct attribution.
   \item The final sprint briefing, with a public-facing explainer of the headline finding.
 \end{itemize}
 
 \section{Fit with the Sprint}
 
-The practicum asks for applications work that informs implications work. This project is exactly that
-loop in miniature: the application is a working model-evaluation pipeline I build and run; the
-implication is a governance-relevant claim about whether frontier agents carry stable, manipulable
-preferences. The technical build produces the evidence, and the evidence produces the argument. The
-result is legible across the audiences the sprint serves: a lab evaluations or economics team reads it
-as rigorous model elicitation; a policy reader reads it as a concrete statement about how an automated
-economic agent behaves under pressure.
+The practicum asks for applications work that informs implications work. This project is that loop in
+miniature: the application is a working model-evaluation pipeline I build and run; the implication is a
+governance-relevant claim about whether automated economic agents carry stable, manipulable preferences
+and whether alignment training is the source. The technical build produces the evidence, and the
+evidence produces the argument. A lab evaluations or economics team reads the result as rigorous model
+elicitation; a policy reader reads it as a concrete statement about how an AI agent behaves under
+pressure, and why.
 
 \vspace{1em}
 \hrule
 \vspace{0.5em}
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 \small
 
 \bibitem{andersen2008}
-Andersen, S., Harrison, G. W., Lau, M. I., and Rutström, E. E. (2008).
+Andersen, S., Harrison, G. W., Lau, M. I., and Rutstr\"om, E. E. (2008).
 Eliciting Risk and Time Preferences. \textit{Econometrica}, 76(3), 583--618.
+
+\bibitem{bini2026}
+Bini, S., Cong, L. W., Huang, D., and Jin, L. (2026).
+Behavioral Economics of AI: LLM Biases and Corrections. \textit{NBER Working Paper} 34745.
 
 \bibitem{binz2023}
 Binz, M., and Schulz, E. (2023).
 Using Cognitive Psychology to Understand GPT-3. \textit{Proceedings of the National Academy of Sciences}, 120(6).
+
+\bibitem{chen2023}
+Chen, Y., Liu, T. X., Shan, Y., and Zhong, S. (2023).
+The Emergence of Economic Rationality of GPT. \textit{Proceedings of the National Academy of Sciences}, 120(51).
 
 \bibitem{holt2002}
 Holt, C. A., and Laury, S. K. (2002).
@@ -259,13 +311,27 @@ Horton, J. J. (2023).
 Large Language Models as Simulated Economic Agents: What Can We Learn from Homo Silicus?
 \textit{NBER Working Paper} 31122.
 
+\bibitem{itzhak2024}
+Itzhak, I., Stanovsky, G., Rosenfeld, N., and Belinkov, Y. (2024).
+Instructed to Bias: Instruction-Tuned Language Models Exhibit Emergent Cognitive Bias.
+\textit{Transactions of the Association for Computational Linguistics}, 12.
+
 \bibitem{kahneman1979}
 Kahneman, D., and Tversky, A. (1979).
 Prospect Theory: An Analysis of Decision under Risk. \textit{Econometrica}, 47(2), 263--291.
 
 \bibitem{koszegi2006}
-Kőszegi, B., and Rabin, M. (2006).
+K\H{o}szegi, B., and Rabin, M. (2006).
 A Model of Reference-Dependent Preferences. \textit{Quarterly Journal of Economics}, 121(4), 1133--1165.
+
+\bibitem{liu2025}
+Liu, J., Yang, Y., and Tam, K. Y. (2025).
+Evaluating and Aligning Human Economic Risk Preferences in LLMs.
+\textit{Proceedings of EMNLP 2025}; arXiv:2503.06646.
+
+\bibitem{mazeika2025}
+Mazeika, M., et al. (2025).
+Utility Engineering: Analyzing and Controlling Emergent Value Systems in AIs. arXiv:2502.08640.
 
 \bibitem{mei2024}
 Mei, Q., Xie, Y., Yuan, W., and Jackson, M. O. (2024).
@@ -281,6 +347,18 @@ Tversky, A., and Kahneman, D. (1991).
 Loss Aversion in Riskless Choice: A Reference-Dependent Model.
 \textit{Quarterly Journal of Economics}, 106(4), 1039--1061.
 
+\bibitem{yee2026}
+Yee, B., and Koh, P. (2026).
+Large Language Models as Calibrated Measurement Instruments for Behavioral Parameters. arXiv:2602.01022.
+
 \end{thebibliography}
+
+\vspace{0.5em}
+{\footnotesize \noindent Additional methodological sources cited in the design (author lists pending
+verification for some preprints): CPT estimation on LLMs (arXiv:2508.08992); sampling stochasticity
+(arXiv:2604.06543); position bias (Zheng et al., ICLR 2024; Pezeshkpour and Hruschka 2024);
+format-restriction effects (Tam et al., EMNLP 2024); machine-psychology contamination standards
+(Hagendorff et al., arXiv:2303.13988); validity conditions for LLM-as-subject inference
+(arXiv:2602.15785). Full list in the project's literature notes.}
 
 \end{document}

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+.DS_Store
+proposal/*.aux
+proposal/*.log
+proposal/*.out
