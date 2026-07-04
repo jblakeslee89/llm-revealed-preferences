@@ -197,11 +197,21 @@ def main() -> None:
     ap.add_argument("--sim-r", type=float, default=0.5, help="dry-run agent's true r")
     ap.add_argument("--sim-mu", type=float, default=0.15, help="dry-run agent's true mu")
     ap.add_argument("--out", default=None, help="output CSV path")
+    ap.add_argument("--redo", default=None, metavar="CSV",
+                    help="re-run only the discarded trials from an existing CSV "
+                         "(appends valid rows to the same file)")
     args = ap.parse_args()
 
     load_dotenv()
     gambles = generate_gambles(n=args.n_gambles, seed=args.seed)
     trials = build_trials(gambles, reps=args.reps, seed=args.seed)
+    if args.redo:
+        import pandas as pd
+        prev = pd.read_csv(args.redo)
+        done_ok = set(prev.loc[prev["discarded"] == 0, "trial_id"])
+        trials = [t for t in trials if t.trial_id not in done_ok]
+        args.out = args.redo  # append repaired rows to the same dataset
+        print(f"Redo mode: {len(trials)} trials still need a valid response.")
     if args.pilot:
         trials = trials[:args.pilot]
 
