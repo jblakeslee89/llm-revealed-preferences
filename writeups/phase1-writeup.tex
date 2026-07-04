@@ -1,0 +1,341 @@
+\documentclass[11pt]{article}
+
+% ---- Packages ----
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+% ---- Light formatting ----
+\definecolor{moss}{HTML}{758C58}
+\titleformat{\section}{\large\bfseries\color{moss}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\setlist{itemsep=2pt, topsep=4pt}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+
+% ---- Title block ----
+\title{\vspace{-1.5em}\textbf{Claude Prices Probability, Not Payoffs}\\[0.3em]
+\large Phase 1 Results: Structural Estimation of Risk Preferences in an LLM}
+\author{J. Blakeslee \\ \small Pardee RAND Graduate School}
+\date{\small AI Sprint Practicum (Course 1012) \\ \small July 2026}
+
+\begin{document}
+\maketitle
+
+\hrule
+\vspace{0.5em}
+
+\section{Introduction}
+
+This project treats large language models as economic agents and recovers their preference
+primitives from their choices. The full study elicits binary lottery choices from LLMs, estimates
+structural discrete-choice models on the resulting data, and then carries the identical instruments
+to matched base and instruction-tuned models to test whether post-training instills behavioral
+biases. Phase 1 is the deliberate warm-up: fit a constant-relative-risk-aversion (CRRA) expected
+utility model to 1{,}200 controlled choices from a single frontier model, and in doing so debug the
+elicitation pipeline before the stakes rise. The purpose of a warm-up is to be easy. This one was
+not, and the way it failed is the finding.
+
+The model under study is \texttt{claude-haiku-4-5-20251001}, a pinned snapshot, queried at
+temperature 1.0 through forced tool-choice with a 10\% plain-text validation arm. We asked it 1{,}200
+either/or money questions of the form ``a sure \$86 or a 43\% chance of \$210,'' each one
+procedurally generated to be contamination-safe, fully counterbalanced for option order, and drawn
+under one of five paraphrase templates in a fresh context. A textbook CRRA fit returned a plausible
+risk-aversion number and hid a specification failure underneath it. The diagnostics that the design
+was built to run caught the failure. Once corrected, the model reveals a preference structure that is
+coherent, human-implausible in a specific and quantifiable way, and directly relevant to how agentic
+systems will behave when they allocate real resources.
+
+\section{The Result in Plain Language}
+
+We asked an AI model twelve hundred simple money questions. Every question had the same shape: a
+guaranteed amount of money, or a gamble. For example, ``Would you rather take a sure \$86, or a 43\%
+chance at \$210 and otherwise nothing?'' We varied the guaranteed amount, the size of the prize, and
+the odds of winning across forty distinct gambles, asked each one many times with different wording
+and different ordering, and recorded which side the model picked. Nothing was left to chance in the
+design: the numbers were odd and non-round so the model could not be reciting a memorized textbook,
+and every gamble appeared in both possible orders so we could tell whether mere position was steering
+the answer.
+
+A person deciding these questions weighs two things: how much money is on the table, and how likely
+they are to win it. A long shot at a huge prize can be worth taking; a near-certain shot at a small
+prize can be worth passing on. The model does something stranger. It looks almost entirely at the
+odds of winning and barely at the size of the prize.
+
+Here is the behavior in one picture. Offer the model a gamble it will probably lose, and it refuses,
+no matter how large the prize. Raise the prize from \$200 to \$2{,}000 to \$20{,}000 while keeping
+the win probability low, and the refusal does not budge. Now offer it a gamble it will probably win,
+even one whose prize is only mediocre, and it takes it. When the chance of winning was below roughly
+30\%, the model gambled about 8\% of the time. When the chance of winning was above roughly 60\%, it
+gambled about 86\% of the time. The average money-value of the gambles was nearly identical across
+those two groups. The model was not chasing value. It was chasing the likely winner.
+
+This is close to the opposite of a well-known human quirk. People buy lottery tickets: they
+overvalue tiny chances at enormous prizes. This model would never buy a lottery ticket at any price,
+and it would happily take a coin-flip for pocket change. Neither is ``rational'' in the economist's
+sense, and the model's version is arguably the more consequential one for anything asked to make real
+decisions.
+
+We found one more thing, and it is almost embarrassing in how simple it is. Merely listing the
+gamble second, rather than first, made the model much more likely to choose it. Same gamble, same
+numbers, same odds; only the position on the page changed, and the model's choices shifted by a large
+and statistically overwhelming margin. Whoever controls the order in which options are presented has a
+lever on what this model decides.
+
+Why care? Because these models are being handed real decisions: which supplier to pick, which trade
+to place, which case to prioritize, what to offer in a negotiation. A decision-maker that ignores how
+much is at stake and fixates on the odds will systematically walk past high-value long shots (the
+research bet, the insurance-like tradeoff) and grab safe mediocrity. That is a predictable, exploitable
+distortion, and Phase 1 measures it.
+
+\section{Experimental Design}
+
+Every choice in the study is an independent API call with no memory of prior trials. The instrument
+is a forced binary choice between a sure amount and a two-outcome gamble. The gamble pays a high
+amount with probability $p$ and zero otherwise. The design holds to the measurement commitments the
+proposal set out, treating the known validity threats in this literature as first-order.
+
+\begin{itemize}
+  \item \textbf{Contamination-safe gambles.} Every lottery is procedurally generated with non-round
+  payoffs and jittered probabilities inside novel wording. There are no textbook Holt-Laury rows to
+  recite.
+  \item \textbf{Full counterbalancing of order.} Each gamble is presented in both orders, with the
+  sure option and the gamble swapping first and second position, so position can be estimated rather
+  than assumed away.
+  \item \textbf{Template as a factor.} Each gamble is drawn under five semantically equivalent
+  paraphrase templates, so between-template variance is observable.
+  \item \textbf{Reproducibility.} Every trial logs the model snapshot, seed, temperature, and raw
+  response. Elicitation is via forced tool-choice, with a 10\% plain-text arm to validate that the
+  tool-choice channel is not itself distorting answers.
+\end{itemize}
+
+The design grid is 40 gambles (sure amount \$23--\$187 against a two-outcome gamble with high payoff
+at probability $p \in [0.19, 0.83]$, else zero; EV ratios spanning 0.75--1.7) $\times$ 5 templates
+$\times$ 2 orders $\times$ 3 repetitions, for 1{,}200 target choices. The final dataset contains
+1{,}200 valid choices with zero unparseable responses. A mid-run API credit outage caused 265 trials
+to fail; these were re-run cleanly, and because run order was shuffled, the outage is random with
+respect to experimental conditions.
+
+\section{Econometric Model and Estimation}
+
+\subsection{Baseline: CRRA expected utility with a Fechner error (M1)}
+The canonical structural exercise models the model as a CRRA expected-utility maximizer with a logit
+(Fechner) choice error. Utility is
+\[
+  u(x) = \frac{x^{1-r}}{1-r},
+\]
+and the probability of choosing the gamble over the sure option is
+\[
+  \Pr(\text{gamble}) = \frac{1}{1 + \exp\!\big(-\,(EU_g - EU_s)/(\mu \cdot \text{scale})\big)},
+\]
+where $EU_g = p \cdot u(\text{hi})$, $EU_s = u(\text{sure})$, and $\text{scale} = |u(\text{max
+payoff})|$ normalizes the noise term across stakes. Maximum likelihood on the 1{,}200 choices
+returns $r = 0.19$ (se 0.048, 95\% CI $[0.10, 0.29]$) and $\mu = 0.26$ (se 0.040), with log-likelihood
+$-809.69$. Read on its own, this is an unremarkable, mildly risk-averse agent.
+
+\subsection{Diagnostic: probability drives choice, payoffs do not}
+The sanity checks the design was built to run flag M1 as misspecified. The share of gambles chosen is
+non-monotone across EV-ratio quartiles (0.43, 0.71, 0.45, 0.62); there is a large position gap of
+0.12 ($p < 0.001$); and the spread across templates is 0.25. A descriptive logistic regression of the
+gamble choice on the EV ratio, the win probability $p$, and a \texttt{safe\_first} indicator (the
+gamble listed second) makes the pattern explicit:
+\[
+  \text{ev\_ratio: } +1.71\ (z=5.0), \quad p: +11.87\ (z=22.8), \quad \text{safe\_first: } +0.97\ (z=6.3).
+\]
+Holding the mean EV ratio roughly constant (between 1.08 and 1.19) across win-probability bins, uptake
+climbs from 8.3\% to 85.9\% as $p$ rises (Table~\ref{tab:bins}). Choice tracks the probability of
+winning; payoff magnitudes barely register. CRRA cannot generate this: it integrates probability and
+payoff into a single expected utility, so it cannot make choice nearly independent of payoff while
+sharply dependent on $p$.
+
+\subsection{Extended model: Prelec weighting plus a position parameter (M2)}
+The diagnostic points to a distorted probability weighting function. M2 adds a Prelec (1998) weighting
+function and a position nuisance parameter $\delta$ that enters the latent index when the gamble is
+listed second:
+\[
+  w(p) = \exp\!\big(-(-\ln p)^{\gamma}\big), \qquad
+  z = \frac{w(p)\,u(\text{hi}) - u(\text{sure})}{\mu \cdot \text{scale}} + \delta \cdot \mathbf{1}[\text{gamble second}],
+\]
+with $\Pr(\text{gamble}) = 1/(1 + e^{-z})$. At $\gamma = 1$ and $\delta = 0$ this nests M1 exactly, so
+the two are comparable by a likelihood-ratio test. Estimation is by maximum likelihood with
+multi-start Nelder-Mead and standard errors from the numerical Hessian.
+
+\section{Results}
+
+Table~\ref{tab:params} reports the M2 estimates. Table~\ref{tab:compare} compares the baseline, the
+extended model, and a bare-bones probability-only logit (M3). Table~\ref{tab:bins} shows fit against
+the observed choice rate by win-probability bin.
+
+\begin{table}[h]
+\centering
+\caption{M2 parameter estimates ($n = 1{,}200$).}
+\label{tab:params}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Parameter & Estimate (se) & Interpretation \\
+\midrule
+$r$ (curvature)            & 0.592 (0.028) & Risk aversion; human-plausible range \\
+$\gamma$ (Prelec)          & 2.693 (0.166) & Extreme S-shape; long shots underweighted \\
+$\mu$ (Fechner noise)      & 0.104 (0.008) & Choice noise, less than half of M1's \\
+$\delta$ (position)        & 1.257 (0.160) & Shift toward the gamble when it is listed second \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Model comparison. Lower AIC/BIC is better.}
+\label{tab:compare}
+\begin{tabular}{@{}lccrrr@{}}
+\toprule
+Model & Structure & $k$ & logLik & AIC & BIC \\
+\midrule
+M1 & CRRA + Fechner            & 2 & $-809.69$ & 1623.4 & 1633.6 \\
+M2 & CRRA + Prelec + position  & 4 & $-501.24$ & 1010.5 & 1030.8 \\
+M3 & Probability-only logit    & 2 & $-501.40$ & 1010.8 & 1021.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The likelihood-ratio test of M1 against M2 is decisive: $\chi^2(2) = 616.9$, $p = 1.1 \times
+10^{-134}$. Adding probability weighting and a position term transforms the fit.
+
+\begin{table}[h]
+\centering
+\caption{Choice rate by win-probability bin: observed vs.\ fitted. EV ratio is roughly constant across
+bins, so a value-integrating model should be near-flat.}
+\label{tab:bins}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Win probability $p$ & Observed & M1 fitted & M2 fitted \\
+\midrule
+$(0.15, 0.30]$ & 0.083 & 0.427 & 0.028 \\
+$(0.30, 0.45]$ & 0.138 & 0.474 & 0.161 \\
+$(0.45, 0.60]$ & 0.607 & 0.493 & 0.654 \\
+$(0.60, 0.85]$ & 0.859 & 0.487 & 0.782 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+M1 predicts a nearly flat 0.43--0.49 across bins, missing the observed climb entirely. M2 tracks the
+step from near-zero uptake at low $p$ to high uptake at high $p$.
+
+\section{Interpretation}
+
+\textbf{The weighting function is extreme, and points the wrong way.} A Prelec $\gamma = 2.69$ is a
+strong S-shape. It severely underweights low and moderate probabilities and only credits near-certain
+odds. Humans show the opposite: an inverse-S with $\gamma$ around 0.65--0.75 (Prelec 1998; Wu and
+Gonzalez 1996), overweighting long shots, which is why people buy lottery tickets. Haiku radically
+underweights anything short of a likely win. It will not take a long shot at nearly any price.
+
+\textbf{Once weighting is controlled, the curvature is ordinary.} The M2 estimate $r = 0.59$ sits
+squarely in the standard human CRRA range. The baseline $r = 0.19$ was misspecification bias: forcing
+a probability-distortion pattern through a pure-curvature model pulled the curvature estimate toward
+risk neutrality. The apparent risk attitude in M1 was an artifact of the wrong model.
+
+\textbf{Position moves choice by a large factor.} A position parameter $\delta = 1.26$ implies an odds
+shift of $e^{1.26} \approx 3.5\times$ toward the gamble merely from listing it second. The direction is
+notable: this is a second-option bias, opposite the first-option ``A-bias'' that much of the LLM
+literature reports.
+
+\textbf{Noise was mostly misspecification.} The Fechner noise term halved, from $\mu = 0.26$ in M1 to
+$\mu = 0.10$ in M2. What looked like random choice under the wrong model was largely structure the
+wrong model could not represent.
+
+\textbf{The honest caveat.} The probability-only heuristic M3 essentially ties M2 on AIC (1010.8 vs.\
+1010.5) and beats it on BIC (1021.0 vs.\ 1030.8). Win probability alone explains almost everything;
+payoff magnitudes add little. This near-tie is itself the finding. The model behaves closer to a
+``pick the likely winner'' heuristic than to genuine expected-utility integration. The structural
+model earns its place by interpretability: it nests the rational benchmark, yields parameters
+comparable to the human behavioral literature, and locates exactly where and how the model departs
+from that benchmark, which a bare logit cannot do.
+
+\section{Policy Relevance}
+
+\textbf{Allocative agents inherit this distortion.} LLMs are being deployed to make allocative choices:
+procurement, trading, triage, negotiation. An agent that thresholds on probability and ignores payoff
+magnitude will systematically decline high-value long shots (R\&D bets, insurance-like tradeoffs) and
+accept likely-but-mediocre options. Phase 1 quantifies that distortion for one snapshot under one
+protocol, turning a plausible worry into a measured parameter.
+
+\textbf{Interface order is a control lever.} A $3.5\times$ position effect means whoever controls the
+order in which options are presented steers the agent's choice. Interface design becomes a lever over
+AI decisions. That matters for anyone building or regulating agentic systems, and it matters more in
+adversarial settings, where an opponent who arranges the menu can tilt the outcome.
+
+\textbf{Structural estimation earns its keep.} A descriptive bias demonstration cannot separate ``the
+model is risk-averse'' from ``the model ignores payoffs.'' The M1 fit would have reported the former;
+the truth is the latter. Structural estimation with a correctly specified model can tell them apart,
+and the misspecification was only detectable because the design carried sanity checks and
+counterbalancing. This is the argument for measurement-grade evaluations rather than one-off bias
+anecdotes.
+
+\textbf{Scope.} These parameters are properties of this pinned snapshot under this protocol:
+unincentivized, forced-choice, one model. They are not claimed as universal traits of LLMs. Phase 2
+(gain/loss framing, loss aversion, an endogenous reference point) and Phase 3 (base versus instruct
+attribution) test whether the pattern is stable and where it comes from.
+
+\section{Limitations and Next Phase}
+
+Phase 1 studies a single model, at a single temperature, with unincentivized forced choice, so the
+estimates are conditional on that protocol. The near-tie between the structural model and the
+probability-only heuristic means the payoff-magnitude channel is weak in this design; a stakes range
+wider than \$23--\$187 might surface more curvature, and Phase 2 will widen it. The position effect is
+estimated as a single nuisance term rather than modeled by template, though the counterbalanced design
+ensures it does not bias the preference parameters. Temperature 1.0 sampling is treated as a choice
+error process here; whether that mapping holds is a separate question the logprob elicitation planned
+for Phase 3 will address directly.
+
+Phase 2 adds the gain/loss frame manipulation and estimates loss aversion and an endogenous reference
+point. Phase 3 runs the identical instruments on matched base and instruction-tuned open-weight models
+to attribute the estimated parameters to post-training. Phase 1 has done its job: the pipeline is
+validated end to end, and it has already returned a sharp, quantified, and policy-relevant result.
+
+\vspace{1em}
+\hrule
+\vspace{0.5em}
+
+\begin{thebibliography}{99}
+\small
+
+\bibitem{holt2002}
+Holt, C. A., and Laury, S. K. (2002).
+Risk Aversion and Incentive Effects. \textit{American Economic Review}, 92(5), 1644--1655.
+
+\bibitem{kahneman1979}
+Kahneman, D., and Tversky, A. (1979).
+Prospect Theory: An Analysis of Decision under Risk. \textit{Econometrica}, 47(2), 263--291.
+
+\bibitem{koszegi2006}
+K\H{o}szegi, B., and Rabin, M. (2006).
+A Model of Reference-Dependent Preferences. \textit{Quarterly Journal of Economics}, 121(4), 1133--1165.
+
+\bibitem{liu2025}
+Liu, J., Yang, Y., and Tam, K. Y. (2025).
+Evaluating and Aligning Human Economic Risk Preferences in LLMs.
+\textit{Proceedings of EMNLP 2025}; arXiv:2503.06646.
+
+\bibitem{cpt2025}
+CPT Estimation on LLMs (2025). Cumulative Prospect Theory Parameters of Instruction-Tuned Language
+Models. arXiv:2508.08992.
+
+\bibitem{prelec1998}
+Prelec, D. (1998).
+The Probability Weighting Function. \textit{Econometrica}, 66(3), 497--527.
+
+\bibitem{train2009}
+Train, K. E. (2009).
+\textit{Discrete Choice Methods with Simulation} (2nd ed.). Cambridge University Press.
+
+\bibitem{wu1996}
+Wu, G., and Gonzalez, R. (1996).
+Curvature of the Probability Weighting Function. \textit{Management Science}, 42(12), 1676--1690.
+
+\end{thebibliography}
+
+\end{document}

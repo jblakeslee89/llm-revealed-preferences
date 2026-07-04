@@ -50,6 +50,15 @@ python src/harness.py --reps 3
 
 - [x] Proposal (revised for mid-2026 literature)
 - [x] Phase 1 harness + estimator, validated end-to-end on simulated agent
-- [ ] Phase 1 live run on Claude
+- [x] Phase 1 live run: 1,200 choices, claude-haiku-4-5-20251001
+- [x] Extended estimator (`analysis/estimate_cpt.py`): Prelec weighting + position nuisance
 - [ ] Phase 2: gain/loss framing, loss aversion, reference point
 - [ ] Phase 3: base-vs-instruct logprob elicitation on open models
+
+## Phase 1 headline (July 2026)
+
+Haiku prices probability, not payoffs. Extreme S-shaped probability weighting
+(Prelec gamma = 2.69 vs. human ~0.7: long shots refused at almost any price),
+human-plausible curvature once weighting is controlled (r = 0.59), and a ~3.5x
+odds shift toward whichever option is listed second. A probability-only heuristic
+nearly ties the structural model on fit. Full writeup in `writeups/`.
