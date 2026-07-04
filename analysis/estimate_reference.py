@@ -203,7 +203,12 @@ def main():
     }
     for k in ("alpha", "lambda", "gamma", "mu", "delta", "phi"):
         val, se = params[k]
-        print(f"  {k:>7} = {val:8.4f}  (se {se:.4f})   {labels[k]}")
+        flag = "   <-- at bound; lambda/phi not separately identified" if k == "lambda" and val > 50 else ""
+        print(f"  {k:>7} = {val:8.4f}  (se {se:.4f})   {labels[k]}{flag}")
+    if params["lambda"][0] > 50:
+        print("  NOTE: the free-phi fit sits in a degenerate corner (lambda at its bound,")
+        print("        phi ~ 0). Read the phi=1 stated-reference estimate below as primary;")
+        print("        the model-free frame gap above is the assumption-free headline.")
 
     lam_s, lam_s_se = params_stated["lambda"]
     print(f"\n  Loss aversion under stated reference (phi=1): "
