@@ -1,0 +1,403 @@
+\documentclass[11pt]{article}
+
+% ---- Packages ----
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+% ---- Light formatting ----
+\definecolor{moss}{HTML}{758C58}
+\titleformat{\section}{\large\bfseries\color{moss}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\setlist{itemsep=2pt, topsep=4pt}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+
+% ---- Title block ----
+\title{\vspace{-1.5em}\textbf{Claude Fears the Word ``Loss''}\\[0.3em]
+\large Phase 2 Results: Framing, Loss Aversion, and a Violation of Frame Invariance}
+\author{J. Blakeslee \\ \small Pardee RAND Graduate School}
+\date{\small AI Sprint Practicum (Course 1012) \\ \small July 2026}
+
+\begin{document}
+\maketitle
+
+\hrule
+\vspace{0.5em}
+
+\section{Introduction}
+
+This project treats large language models as economic agents and recovers their preference primitives
+from their choices. Phase 1 fit a structural discrete-choice model to 1{,}200 controlled lottery
+choices from a single frontier model and found something sharp: \texttt{claude-haiku-4-5} prices the
+probability of winning and nearly ignores the size of the prize, with an extreme S-shaped probability
+weighting function (Prelec $\gamma = 2.69$) and human-plausible curvature once that distortion is
+controlled. Phase 1 measured how the model chooses among risky prospects. It left open a different
+question: does the model care not just about outcomes, but about how those outcomes are described?
+
+Phase 2 answers that. Expected-utility theory rests on frame invariance: a rational agent evaluates
+final states of wealth, so two descriptions of the identical lottery must yield the identical choice.
+The classic human violation is Tversky and Kahneman's (1981) Asian disease problem, where reversing
+``lives saved'' and ``lives lost'' reverses the majority preference over outcomes that are arithmetically
+the same. We port that manipulation to money. The same terminal-wealth lottery is presented under three
+frames that a frame-invariant agent must treat identically, and we structurally estimate reference
+dependence and loss aversion from the pattern of choices across frames. The model under study is again
+\texttt{claude-haiku-4-5-20251001}, a pinned snapshot, queried at temperature 1.0 through forced
+tool-choice with an 8\% plain-text validation arm and fresh context per trial.
+
+The headline is that the model is not frame-invariant. Two lotteries with byte-for-byte identical
+terminal wealth draw 40\% versus 10\% gamble-taking based only on whether the downside is worded as a
+loss. An expected-utility maximizer cannot produce this. The word ``loss'' is doing the work.
+
+\section{The Result in Plain Language}
+
+We asked the same AI model the same kind of money question three different ways, where the three ways
+lead to exactly the same outcomes. Imagine you are offered a sure \$50, or a gamble that pays \$120 if
+you win and nothing if you lose. That is one version. Now imagine we first hand you \$50 and say it is
+yours, then offer you the choice to keep it or gamble: the gamble either raises your \$50 to \$120, or
+drops it back to zero. If you do the arithmetic, these are the same decision. Keep the \$50, or take the
+gamble that ends with \$120 or \$0. A careful thinker should not care which way we phrased it.
+
+The model cared, and cared a lot. When the downside was described plainly, it took the gamble about
+40\% of the time. When the identical downside was described as ``dropping'' from \$50 back to zero, a
+loss of the money it had just been handed, it took the gamble only about 10\% of the time. Same money,
+same odds, same final outcomes. The only thing that changed was the word ``loss.'' That single change in
+wording cut the model's willingness to gamble by three quarters.
+
+This is a well-documented human quirk. People hate losses more than they enjoy equal-sized gains, and
+they respond to whether a choice is framed as a gain or a loss even when the outcomes are the same. The
+striking thing is that the AI shows the same quirk, and by our best estimate shows it more strongly than
+people typically do. When we put a number on how much more the model dislikes a loss than it likes an
+equal gain, we get a factor above three. The classic human number is around 2.25. So the model is loss-
+averse in the same direction as humans, and by this measure harder.
+
+The behavior was not total. Even in the loss-worded version, the model still gambled a bit more when the
+gamble was a better deal, so it was not blindly refusing. It was heavily suppressed, not switched off.
+We also ran a simple honesty check: offer the model a sure \$50 against a sure \$70, no gambling
+involved. It picked the larger amount every single time, all eighty times. So the model reads how much
+money is on the table perfectly well when there is no gamble in the picture. Its trouble is specific to
+choices under risk, and here, specific to the word ``loss.''
+
+Put the two phases together and a picture starts to form, carefully. Phase 1 found that when the model
+faces a gamble, it fixates on the odds and barely notices the prize size. Phase 2 finds that it also
+fixates on loss wording. Yet the honesty check shows it reads dollar amounts fine when no gamble is
+present. The tentative reading is that the model's risky choices are steered by a few loud surface
+features of the prompt, the probability figure and the loss language, more than by a full calculation of
+what it ends up with. That is a hypothesis the two phases jointly support, not a proven fact.
+
+Why does this matter? An agent whose willingness to take a risk can be swung thirty percentage points by
+a choice of words is steerable by whoever writes the words. In procurement, negotiation, insurance, or
+triage tools, describing an option's downside as a loss becomes a lever over what the agent decides, and
+a way to manipulate it in an adversarial setting.
+
+\section{Experimental Design}
+
+Every choice is an independent API call with no memory of prior trials. The instrument is a forced
+binary choice between a sure amount \$$s$ and a two-outcome gamble that pays a high amount \$$h$ with
+probability $p$ and \$0 otherwise. The manipulation is the frame: the same terminal-wealth lottery is
+worded three ways.
+
+\begin{itemize}
+  \item \textbf{Gain frame.} Anchored at \$0. Every outcome is described as a gain: a certain gain of
+  \$$s$ versus a $p$\% chance to gain \$$h$, else gain nothing.
+  \item \textbf{Mixed frame.} The model is ``given \$$s$ up front,'' then chooses to keep \$$s$ (no
+  change) or take a gamble that can rise to \$$h$ (a gain of \$$(h-s)$) or drop to \$0 (a loss of
+  \$$s$). The gamble straddles the \$$s$ reference point, which is what identifies loss aversion.
+  \item \textbf{Neutral frame.} The Phase 1 wording, neither gain- nor loss-anchored.
+\end{itemize}
+
+The three frames are terminal-wealth identical (Table~\ref{tab:equiv}). A frame-invariant expected-
+utility agent evaluating final wealth must choose identically across all three. We add a dominant
+positive control: a certain \$$s$ against a strictly larger certain amount, no probability involved. An
+agent that reads magnitude should take the larger sure amount essentially every time, so this control
+checks that the elicitation channel itself is sound.
+
+\begin{table}[h]
+\centering
+\caption{Terminal-wealth equivalence of the three frames. All three describe the identical final-wealth
+lottery: \$$s$ for sure, versus \{\$$h$ with probability $p$, \$0 otherwise\}.}
+\label{tab:equiv}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Frame & Reference anchor & Safe option (final wealth) & Gamble (final wealth) \\
+\midrule
+Gain    & \$0        & \$$s$ (gain of \$$s$)        & \$$h$ w.p.\ $p$, else \$0 \\
+Mixed   & \$$s$      & \$$s$ (keep, no change)      & \$$h$ w.p.\ $p$, else \$0 \\
+Neutral & \$0        & \$$s$ (Phase 1 wording)      & \$$h$ w.p.\ $p$, else \$0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The design grid is 40 procedurally generated, contamination-safe gambles $\times$ 3 frames $\times$ 5
+paraphrase templates $\times$ 2 counterbalanced orders $\times$ 2 repetitions, plus 80 dominant
+controls, for 2{,}480 target choices. Payoffs are non-round and probabilities jittered so nothing is a
+textbook row the model could recite; each gamble appears in both orders so position is estimated rather
+than assumed away; each is drawn under five semantically equivalent templates so between-template
+variance is observable. Elicitation is via forced tool-choice with an 8\% plain-text arm to confirm the
+tool channel is not itself distorting answers. The final dataset contains 2{,}480 valid choices with
+zero unparseable responses.
+
+\section{Econometric Model and Estimation}
+
+The structural model is reference-dependent value with Prelec probability weighting. Let the reference
+point be $\rho = \phi \cdot \text{anchor}$, where the anchor is \$0 in the gain and neutral frames and
+\$$s$ in the mixed frame. Value is measured in deviations from the reference:
+\[
+  v(x) =
+  \begin{cases}
+    (x - \rho)^{\alpha}, & x \ge \rho, \\[2pt]
+    -\lambda\,(\rho - x)^{\alpha}, & x < \rho,
+  \end{cases}
+\]
+so $\alpha$ is the curvature of value over gains and losses and $\lambda$ is the loss-aversion
+coefficient: $\lambda > 1$ means losses loom larger than equal gains. Probabilities are weighted by the
+Prelec (1998) function
+\[
+  w(p) = \exp\!\big(-(-\ln p)^{\gamma}\big).
+\]
+Writing $V_{\text{risky}} = w(p)\,v(h) + \big(1 - w(p)\big)\,v(0)$ and $V_{\text{safe}} = v(s)$, the
+latent choice index is
+\[
+  z = \frac{V_{\text{risky}} - V_{\text{safe}}}{\mu \cdot \text{scale}}
+      + \delta\cdot\mathbf{1}[\text{gamble listed second}],
+  \qquad \text{scale} = \max(h,s)^{\alpha},
+\]
+with $\Pr(\text{gamble}) = 1/(1 + e^{-z})$. The normalizer $\text{scale} = \max(h,s)^{\alpha}$ is chosen
+to be free of $\lambda$, so the noise term does not absorb the loss-aversion parameter, and $\delta$ is
+the same position nuisance term used in Phase 1. Estimation is by maximum likelihood with multi-start
+Nelder-Mead and standard errors from the numerical Hessian.
+
+\subsection{Two tests}
+The design supports two separate hypothesis tests.
+
+\textbf{Frame invariance ($H_0: \phi = 0$).} At $\phi = 0$ the reference point is \$0 in every frame,
+the mixed frame collapses onto the gain frame, and the model is frame-invariant. A likelihood-ratio test
+of $\phi = 0$ against the free-$\phi$ alternative asks whether reference dependence is present at all.
+
+\textbf{Loss aversion ($H_0: \lambda = 1$).} At $\lambda = 1$ gains and losses enter symmetrically and
+there is no loss aversion. A Wald test on $\lambda$ asks whether the loss-worded downside is penalized
+beyond its magnitude.
+
+\subsection{The stated-reference assumption}
+Estimating $\lambda$ and $\phi$ jointly is problematic on this data because the two are nearly collinear:
+the mixed frame's suppression can be explained either by the reference moving fully to \$$s$ with a
+moderate $\lambda$, or by the reference barely moving while an extreme $\lambda$ punishes the \$0 outcome
+that sits just below it. We therefore estimate loss aversion under the K\H{o}szegi-Rabin (2006)
+stated-reference assumption, fixing $\phi = 1$ so the reference equals the stated up-front endowment
+\$$s$ in the mixed frame. This is the natural reading of a frame that explicitly hands the model \$$s$
+and calls the downside a loss. Section~6 reports what happens when $\phi$ is left free, and why the
+assumption is needed.
+
+\section{Results}
+
+\subsection{Positive control}
+Of the 80 dominant trials, 100.0\% picked the strictly larger certain amount. The model reads payoff
+magnitude cleanly when no probability is involved. This is a useful contrast with Phase 1: the
+magnitude-insensitivity documented there is specific to choices under risk, not a general inability to
+compare dollar amounts.
+
+\subsection{Model-free frame gap}
+Before any structural model, the raw gamble-uptake rates already show the violation (Table~\ref{tab:gap}).
+
+\begin{table}[h]
+\centering
+\caption{Gamble uptake by frame. The mixed frame, terminal-wealth identical to the gain frame, draws
+far fewer gambles.}
+\label{tab:gap}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Frame & $n$ & Gamble uptake & Difference \\
+\midrule
+Gain    & 799 & 0.398 & --- \\
+Neutral & 800 & 0.300 & \\
+Mixed   & 800 & 0.096 & mixed $-$ gain $= -0.302$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The mixed-minus-gain gap is $-0.302$ with $p = 3.1\times10^{-47}$. It is not a composition artifact:
+holding each of the 40 gambles fixed, 88\% of gambles show higher uptake under the gain frame than the
+mixed frame, and the mean within-gamble gap is 0.302, identical to the pooled gap. The suppression is
+not dead responsiveness either. Within the mixed frame, uptake still rises with the gamble's expected-
+value ratio across terciles (0.043, 0.073, 0.177), so the model still responds to incentives; the
+response is heavily suppressed, not switched off.
+
+\subsection{Structural estimates}
+Table~\ref{tab:params} reports the maximum-likelihood estimates under the stated-reference assumption
+$\phi = 1$.
+
+\begin{table}[h]
+\centering
+\caption{Structural estimates under the stated-reference assumption ($\phi = 1$, $n = 2{,}480$).}
+\label{tab:params}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Parameter & Estimate (se) & Interpretation \\
+\midrule
+$\lambda$ (loss aversion) & 3.234 (0.171) & Losses loom $3.2\times$ larger than equal gains \\
+$\alpha$ (curvature)      & 0.503 (0.024) & Diminishing sensitivity; human-plausible \\
+$\gamma$ (Prelec)         & 1.516 (0.059) & S-shape; long shots underweighted \\
+$\mu$ (Fechner noise)     & 0.131 (0.009) & Choice noise \\
+$\delta$ (position)       & $-0.363$ (0.104) & Shift away from the gamble when listed second \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The loss-aversion Wald test of $H_0: \lambda = 1$ gives $z = +13.09$, $p = 3.9\times10^{-39}$. Losses are
+penalized far beyond their magnitude. The frame-invariance likelihood-ratio test of $H_0: \phi = 0$
+gives $\chi^2(1) = 155.1$, $p = 1.3\times10^{-35}$. Frame invariance is strongly rejected. Reference
+dependence is present, and it is large.
+
+\section{The Identification Limit}
+
+Honesty requires reporting what the free-$\phi$ fit does. When $\phi$ is estimated rather than fixed, the
+likelihood surface slides to a corner: $\phi \approx 0.0004$ with $\lambda$ pinned at its upper bound
+near 54.6, and this corner attains a slightly higher likelihood than the $\phi = 1$ fit. That is a
+degenerate solution, not a finding. It says $\lambda$ and $\phi$ are not separately identified on this
+data.
+
+The intuition is that the mixed frame's suppression admits two nearly observationally equivalent
+readings. In one, the reference moves fully to \$$s$ ($\phi = 1$) and a moderate $\lambda \approx 3.2$
+penalizes the loss of that endowment. In the other, the reference barely moves ($\phi \approx 0$) but an
+extreme $\lambda$ punishes the \$0 outcome that now sits just below a reference near zero. Both bend the
+value function enough to reproduce the observed 30-point gap; the data cannot arbitrate between them
+without an assumption about where the reference sits. This is why we impose the stated-reference
+restriction rather than report the corner.
+
+The reporting hierarchy is therefore: the assumption-free headline is the model-free frame gap
+(Table~\ref{tab:gap}), which needs no structural model; the $\phi = 1$ structural estimate
+($\lambda = 3.23$) is the primary structural number; the free-$\phi$ corner is a reported identification
+limit, not a result. We flag it because the limit is itself informative about how hard these properties
+are to measure, a point we return to in the policy section.
+
+\section{Interpretation and Synthesis with Phase 1}
+
+\textbf{The model violates frame invariance.} Two terminal-wealth-identical lotteries draw 40\% versus
+10\% gamble-taking based solely on whether the downside is worded as a loss. An expected-utility
+maximizer evaluating final wealth cannot produce this pattern. The words ``loss,'' ``drop,'' and ``lose''
+are doing the work. This is the Asian-disease reversal (Tversky and Kahneman 1981) reproduced over money
+in an AI.
+
+\textbf{The direction is loss aversion, and the magnitude is large.} The suppressed side is the
+loss-worded gamble, so the agent is avoiding losses, exactly the human direction. The structural estimate
+$\lambda = 3.23$ exceeds the canonical human value of roughly 2.25 (Kahneman and Tversky 1979; Tversky
+and Kahneman 1992). By this estimate the model is loss-averse in the same direction as humans and more
+strongly, on top of violating invariance in the first place.
+
+\textbf{A portrait across two phases, stated carefully.} Phase 1 showed that choice under risk is driven
+by the probability figure and nearly ignores payoff size. The dominant control here (100\%) shows
+magnitude is read fine when probability is absent. Phase 2 adds that risky choice is also swung by loss
+wording. Together these suggest the model's risky choices are governed by salient surface features of the
+prompt, the probability number and the loss language, more than by an integrated expected-utility
+computation over final wealth. This is a hypothesis the two phases jointly support. It is not proven, and
+the design was not built to prove it; it is the emerging portrait, offered as the thing Phase 3 should
+test.
+
+\textbf{Probability weighting is consistent across phases.} The Prelec estimate here, $\gamma = 1.52$,
+is still an S-shape that underweights long shots, the same direction as Phase 1's $\gamma = 2.69$, though
+smaller in magnitude under this reference-dependent design. The two designs are not identical, so the
+level difference is expected; the sign agreement is the point.
+
+\textbf{Position bias is not a stable trait.} The position parameter flipped sign between phases:
+$\delta = +1.26$ in Phase 1 (a pull toward the gamble when listed second), $\delta = -0.36$ here (a pull
+away). A property that reverses across designs is not a fixed characteristic of the model. Whatever
+drives the order effect is contingent on the surrounding wording, which is itself worth flagging: order
+effects measured in one design should not be assumed to carry to another.
+
+\section{Policy Relevance}
+
+\textbf{Wording is a lever over the agent's decision.} An agent whose risk choices swing thirty
+percentage points on whether a downside is called a loss is manipulable by whoever writes the option
+descriptions. In procurement, negotiation, insurance, or triage tools, loss framing becomes a control
+input over the agent's behavior. In an adversarial setting it is an attack surface: an opponent who
+drafts the menu can suppress or elicit risk-taking at will, without changing a single number in the
+actual stakes.
+
+\textbf{The identification limit is itself a governance point.} Even with thousands of clean choices and
+a correctly specified model, separating ``the reference moved'' from ``extreme loss aversion'' required an
+assumption. These properties are genuinely hard to measure, which is precisely the argument for
+measurement-grade evaluations, designs that carry their own diagnostics and state their identifying
+assumptions, rather than one-shot bias demonstrations that report a single number and hide the
+degeneracy underneath it.
+
+\textbf{Scope.} These are properties of one pinned snapshot under one unincentivized forced-choice
+protocol. They are not claimed as universal traits of LLMs. Phase 3, which runs the identical instruments
+on matched base and instruction-tuned open-weight models, tests whether post-training is the origin of
+the reference dependence measured here.
+
+\section{Limitations and Next Phase}
+
+Phase 2 studies a single model at a single temperature with unincentivized forced choice, so the
+estimates are conditional on that protocol. The central structural number, $\lambda = 3.23$, rests on the
+stated-reference assumption $\phi = 1$; the free-$\phi$ fit is degenerate, so the loss-aversion magnitude
+is identified only under that restriction, while the frame-invariance violation itself is assumption-free
+and rests on the model-free gap. Temperature 1.0 sampling is treated as a choice-error process, a mapping
+the logprob elicitation planned for Phase 3 will test directly. The frames were validated for
+terminal-wealth equivalence but not for equal reading difficulty; if the loss wording is simply harder to
+parse, some of the gap could be comprehension rather than preference, though the retained sensitivity to
+the expected-value ratio within the mixed frame argues against pure confusion.
+
+Phase 3 runs the identical instruments on matched base and instruction-tuned open-weight models to
+attribute the reference dependence, loss aversion, and probability distortion measured across Phases 1
+and 2 to post-training. If the biases are absent in the base model and present in its instruction-tuned
+sibling, post-training is implicated as their origin. Phase 2 has done its job: it has turned a plausible
+worry about framing into a measured violation of frame invariance and a structural loss-aversion estimate,
+and it has been honest about the one place the data could not identify on its own.
+
+\vspace{1em}
+\hrule
+\vspace{0.5em}
+
+\begin{thebibliography}{99}
+\small
+
+\bibitem{holt2002}
+Holt, C. A., and Laury, S. K. (2002).
+Risk Aversion and Incentive Effects. \textit{American Economic Review}, 92(5), 1644--1655.
+
+\bibitem{kahneman1979}
+Kahneman, D., and Tversky, A. (1979).
+Prospect Theory: An Analysis of Decision under Risk. \textit{Econometrica}, 47(2), 263--291.
+
+\bibitem{koszegi2006}
+K\H{o}szegi, B., and Rabin, M. (2006).
+A Model of Reference-Dependent Preferences. \textit{Quarterly Journal of Economics}, 121(4), 1133--1165.
+
+\bibitem{liu2025}
+Liu, J., Yang, Y., and Tam, K. Y. (2025).
+Evaluating and Aligning Human Economic Risk Preferences in LLMs.
+\textit{Proceedings of EMNLP 2025}; arXiv:2503.06646.
+
+\bibitem{cpt2025}
+CPT Estimation on LLMs (2025). Cumulative Prospect Theory Parameters of Instruction-Tuned Language
+Models. arXiv:2508.08992.
+
+\bibitem{prelec1998}
+Prelec, D. (1998).
+The Probability Weighting Function. \textit{Econometrica}, 66(3), 497--527.
+
+\bibitem{train2009}
+Train, K. E. (2009).
+\textit{Discrete Choice Methods with Simulation} (2nd ed.). Cambridge University Press.
+
+\bibitem{tversky1981}
+Tversky, A., and Kahneman, D. (1981).
+The Framing of Decisions and the Psychology of Choice. \textit{Science}, 211(4481), 453--458.
+
+\bibitem{tversky1992}
+Tversky, A., and Kahneman, D. (1992).
+Advances in Prospect Theory: Cumulative Representation of Uncertainty.
+\textit{Journal of Risk and Uncertainty}, 5(4), 297--323.
+
+\bibitem{wu1996}
+Wu, G., and Gonzalez, R. (1996).
+Curvature of the Probability Weighting Function. \textit{Management Science}, 42(12), 1676--1690.
+
+\end{thebibliography}
+
+\end{document}
