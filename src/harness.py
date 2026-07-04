@@ -30,7 +30,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from design import Trial, build_trials, generate_gambles, trial_row
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = PROJECT_ROOT / "data"
+
+
+def load_dotenv() -> None:
+    """Read KEY=VALUE lines from the project-root .env (gitignored) into the
+    environment, so the API key never lives in code or shell profiles."""
+    env_file = PROJECT_ROOT / ".env"
+    if not env_file.exists():
+        return
+    for line in env_file.read_text().splitlines():
+        line = line.strip().removeprefix("export ").strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 CHOICE_TOOL = {
     "name": "submit_choice",
@@ -185,6 +199,7 @@ def main() -> None:
     ap.add_argument("--out", default=None, help="output CSV path")
     args = ap.parse_args()
 
+    load_dotenv()
     gambles = generate_gambles(n=args.n_gambles, seed=args.seed)
     trials = build_trials(gambles, reps=args.reps, seed=args.seed)
     if args.pilot:
