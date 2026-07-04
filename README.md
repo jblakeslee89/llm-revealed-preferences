@@ -52,8 +52,28 @@ python src/harness.py --reps 3
 - [x] Phase 1 harness + estimator, validated end-to-end on simulated agent
 - [x] Phase 1 live run: 1,200 choices, claude-haiku-4-5-20251001
 - [x] Extended estimator (`analysis/estimate_cpt.py`): Prelec weighting + position nuisance
-- [ ] Phase 2: gain/loss framing, loss aversion, reference point
+- [x] Phase 2 harness + estimator built and validated on simulated agent
+      (recovers lambda=1.89 vs true 2.0; frame-invariance test fires correctly)
+- [ ] Phase 2 live run on Claude
 - [ ] Phase 3: base-vs-instruct logprob elicitation on open models
+
+## Phase 2 (framing) usage
+
+```bash
+# validate the estimator against a known loss-averse agent (no API key)
+python src/harness.py --phase 2 --dry-run --reps 3 --sim-lam 2.0
+python analysis/estimate_reference.py data/phase2_dryrun.csv
+
+# live run (~3,700 calls: 40 gambles x 3 frames x 5 templates x 2 orders x 2 reps
+# plus dominant controls)
+python src/harness.py --phase 2
+python analysis/estimate_reference.py data/phase2_claude-haiku-4-5-20251001.csv
+```
+
+Frames: `gain` (anchor $0, all gains), `mixed` (anchor at the sure amount; the
+gamble straddles the reference, which identifies loss aversion), `neutral`
+(Phase 1 wording), `dominant` (positive control: certain $s vs a larger certain
+amount, uptake should be ~1). All three core frames are terminal-wealth-identical.
 
 ## Phase 1 headline (July 2026)
 

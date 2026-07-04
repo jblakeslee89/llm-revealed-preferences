@@ -56,9 +56,10 @@ CHOICE_TOOL = {
     },
 }
 
-FIELDNAMES = [
-    "trial_id", "gamble_id", "sure", "hi", "p", "ev_ratio",
-    "template_id", "safe_first", "rep", "response_mode",
+# Run-metadata columns appended to whatever design columns the trial carries.
+# Design columns are read dynamically from the trial dataclass, so Phase 1 and
+# Phase 2 (which adds frame/anchor) share the same runner.
+RUN_FIELDS = [
     "model", "temperature", "seed",
     "letter", "chose_gamble", "raw", "discarded",
     "latency_s", "ts_utc",
@@ -131,18 +132,59 @@ class SimulatedCRRAAgent:
         return letter, f"simulated p_gamble={p_gamble:.3f}"
 
 
+class SimulatedReferenceAgent:
+    """Synthetic Phase 2 subject: reference-dependent, loss-averse, Prelec-weighting
+    chooser with known (alpha, lam, gamma, phi, mu, delta). Recovering these in
+    analysis/estimate_reference.py validates the Phase 2 estimator before spending
+    on live calls."""
+
+    def __init__(self, alpha=0.8, lam=2.0, gamma=1.0, phi=1.0, mu=0.15,
+                 delta=0.0, seed=7):
+        self.alpha, self.lam, self.gamma = alpha, lam, gamma
+        self.phi, self.mu, self.delta = phi, mu, delta
+        self.rng = random.Random(seed)
+        self.model = f"simulated-ref(alpha={alpha},lam={lam},phi={phi})"
+        self.temperature = float("nan")
+
+    def _w(self, p):
+        if p <= 0:
+            return 0.0
+        if p >= 1:
+            return 1.0
+        return math.exp(-((-math.log(p)) ** self.gamma))
+
+    def _v(self, x, rho):
+        if x >= rho:
+            return (x - rho) ** self.alpha
+        return -self.lam * (rho - x) ** self.alpha
+
+    def choose(self, trial) -> tuple[str, str]:
+        anchor = getattr(trial, "anchor", 0)
+        rho = self.phi * anchor
+        v_safe = self._v(trial.sure, rho)
+        w = self._w(trial.p)
+        v_risky = w * self._v(trial.hi, rho) + (1 - w) * self._v(0, rho)
+        scale = max(max(trial.hi, trial.sure), 1.0) ** self.alpha  # lambda-free, matches estimator
+        z = (v_risky - v_safe) / (self.mu * scale) + self.delta * float(trial.safe_first)
+        p_gamble = 1 / (1 + math.exp(-max(-35, min(35, z))))
+        chose_gamble = self.rng.random() < p_gamble
+        letter = trial.gamble_letter if chose_gamble else ("A" if trial.gamble_letter == "B" else "B")
+        return letter, f"simulated p_gamble={p_gamble:.3f}"
+
+
 # ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
 
-def run(trials: list[Trial], agent, seed: int, out_path: Path,
+def run(trials, agent, seed: int, out_path: Path, row_fn,
         max_retries: int = 3, sleep_s: float = 0.05) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     new_file = not out_path.exists()
     n_done = n_discard = 0
+    fieldnames = list(row_fn(trials[0]).keys()) + RUN_FIELDS
 
     with open(out_path, "a", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=FIELDNAMES)
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         if new_file:
             writer.writeheader()
 
@@ -162,7 +204,7 @@ def run(trials: list[Trial], agent, seed: int, out_path: Path,
 
             discarded = letter not in ("A", "B")
             chose_gamble = "" if discarded else int(letter == t.gamble_letter)
-            row = trial_row(t) | {
+            row = row_fn(t) | {
                 "model": agent.model, "temperature": agent.temperature, "seed": seed,
                 "letter": letter or "", "chose_gamble": chose_gamble,
                 "raw": (raw or "")[:200], "discarded": int(discarded),
@@ -185,17 +227,21 @@ def run(trials: list[Trial], agent, seed: int, out_path: Path,
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--phase", type=int, choices=[1, 2], default=1)
     ap.add_argument("--model", default="claude-haiku-4-5-20251001")
     ap.add_argument("--temperature", type=float, default=1.0)
-    ap.add_argument("--reps", type=int, default=3, help="repetitions per design cell")
+    ap.add_argument("--reps", type=int, default=None,
+                    help="repetitions per design cell (default 3 for phase 1, 2 for phase 2)")
     ap.add_argument("--n-gambles", type=int, default=40)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--pilot", type=int, default=None, metavar="N",
                     help="run only the first N trials (after shuffling)")
     ap.add_argument("--dry-run", action="store_true",
-                    help="use the simulated CRRA agent instead of the API")
-    ap.add_argument("--sim-r", type=float, default=0.5, help="dry-run agent's true r")
+                    help="use a simulated agent instead of the API")
+    ap.add_argument("--sim-r", type=float, default=0.5, help="phase-1 dry-run agent's true r")
     ap.add_argument("--sim-mu", type=float, default=0.15, help="dry-run agent's true mu")
+    ap.add_argument("--sim-lam", type=float, default=2.0, help="phase-2 dry-run agent's true lambda")
+    ap.add_argument("--sim-phi", type=float, default=1.0, help="phase-2 dry-run reference tracking")
     ap.add_argument("--out", default=None, help="output CSV path")
     ap.add_argument("--redo", default=None, metavar="CSV",
                     help="re-run only the discarded trials from an existing CSV "
@@ -204,29 +250,43 @@ def main() -> None:
 
     load_dotenv()
     gambles = generate_gambles(n=args.n_gambles, seed=args.seed)
-    trials = build_trials(gambles, reps=args.reps, seed=args.seed)
+
+    if args.phase == 2:
+        from design_phase2 import build_phase2_trials, trial_row as row_fn
+        reps = args.reps if args.reps is not None else 2
+        trials = build_phase2_trials(gambles, reps=reps, seed=args.seed)
+        tag = "phase2"
+    else:
+        from design import trial_row as row_fn
+        reps = args.reps if args.reps is not None else 3
+        trials = build_trials(gambles, reps=reps, seed=args.seed)
+        tag = "phase1"
+
     if args.redo:
         import pandas as pd
         prev = pd.read_csv(args.redo)
         done_ok = set(prev.loc[prev["discarded"] == 0, "trial_id"])
         trials = [t for t in trials if t.trial_id not in done_ok]
-        args.out = args.redo  # append repaired rows to the same dataset
+        args.out = args.redo
         print(f"Redo mode: {len(trials)} trials still need a valid response.")
     if args.pilot:
         trials = trials[:args.pilot]
 
     if args.dry_run:
-        agent = SimulatedCRRAAgent(r=args.sim_r, mu=args.sim_mu, seed=args.seed)
-        default_out = DATA_DIR / "phase1_dryrun.csv"
+        if args.phase == 2:
+            agent = SimulatedReferenceAgent(lam=args.sim_lam, phi=args.sim_phi, seed=args.seed)
+        else:
+            agent = SimulatedCRRAAgent(r=args.sim_r, mu=args.sim_mu, seed=args.seed)
+        default_out = DATA_DIR / f"{tag}_dryrun.csv"
     else:
         if not os.environ.get("ANTHROPIC_API_KEY"):
             sys.exit("ANTHROPIC_API_KEY is not set. Export it, or use --dry-run.")
         agent = ClaudeAgent(model=args.model, temperature=args.temperature)
-        default_out = DATA_DIR / f"phase1_{args.model.replace('/', '_')}.csv"
+        default_out = DATA_DIR / f"{tag}_{args.model.replace('/', '_')}.csv"
 
     out_path = Path(args.out) if args.out else default_out
-    print(f"Agent: {agent.model} | trials: {len(trials)} | out: {out_path}\n")
-    run(trials, agent, seed=args.seed, out_path=out_path,
+    print(f"Phase {args.phase} | agent: {agent.model} | trials: {len(trials)} | out: {out_path}\n")
+    run(trials, agent, seed=args.seed, out_path=out_path, row_fn=row_fn,
         sleep_s=0.0 if args.dry_run else 0.05)
 
 
