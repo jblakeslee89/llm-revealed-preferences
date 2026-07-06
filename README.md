@@ -53,9 +53,12 @@ python src/harness.py --reps 3
 - [x] Phase 1 live run: 1,200 choices, claude-haiku-4-5-20251001
 - [x] Extended estimator (`analysis/estimate_cpt.py`): Prelec weighting + position nuisance
 - [x] Phase 2 harness + estimator built and validated on simulated agent
-      (recovers lambda=1.89 vs true 2.0; frame-invariance test fires correctly)
-- [ ] Phase 2 live run on Claude
-- [ ] Phase 3: base-vs-instruct logprob elicitation on open models
+- [x] Phase 2 live run on Claude (frame invariance violated; lambda=3.23)
+- [x] Phase 2 writeup
+- [x] Phase 3 build: logprob agent, fractional-MLE attribution estimator,
+      Colab elicitation script; validated on simulated data (exact recovery)
+- [ ] Phase 3 live: run open base/instruct pairs on Colab (see `colab/README.md`)
+- [ ] Phase 3 writeup
 
 ## Phase 2 (framing) usage
 
