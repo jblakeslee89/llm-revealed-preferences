@@ -265,6 +265,61 @@ selective attention, not an inability to do arithmetic.
 \end{synthcard}
 
 % ============================================================
+%  SAFETY RELEVANCE
+% ============================================================
+\section{Safety Relevance: Risk Attitude as a Control Lever}
+
+A recent proposal from Forethought, ``Risk-Averse AIs'' (Newberry and Ord,
+2025),\footnote{\url{https://www.forethought.org/research/risk-averse-ais}} argues that frontier
+developers should deliberately train advanced models to be risk-averse in resources, so that a
+misaligned model prefers a modest guaranteed payment over a low-probability attempt at takeover. The
+scheme is an expected-utility calculation the model is assumed to perform: it compares the utility of a
+sure payment against the probability-weighted utility of rebellion, and a concave utility
+(constant-absolute-risk-aversion, CARA) makes cooperation cheap to buy. This makes a model's risk
+attitude a proposed safety property, an incentive lever a developer could pull.
+
+Such a scheme can only be as reliable as a developer's ability to measure and trust that risk attitude.
+The proposal itself calls for exactly this measurement, suggesting a benchmark that gauges a model's
+risk aversion in resources, yet it leaves the measurement as future work and rests its empirical case on
+a single small fine-tuning result. My Phase 1 and Phase 2 are that measurement, done with
+contamination-safe instruments, counterbalancing, and structural estimation. Two of my findings bear
+directly on the proposal's load-bearing assumptions, and both are cautions.
+
+\begin{enumerate}[leftmargin=1.4em, itemsep=2pt, topsep=2pt]
+\item \textbf{Frame dependence is an attack surface.} The scheme assumes a stable risk attitude. Phase 2
+shows the model's revealed risk attitude swings about fourfold based only on whether the downside is
+worded as a loss. A misaligned model, or an adversary shaping how a situation is described to it, can
+reframe the choice to stay obedient as a loss to be avoided, and a loss frame is precisely where the
+measured risk attitude moves most. The proposal treats CARA as reflectively stable because it satisfies
+the von Neumann-Morgenstern axioms. Yet framing-induced preference reversals are a classic violation of
+those axioms, and Phase 2 measured one.
+
+\item \textbf{The model is not running the calculation the scheme assumes.} The proposal models the AI
+as an expected-utility maximizer weighing a low-probability, very-high-payoff takeover against a sure
+small payment. Phase 1 shows this model prices the probability figure and nearly ignores the payoff
+size, with an extreme distortion that underweights low probabilities. That could cut either way for
+safety. It might make the model discount a low-probability takeover even more than the intended curve
+predicts, or mean the clean utility curve does not describe how the model processes the gamble. Either
+way, the safety scheme inherits whatever distortions the real decision process carries, and my
+measurements say that process is driven by surface features more than by an integrated calculation over
+outcomes.
+\end{enumerate}
+
+\begin{resultcard}[Why this matters]
+Incentive-based control treats a model's risk attitude as a stable safety property. My measurements show
+it is frame-dependent and surface-driven, which is the failure mode such schemes do not yet account for.
+\end{resultcard}
+
+Phase 3 speaks to the proposal's other question: how to train a risk attitude. Phase 3 tests whether
+existing final-stage training already moves risk attitudes. If it does, that supports the claim that
+risk attitudes are trainable. But if what training instills is the frame-dependent, non-integrated
+attitude measured here, that is evidence the risk aversion current methods produce is not the coherent,
+stable kind the safety scheme requires. These measurements are on a single small model under
+unincentivized, hypothetical choices, so they bound only loosely what a frontier model under real
+incentives would do. Still, the direction is a warning, and it motivates scaling this measurement to
+frontier models before a risk attitude is trusted as a safeguard.
+
+% ============================================================
 %  PHASE 3
 % ============================================================
 \section{Phase 3: Where Do the Biases Come From?}
