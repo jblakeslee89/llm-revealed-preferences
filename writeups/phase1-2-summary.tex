@@ -1,0 +1,300 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  Packages
+% ============================================================
+\usepackage[margin=0.85in,top=0.75in,bottom=0.85in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[skip=4pt]{caption}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{ragged2e}
+\usepackage[hidelinks]{hyperref}
+
+% ============================================================
+%  Color tokens
+% ============================================================
+\definecolor{moss}{HTML}{758C58}
+\definecolor{mossdk}{HTML}{55663F}   % darker moss for headings
+\definecolor{ink}{HTML}{1C1C1E}      % near-black body text
+\definecolor{rulegray}{HTML}{D8D8D2} % light gray hairlines
+\definecolor{mutegray}{HTML}{6E6E73} % captions / secondary text
+\definecolor{mossbg}{HTML}{F2F4EE}   % faint moss wash (moss!5-ish)
+
+\color{ink}
+
+% ============================================================
+%  Typographic setup
+% ============================================================
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.38em}
+\setlist{itemsep=2pt, topsep=3pt, parsep=0pt}
+
+% Section headings: moss, bold, with a hairline underneath
+\titleformat{\section}
+  {\Large\bfseries\color{mossdk}}
+  {}{0pt}
+  {}
+  [{\vspace{2pt}\color{rulegray}\titlerule[0.8pt]}]
+\titlespacing*{\section}{0pt}{11pt}{6pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{ink}}
+  {}{0pt}{}
+\titlespacing*{\subsection}{0pt}{9pt}{2pt}
+
+% Kill default section numbers globally (we head manually)
+\setcounter{secnumdepth}{0}
+
+% ============================================================
+%  Hero-stat callout: big moss number + small caption
+%  #1 = big number   #2 = caption
+% ============================================================
+\newcommand{\herostat}[2]{%
+  \begin{minipage}[t]{0.315\linewidth}%
+    \centering
+    {\fontsize{30}{32}\selectfont\bfseries\color{moss} #1}\\[5pt]
+    {\footnotesize\color{mutegray}\setlength{\baselineskip}{11pt} #2\par}%
+  \end{minipage}%
+}
+
+% Row wrapper for three hero stats, framed top and bottom by hairlines
+\newenvironment{herorow}
+  {\par\vspace{4pt}\noindent\color{rulegray}\rule{\linewidth}{0.8pt}\par
+   \vspace{9pt}\noindent}
+  {\par\vspace{9pt}\noindent\color{rulegray}\rule{\linewidth}{0.8pt}\par\vspace{4pt}}
+
+% ============================================================
+%  Result "card": moss frame, faint moss fill, hard corners
+% ============================================================
+\newtcolorbox{resultcard}[1][]{
+  colframe=moss,
+  colback=mossbg,
+  boxrule=0.5pt,
+  sharp corners,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  fonttitle=\bfseries\color{mossdk},
+  coltitle=mossdk,
+  title={#1},
+  before skip=8pt, after skip=8pt,
+}
+
+% Synthesis card: inverted emphasis, moss title bar
+\newtcolorbox{synthcard}[1][]{
+  enhanced,
+  colframe=mossdk,
+  colback=white,
+  boxrule=0.9pt,
+  sharp corners,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={#1},
+  fonttitle=\bfseries\large\color{white},
+  coltitle=white,
+  colbacktitle=mossdk,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={sharp corners, boxrule=0pt},
+  before skip=10pt, after skip=10pt,
+}
+
+% Small moss tag label used inline
+\newcommand{\mosstag}[1]{{\footnotesize\bfseries\color{moss}\MakeUppercase{#1}}}
+
+\begin{document}
+
+% ============================================================
+%  Title block
+% ============================================================
+\begin{flushleft}
+{\color{rulegray}\rule{\linewidth}{1.2pt}}\\[10pt]
+{\LARGE\bfseries\color{ink} Reading the Prompt, Not the Economics}\\[6pt]
+{\large\color{mossdk} Structural Estimation of an AI Model's Risk Preferences}\\[3pt]
+{\normalsize\color{mutegray} A progress report on Phases 1 and 2, with the Phase 3 plan}\\[11pt]
+{\color{rulegray}\rule{\linewidth}{0.8pt}}\\[7pt]
+{\small\color{ink}\textbf{J. Blakeslee}, Pardee RAND Graduate School \hfill
+ AI Sprint Practicum, Course 1012 \quad$\cdot$\quad July 2026}\\[3pt]
+{\color{rulegray}\rule{\linewidth}{1.2pt}}
+\end{flushleft}
+
+\vspace{6pt}
+
+% One-line thesis, featured
+\begin{tcolorbox}[
+  colframe=moss, colback=mossbg, boxrule=0.5pt, sharp corners,
+  left=12pt, right=12pt, top=9pt, bottom=9pt, before skip=2pt, after skip=10pt]
+{\large\itshape\color{ink} Across two phases, Claude's risky choices track the surface features
+of a prompt, the probability figure and the word ``loss,'' more than the underlying economics.}
+\end{tcolorbox}
+
+This project treats a large language model as an economic agent and recovers its preference
+primitives from its choices. Two phases are complete. Each elicits roughly a thousand to
+two-and-a-half thousand controlled binary lottery choices from a pinned model snapshot, then fits a
+structural discrete-choice model to the result. Phase 1 asks how the model weighs risk. Phase 2 asks
+whether the wording of a choice, holding the money fixed, moves the answer. Both return sharp,
+quantified, human-comparable results. Phase 3, planned below, asks where the biases come from.
+
+% ============================================================
+%  PHASE 1
+% ============================================================
+\section{Phase 1: How Claude Weighs Risk}
+
+{\small\color{mutegray} \texttt{claude-haiku-4-5-20251001} \;$\cdot$\; 1{,}200 controlled choices
+\;$\cdot$\; forced binary choice between a sure amount and a two-outcome gamble}
+
+\begin{herorow}
+\herostat{2.69}{probability-weighting curve; humans about 0.7 and bent the opposite way}%
+\hfill
+\herostat{0.59}{risk-aversion once weighting is controlled; squarely human-plausible}%
+\hfill
+\herostat{22.8 vs.\ 5.0}{how strongly the win-probability drives choice versus the payoff size}
+\end{herorow}
+
+A first, simple risk model fit badly. A textbook constant-relative-risk-aversion (CRRA) expected
+utility model implied a risk-aversion of 0.19 and could not reproduce the choices. The diagnostic
+showed why. As the win probability rose from low to high, gamble-taking climbed from 8\% to 86\%,
+while the gambles' actual expected value stayed roughly flat. Claude was pricing the probability and
+nearly ignoring the dollar amounts.
+
+An extended model, adding a probability-weighting curve and a position term, fit far better: a
+likelihood-ratio chi-square of 617 on 2 degrees of freedom. Its probability-weighting curve is an
+extreme S-shape at 2.69, the opposite of the human inverse-S. Claude underweights long shots instead
+of overweighting them, so it will refuse a long shot at almost any prize. Once that weighting is
+controlled, its risk-aversion of 0.59 is ordinary and human-plausible; the earlier 0.19 was an
+artifact of the wrong model. Choice noise roughly halved, from 0.26 to 0.10, once the model was right.
+
+\begin{resultcard}[Key finding]
+Claude prices the probability of winning and nearly ignores the size of the prize. Its
+probability-weighting curve is an extreme S-shape pointed opposite to the human one: it underweights
+long shots rather than overweighting them, and will pass on a high-value long shot at almost any
+prize.
+\end{resultcard}
+
+\begin{table}[h]
+\centering
+\small
+\caption*{\small\textbf{M2 parameter estimates.} CRRA value, Prelec probability weighting, and a
+position term. $n = 1{,}200$.}
+\begin{tabular}{@{}l l l@{}}
+\toprule
+\textbf{Parameter} & \textbf{Estimate (se)} & \textbf{Interpretation} \\
+\midrule
+$r$ (curvature)       & 0.592 (0.028) & Risk aversion, human-plausible range \\
+$\gamma$ (Prelec)     & 2.693 (0.166) & Extreme S-shape; long shots underweighted \\
+$\mu$ (Fechner noise) & 0.104 (0.008) & Choice noise, less than half of the baseline \\
+$\delta$ (position)   & 1.257 (0.160) & About $3.5\times$ odds pull toward the option listed second \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+%  PHASE 2
+% ============================================================
+\section{Phase 2: Framing and the Fear of Losses}
+
+{\small\color{mutegray} \texttt{claude-haiku-4-5-20251001} \;$\cdot$\; 2{,}480 controlled choices
+\;$\cdot$\; one terminal-wealth lottery, shown in three logically identical frames}
+
+\begin{herorow}
+\herostat{40\% $\rightarrow$ 10\%}{gamble-taking on the same lottery when the downside is worded as a
+loss instead of getting nothing}%
+\hfill
+\herostat{3.23}{estimated fear-of-losses, above the classic human figure of about 2.25}%
+\hfill
+\herostat{100\%}{a built-in control, where one option was plainly larger, answered correctly every time}
+\end{herorow}
+
+The same terminal-wealth lottery was shown three ways that a rational agent must treat identically: as
+pure gains, in neutral wording, and as a mix where the downside is called a loss. Gamble-taking was
+40\% in the gain wording, 30\% neutral, and 10\% when the downside was a loss, a gap of about 0.30
+with a p-value on the order of $10^{-47}$. Holding each individual lottery fixed, 88\% of them show the
+effect, so it is not composition. This violates frame invariance: identical money, different words,
+different choice.
+
+The structural estimate puts the fear-of-losses at 3.23, above the canonical human figure of about
+2.25. The dominant-choice control, a certain amount versus a strictly larger certain amount, was
+answered correctly 100\% of the time. Claude reads dollar magnitudes perfectly well when no
+probability is involved; the trouble is specific to choices under risk, and here, specific to the word
+``loss.''
+
+\begin{resultcard}[Key finding]
+Two lotteries with byte-for-byte identical terminal wealth draw 40\% versus 10\% gamble-taking based
+only on whether the downside is called a loss. The estimated loss-aversion coefficient, 3.23, exceeds
+the canonical human 2.25. Wording moves the choice; the money does not change.
+\end{resultcard}
+
+\begin{table}[h]
+\centering
+\small
+\caption*{\small\textbf{Structural estimates under the stated-reference assumption} ($\phi = 1$,
+$n = 2{,}480$).}
+\begin{tabular}{@{}l l l@{}}
+\toprule
+\textbf{Parameter} & \textbf{Estimate (se)} & \textbf{Interpretation} \\
+\midrule
+$\lambda$ (loss aversion) & 3.234 (0.171)  & Losses loom about $3.2\times$ larger than equal gains \\
+$\alpha$ (curvature)      & 0.503 (0.024)  & Diminishing sensitivity, human-plausible \\
+$\gamma$ (Prelec)         & 1.516 (0.059)  & S-shape; long shots underweighted \\
+$\mu$ (Fechner noise)     & 0.131 (0.009)  & Choice noise \\
+$\delta$ (position)       & $-0.363$ (0.104) & Pull away from the gamble when listed second \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{An honest identification limit}
+The data cannot fully separate ``the reference point moved'' from ``an extreme fear of losses.'' The
+mixed-frame suppression admits two nearly observationally equivalent readings, so the clean headline is
+the assumption-free frame gap, and the fear-of-losses figure of 3.23 is reported under the standard
+stated-reference assumption. One further caution: the position term flipped sign between phases, from
+$+1.26$ in Phase 1 to $-0.36$ here, so position bias is a design artifact rather than a stable trait
+of the model.
+
+% ============================================================
+%  SYNTHESIS
+% ============================================================
+\section{Synthesis: Two Phases, One Thread}
+
+\begin{synthcard}[The emerging portrait]
+Claude's choices under risk are governed by salient surface features of the prompt, the probability
+number in Phase 1 and the loss wording in Phase 2, more than by an integrated computation over final
+wealth. It reads magnitudes fine when nothing distracts it, as the 100\% control shows. So this is
+selective attention, not an inability to do arithmetic.
+\end{synthcard}
+
+% ============================================================
+%  PHASE 3
+% ============================================================
+\section{Phase 3: Where Do the Biases Come From?}
+
+This is the payoff the whole project was built toward. Phases 1 and 2 measured the biases. Phase 3
+asks the attribution question: are these distortions written into the model during pretraining, or
+installed by the final alignment step?
+
+\textbf{Method.} Run the identical Phase 1 and Phase 2 instruments on matched pairs of open models,
+one \emph{before} its final training step and one \emph{after}, that is, base versus instruct. Read
+each choice probability directly from the model's own token probabilities rather than from sampled
+text. If a bias appears only in the after-training model, the training instilled it. A format-control
+arm, running the after-training model in both prompt formats, rules out a wording confound.
+
+\textbf{Models.} Qwen2.5-7B goes first, then Llama-3.1-8B, with OLMo-2 as a stretch. OLMo-2 publishes
+its staged checkpoints, base, then supervised, then preference-tuned, which would let the bias be
+pinned to a \emph{specific} training stage.
+
+\begin{resultcard}[The question Phase 3 answers]
+Is a model's economic character learned in pretraining, or written in by the alignment step at the
+end?
+\end{resultcard}
+
+\textbf{Status and practicalities.} The pipeline is built and already validated on simulated data,
+where it recovers known values near-perfectly. It runs on a free Colab GPU, because no hosted service
+serves the needed before-training models with token probabilities.
+
+\vspace{6pt}
+{\color{rulegray}\rule{\linewidth}{0.8pt}}\\[3pt]
+{\footnotesize\color{mutegray} Estimates are properties of the pinned snapshots under this
+unincentivized forced-choice protocol; they are not claimed as universal traits of language models.}
+
+\end{document}
