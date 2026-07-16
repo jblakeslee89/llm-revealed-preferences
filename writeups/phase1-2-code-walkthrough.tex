@@ -1,0 +1,1277 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  Packages
+% ============================================================
+\usepackage[margin=1in,top=0.9in,bottom=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[skip=5pt]{caption}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{ragged2e}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+
+% ============================================================
+%  Color tokens (shared with the teaching guide)
+% ============================================================
+\definecolor{moss}{HTML}{758C58}
+\definecolor{mossdk}{HTML}{55663F}   % darker moss for headings
+\definecolor{ink}{HTML}{1C1C1E}      % near-black body text
+\definecolor{rulegray}{HTML}{D8D8D2} % light gray hairlines
+\definecolor{mutegray}{HTML}{6E6E73} % captions / secondary text
+\definecolor{mossbg}{HTML}{F2F4EE}   % faint moss wash
+\definecolor{graybg}{HTML}{F4F4F2}   % light gray for code / summaries
+\definecolor{graydk}{HTML}{4A4A4C}   % gray frame
+\definecolor{strgreen}{HTML}{5A6E3D} % string literals in code
+
+\color{ink}
+
+% ============================================================
+%  Typographic setup
+% ============================================================
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlist{itemsep=3pt, topsep=3pt, parsep=0pt}
+\linespread{1.06}
+
+% Section headings: moss, bold, hairline underneath
+\titleformat{\section}
+  {\Large\bfseries\color{mossdk}}
+  {\thesection.\ }{0.4em}
+  {}
+  [{\vspace{2pt}\color{rulegray}\titlerule[0.8pt]}]
+\titlespacing*{\section}{0pt}{16pt}{8pt}
+
+\titleformat{\subsection}
+  {\large\bfseries\color{ink}}
+  {\thesubsection\ }{0.4em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{3pt}
+
+\setcounter{secnumdepth}{2}
+
+% ============================================================
+%  Listings: a clean Python style
+% ============================================================
+\lstdefinestyle{py}{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize\color{ink},
+  keywordstyle=\color{mossdk}\bfseries,
+  commentstyle=\color{mutegray}\itshape,
+  stringstyle=\color{strgreen},
+  numberstyle=\tiny\color{mutegray},
+  numbers=left,
+  numbersep=8pt,
+  breaklines=true,
+  breakatwhitespace=false,
+  breakindent=14pt,
+  postbreak=\mbox{\textcolor{moss}{$\hookrightarrow$}\space},
+  showstringspaces=false,
+  keepspaces=true,
+  columns=fullflexible,
+  tabsize=4,
+  frame=single,
+  framesep=6pt,
+  rulecolor=\color{rulegray},
+  backgroundcolor=\color{graybg},
+  xleftmargin=16pt,
+  xrightmargin=6pt,
+  aboveskip=8pt,
+  belowskip=6pt,
+  literate={-}{-}1,
+}
+\lstset{style=py}
+
+% A shell/terminal style (no line numbers, no keyword coloring)
+\lstdefinestyle{sh}{
+  basicstyle=\ttfamily\footnotesize\color{ink},
+  keywordstyle=\color{ink},
+  commentstyle=\color{mossdk}\itshape,
+  numbers=none,
+  breaklines=true,
+  breakindent=14pt,
+  postbreak=\mbox{\textcolor{moss}{$\hookrightarrow$}\space},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single,
+  framesep=6pt,
+  rulecolor=\color{rulegray},
+  backgroundcolor=\color{graybg},
+  xleftmargin=6pt,
+  xrightmargin=6pt,
+  morecomment=[l]{\#},
+}
+
+% ============================================================
+%  Box 1: Definition box (moss frame, faint moss fill)
+% ============================================================
+\newtcolorbox{defbox}[1][]{
+  colframe=moss,
+  colback=mossbg,
+  boxrule=0.8pt,
+  sharp corners,
+  left=11pt, right=11pt, top=9pt, bottom=9pt,
+  fonttitle=\bfseries\color{mossdk},
+  coltitle=mossdk,
+  title={\footnotesize\MakeUppercase{Definition}\;\textbullet\;#1},
+  before skip=9pt, after skip=9pt,
+  breakable,
+}
+
+% ============================================================
+%  Box 2: "In plain words" summary (light gray)
+% ============================================================
+\newtcolorbox{plainbox}{
+  colframe=graydk,
+  colback=graybg,
+  boxrule=0.6pt,
+  sharp corners,
+  left=11pt, right=11pt, top=9pt, bottom=9pt,
+  fonttitle=\bfseries\color{graydk},
+  coltitle=graydk,
+  title={\footnotesize\MakeUppercase{In plain words}},
+  before skip=9pt, after skip=11pt,
+  breakable,
+}
+
+% ============================================================
+%  Box 3: aside / caveat (moss title bar, white body)
+% ============================================================
+\newtcolorbox{asidebox}[1][]{
+  enhanced,
+  colframe=mossdk,
+  colback=white,
+  boxrule=0.9pt,
+  sharp corners,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={#1},
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=mossdk,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={sharp corners, boxrule=0pt},
+  before skip=11pt, after skip=11pt,
+  breakable,
+}
+
+\newcommand{\term}[1]{\textbf{\color{mossdk}#1}}
+\newcommand{\file}[1]{\textbf{\ttfamily #1}}
+
+\begin{document}
+
+% ============================================================
+%  Title block
+% ============================================================
+\begin{flushleft}
+{\color{rulegray}\rule{\linewidth}{1.2pt}}\\[10pt]
+{\LARGE\bfseries\color{ink} Under the Hood: The Code That Runs the Experiment}\\[5pt]
+{\Large\color{ink} A Line-by-Line Walkthrough of the Python Behind Phases 1 and 2}\\[8pt]
+{\large\color{mossdk} How raw code becomes a money question, an answer, and a fitted number}\\[11pt]
+{\color{rulegray}\rule{\linewidth}{0.8pt}}\\[7pt]
+{\small\color{ink}\textbf{J. Blakeslee}, Pardee RAND Graduate School \hfill
+ AI Sprint Practicum \quad$\cdot$\quad July 2026}\\[3pt]
+{\color{rulegray}\rule{\linewidth}{1.2pt}}
+\end{flushleft}
+
+\vspace{4pt}
+
+\begin{tcolorbox}[
+  colframe=moss, colback=mossbg, boxrule=0.5pt, sharp corners,
+  left=12pt, right=12pt, top=9pt, bottom=9pt, before skip=2pt, after skip=12pt]
+{\itshape\color{ink} Who this is for: a reader who can follow a little Python (a loop, a function, a
+dictionary) but who has never seen this project. Every code block below is the real code from the
+repository, copied unchanged. I explain each block in plain words right underneath, and I box every
+piece of coding or statistics jargon the first time it appears. If you only remember one thing: the
+question the model reads is assembled by ordinary Python string formatting, and I can point at the
+exact line where the wording lives.}
+\end{tcolorbox}
+
+% ============================================================
+\section{Orientation: One Pipeline, Three Stages}
+
+The whole project is a pipeline that turns a research question into a number. It runs in three stages,
+and each stage lives in its own set of files. Keep this map in your head; everything below is a
+zoom-in on one of these three boxes.
+
+\textbf{Stage 1, design the questions.} I write code that manufactures hundreds of small money
+choices and turns each one into the exact block of text the model will read. This lives in
+\file{src/design.py} (Phase 1) and \file{src/design\_phase2.py} (Phase 2, which adds the gain/loss
+wording). No AI is involved yet; this stage is pure bookkeeping that produces a list of questions.
+
+\textbf{Stage 2, ask the model and record answers.} I write code that takes that list of questions,
+sends each one to the AI model, forces a clean ``A'' or ``B'' back, and writes one row of a
+spreadsheet per answer. This lives in \file{src/harness.py}. The output is a CSV file: one row per
+choice, fully labeled.
+
+\textbf{Stage 3, fit the math to the answers.} I write code that reads the CSV and searches for the
+handful of numbers (risk aversion, probability weighting, loss aversion) that best explain the
+pattern of choices. This lives in \file{analysis/estimate\_crra.py} and its richer cousin
+\file{analysis/estimate\_cpt.py}. The output is a small table of estimates.
+
+\begin{plainbox}
+Design (\file{design.py}, \file{design\_phase2.py}) makes the questions. The harness
+(\file{harness.py}) asks the model and saves the answers. The estimators
+(\file{estimate\_crra.py}, \file{estimate\_cpt.py}) read the answers and fit the economics. Three
+stages, three folders, one direction of flow: questions $\rightarrow$ answers $\rightarrow$ numbers.
+\end{plainbox}
+
+% ============================================================
+\section{How I Run It}
+
+Before dissecting the code, here is how it is actually launched from a terminal. These commands come
+straight from the project \file{README.md}.
+
+\begin{lstlisting}[style=sh]
+# validate the whole pipeline against a simulated agent (no API key needed)
+python src/harness.py --dry-run --reps 3
+python analysis/estimate_crra.py data/phase1_dryrun.csv
+# -> should recover r ~= 0.5, mu ~= 0.15
+
+# live pilot against Claude (needs ANTHROPIC_API_KEY exported)
+python src/harness.py --pilot 40
+python analysis/estimate_crra.py data/phase1_claude-haiku-4-5-20251001.csv
+
+# full Phase 1 run (~1,200 calls at default settings)
+python src/harness.py --reps 3
+\end{lstlisting}
+
+Read the block top to bottom. The first pair of commands is a rehearsal that costs nothing. The
+second pair is a small paid test, forty questions, just to confirm the live wiring works. The last
+command is the real run, roughly 1{,}200 questions. Notice that every ``run'' command produces a CSV,
+and every ``estimate'' command reads a CSV. That is the pipeline of Section 1, expressed as four
+shell commands.
+
+\begin{defbox}[Dry run]
+A \term{dry run} is a full rehearsal of the pipeline that never touches the paid AI. Instead of the
+real model, the code substitutes a fake decider whose answers I already understand (see
+\file{SimulatedCRRAAgent} in Section 5). Because I know exactly how the fake decider thinks, I can run
+the entire loop, design the questions, collect answers, fit the model, and then check that the
+estimator recovers the fake decider's known settings. If it does, the plumbing is sound and I can
+safely spend money on the real model. A dry run needs no \term{API key} and costs nothing.
+\end{defbox}
+
+Why rehearse against a fake before paying for the real thing? Two reasons. First, bugs are cheaper to
+find here: if the estimator cannot even recover an answer I built by hand, the problem is my code, not
+the AI. Second, it is a correctness proof for the estimator. The comment \verb|# -> should recover r ~= 0.5, mu ~= 0.15|
+is a promise: I built the fake decider with risk aversion $r = 0.5$ and noise $\mu = 0.15$, so a
+correct estimator must read those same numbers back out of the simulated choices. This is the
+software equivalent of calibrating a scale with a known weight before weighing something unknown.
+
+\subsection{What the resulting CSV looks like}
+
+Each run appends rows to a CSV (comma-separated values) file, one row per choice. A row carries every
+design fact about the question plus the model's answer and some run metadata. Schematically, the key
+columns are:
+
+\begin{lstlisting}[style=sh]
+trial_id, gamble_id, sure, hi, p, ev_ratio, template_id, safe_first, rep,
+response_mode, model, temperature, seed, letter, chose_gamble, raw,
+discarded, latency_s, ts_utc
+\end{lstlisting}
+
+The load-bearing columns for the analysis are \file{sure} (the guaranteed dollar amount), \file{hi}
+and \file{p} (the gamble's prize and its probability), \file{safe\_first} (which option was listed
+first, for the position check), \file{template\_id} (which of the five wordings was used), and above
+all \file{chose\_gamble}, a 1 if the model took the gamble and a 0 if it took the sure thing. Stage 3
+reads \file{sure}, \file{hi}, \file{p}, and \file{chose\_gamble} and asks: what risk attitude would
+make this pattern of 1s and 0s least surprising?
+
+% ============================================================
+\section{Stage 1: Designing the Questions (\texttt{design.py})}
+
+This file never talks to an AI. Its only job is to manufacture questions. I walk through it in the
+order the data flows: first the object that holds one gamble, then the function that mass-produces
+gambles, then the templates that hold the wording, and finally the function that turns a gamble plus
+a template into the exact text the model sees.
+
+\subsection{The \texttt{Gamble}: one object that holds one choice}
+
+\begin{lstlisting}[style=py,firstnumber=23]
+@dataclass(frozen=True)
+class Gamble:
+    """One binary choice: a sure amount vs. a two-outcome gamble (hi with prob p, else 0)."""
+    gamble_id: int
+    sure: int      # sure payoff, dollars
+    hi: int        # gamble's high payoff, dollars
+    p: float       # probability of the high payoff
+
+    @property
+    def ev_gamble(self) -> float:
+        return self.p * self.hi
+
+    @property
+    def ev_ratio(self) -> float:
+        """EV(gamble) / sure. >1 means the gamble is actuarially favorable."""
+        return self.ev_gamble / self.sure
+\end{lstlisting}
+
+A \file{Gamble} bundles four facts: an id number, the sure amount, the gamble's high payoff, and the
+probability of that payoff. The two \verb|@property| methods are small computed conveniences.
+\file{ev\_gamble} is the expected value of the gamble, $p \times \text{hi}$: the average dollars it
+pays over many plays. \file{ev\_ratio} divides that by the sure amount, giving a single number that
+says whether the gamble is a good deal on paper. Above 1 means the gamble's average payout beats the
+sure thing.
+
+\begin{defbox}[Dataclass]
+A \term{dataclass} is a lightweight Python container for a fixed set of named fields. Writing
+\verb|@dataclass| above a class tells Python to generate the boilerplate for me: a constructor, a
+readable printout, and equality checks, all for free. The line \verb|sure: int| declares a field
+named \file{sure} that holds a whole number. \verb|frozen=True| makes each \file{Gamble} immutable:
+once created it cannot be changed, which prevents accidental edits from corrupting a question halfway
+through a run. Think of a dataclass as a labeled box with a fixed number of slots.
+\end{defbox}
+
+\subsection{Manufacturing gambles, and why the numbers are odd}
+
+Now the factory. Two functions do the work: a helper that draws a non-round number, and the generator
+that builds a whole grid of gambles.
+
+\begin{lstlisting}[style=py,firstnumber=41]
+def _non_round(rng: random.Random, lo: int, hi: int) -> int:
+    """Draw an integer that is not a multiple of 5 (contamination safety:
+    avoids the round numbers canonical instruments use)."""
+    while True:
+        x = rng.randint(lo, hi)
+        if x % 5 != 0:
+            return x
+
+
+def generate_gambles(n: int = 40, seed: int = 42) -> list[Gamble]:
+    """Procedurally generate a grid of gambles spanning EV ratios ~0.75-1.7.
+
+    The spread of EV ratios is what identifies risk aversion: a risk-neutral
+    agent switches to the gamble as soon as ev_ratio > 1; a risk-averse agent
+    demands a premium. Probabilities are jittered to two decimals so no row
+    matches a textbook menu.
+    """
+    rng = random.Random(seed)
+    gambles = []
+    for i in range(n):
+        sure = _non_round(rng, 23, 187)
+        # jittered, non-canonical probability in [0.19, 0.83]
+        p = round(rng.uniform(0.19, 0.83), 2)
+        if p in (0.25, 0.50, 0.75):  # avoid the textbook values exactly
+            p += 0.01
+        # target EV ratio spread; log-uniform so both sides of 1.0 are covered
+        ratio = 0.75 * (1.7 / 0.75) ** rng.random()
+        hi = max(int(round(sure * ratio / p)), sure + 1)
+        if hi % 5 == 0:
+            hi += 1
+        gambles.append(Gamble(gamble_id=i, sure=sure, hi=hi, p=p))
+    return gambles
+\end{lstlisting}
+
+This is \term{procedural generation}: instead of typing out forty questions by hand, I write a recipe
+and let the computer roll them. The loop runs \file{n} times (forty by default). Each pass draws a
+sure amount between \$23 and \$187, draws a probability between $0.19$ and $0.83$, picks a target
+\file{ev\_ratio} somewhere in the range $0.75$ to $1.7$, and then back-solves for the prize \file{hi}
+that hits that ratio. The line \verb|ratio = 0.75 * (1.7 / 0.75) ** rng.random()| spreads the ratios
+so that some gambles are bad deals and some are good deals, which is exactly the spread needed to see
+where the model draws its line.
+
+The odd-number trick is the interesting part, and it is a safety measure. Textbook risk experiments
+use round, memorable numbers: a 50 percent chance of \$100. If I reused those, the model might recite
+a memorized textbook answer instead of actually deciding. So \file{\_non\_round} refuses any multiple
+of 5, the code bumps a probability off the canonical $0.25/0.50/0.75$ values, and \file{hi} is
+nudged off any multiple of 5. The result is deliberately awkward amounts like \$58 and \$116 that no
+textbook would print, which forces a genuine computation rather than a recital.
+
+\begin{defbox}[Seed]
+A \term{seed} is a starting number for the random-number generator. Computers do not produce true
+randomness; they produce a fixed, reproducible sequence that only looks random, and the seed picks
+which sequence. \verb|random.Random(seed)| creates a generator pinned to that sequence, so
+\verb|generate_gambles(40, seed=42)| draws the exact same forty gambles every single time anyone runs
+it, on any machine. That is what makes the experiment reproducible: a colleague who runs my code with
+seed 42 sees byte-for-byte the same questions I did.
+\end{defbox}
+
+\begin{plainbox}
+\file{generate\_gambles} rolls forty money choices from a recipe rather than typing them by hand. It
+spreads them across good and bad deals so the model's switching point is visible, and it forces every
+dollar amount and probability to be awkward and non-round so the model cannot parrot a memorized
+textbook answer. The \file{seed} makes the whole roll reproducible.
+\end{plainbox}
+
+\subsection{Where the wording lives: the \texttt{TEMPLATES} dictionary}
+
+Here is the single most important block in the whole design stage. This is where a gamble stops being
+numbers and becomes English. Everything the model reads is built from these five strings.
+
+\begin{lstlisting}[style=py,firstnumber=82]
+TEMPLATES: dict[int, str] = {
+    0: ("You must pick one of two payment options.\n"
+        "Option A: {first}\n"
+        "Option B: {second}\n"
+        "Pick the option you prefer."),
+    1: ("Two offers are on the table and you can accept exactly one.\n"
+        "Offer A: {first}\n"
+        "Offer B: {second}\n"
+        "Which offer do you accept?"),
+    2: ("Consider the following pair of alternatives and select one.\n"
+        "Alternative A: {first}\n"
+        "Alternative B: {second}\n"
+        "Select the alternative you would rather have."),
+    3: ("You are entitled to one of two payouts.\n"
+        "Payout A: {first}\n"
+        "Payout B: {second}\n"
+        "Choose the payout you want."),
+    4: ("A counterparty gives you a one-time decision between two deals.\n"
+        "Deal A: {first}\n"
+        "Deal B: {second}\n"
+        "Decide which deal you take."),
+}
+\end{lstlisting}
+
+\begin{defbox}[Dictionary]
+A Python \term{dictionary} maps keys to values, like a lookup table. \verb|TEMPLATES| maps an integer
+key (0 through 4) to a string value (a wording). Later, \verb|TEMPLATES[self.template_id]| looks up
+one wording by its number. The declaration \verb|dict[int, str]| just says ``keys are integers,
+values are strings.''
+\end{defbox}
+
+\file{TEMPLATES} holds five semantically equivalent phrasings of the same underlying question. Read
+them: ``payment options,'' ``offers,'' ``alternatives,'' ``payouts,'' ``deals.'' The economics is
+identical in all five; only the register differs. This is a deliberate experimental control. If a
+result showed up under only one phrasing, it would be a quirk of that phrasing, not a real preference,
+so I log which template produced each choice and later let the analysis check that the result holds
+across all five.
+
+The two pieces in curly braces, \verb|{first}| and \verb|{second}|, are \term{placeholders}. They are
+empty slots that Python will fill in later with the actual descriptions of the two options. The
+template itself is agnostic about which option is the safe one and which is the gamble; it just knows
+there is a first option and a second option. Deciding what goes in each slot is the job of the next
+two functions.
+
+\subsection{Describing the two options}
+
+\begin{lstlisting}[style=py,firstnumber=106]
+def describe_safe(g: Gamble) -> str:
+    return f"receive ${g.sure} with certainty."
+
+
+def describe_risky(g: Gamble) -> str:
+    pct = round(g.p * 100)
+    return (f"receive ${g.hi} with {pct}% probability, "
+            f"and $0 with {100 - pct}% probability.")
+\end{lstlisting}
+
+These two small functions turn the numeric fields of a \file{Gamble} into English phrases. Given a
+gamble with \verb|sure=58|, \file{describe\_safe} returns the string \verb|receive $58 with certainty.|
+Given \verb|hi=116, p=0.66|, \file{describe\_risky} converts the probability to a percentage and
+returns:
+
+\begin{lstlisting}[style=sh]
+receive $116 with 66% probability, and $0 with 34% probability.
+\end{lstlisting}
+
+The \verb|f"..."| syntax is an \term{f-string}: Python substitutes the value of each braced expression
+into the text. Note the literal \verb|$| and \verb|%| characters here; they are just ordinary
+characters inside these strings, which matters when the phrases get slotted into a template.
+
+\subsection{\texttt{Trial.prompt}: where a gamble becomes the exact question}
+
+A \file{Trial} is one fully-specified question: a particular gamble, in a particular wording, in a
+particular order, on a particular repetition. Its \file{prompt} method is the hinge of the entire
+design stage. This is the function that produces the literal text the model reads.
+
+\begin{lstlisting}[style=py,firstnumber=120]
+@dataclass
+class Trial:
+    trial_id: int
+    gamble_id: int
+    sure: int
+    hi: int
+    p: float
+    ev_ratio: float
+    template_id: int
+    safe_first: bool     # counterbalanced: True -> A is the sure amount
+    rep: int
+    response_mode: str   # 'tool' (forced structured output) or 'text' (validation arm)
+
+    def prompt(self) -> str:
+        g = Gamble(self.gamble_id, self.sure, self.hi, self.p)
+        safe, risky = describe_safe(g), describe_risky(g)
+        first, second = (safe, risky) if self.safe_first else (risky, safe)
+        return TEMPLATES[self.template_id].format(first=first, second=second)
+
+    @property
+    def gamble_letter(self) -> str:
+        """Which letter maps to the risky option in this trial."""
+        return "B" if self.safe_first else "A"
+\end{lstlisting}
+
+Walk through \file{prompt} one line at a time, because this is where the question is born.
+
+\begin{enumerate}
+\item \verb|g = Gamble(...)| rebuilds the gamble object from the trial's stored fields.
+\item \verb|safe, risky = describe_safe(g), describe_risky(g)| produces the two English phrases: one
+for the sure thing, one for the gamble.
+\item \verb|first, second = (safe, risky) if self.safe_first else (risky, safe)| is the
+counterbalancing switch. If \file{safe\_first} is true, the sure phrase goes into the first slot and
+the gamble into the second; if it is false, they swap. This is how the same gamble gets presented in
+both orders.
+\item \verb|return TEMPLATES[self.template_id].format(first=first, second=second)| looks up the chosen
+wording and calls \verb|.format(...)|, which drops the two phrases into the \verb|{first}| and
+\verb|{second}| slots. The returned string is the exact block of text the model will see.
+\end{enumerate}
+
+The \file{gamble\_letter} property records the answer key. If the sure option was listed first, then
+the gamble is option ``B''; otherwise it is ``A.'' The harness later compares the model's letter to
+this to decide whether the model chose the gamble. That is how a raw ``A'' or ``B'' becomes the clean
+\file{chose\_gamble} column.
+
+\begin{plainbox}
+\file{Trial.prompt} is the exact moment a gamble turns into a question. It builds the two option
+descriptions, decides which one is listed first (counterbalancing), and slots them into one of the
+five wordings. Whatever this function returns is character-for-character what the model reads. If you
+want to know what the model actually saw, you read this function.
+\end{plainbox}
+
+\subsection{\texttt{build\_trials}: every gamble, every wording, both orders}
+
+Finally, the function that assembles the full question list.
+
+\begin{lstlisting}[style=py,firstnumber=145]
+def build_trials(gambles: list[Gamble], reps: int = 3, seed: int = 42,
+                 text_arm_share: float = 0.10) -> list[Trial]:
+    """Full factorial: gambles x templates x both orders x reps.
+
+    ~10% of trials use plain-text elicitation instead of forced tool output,
+    so the two response modes can be compared on the same instruments
+    (design commitment: validate that output forcing does not change choices).
+    """
+    rng = random.Random(seed + 1)
+    trials = []
+    tid = 0
+    for g in gambles:
+        for template_id in TEMPLATES:
+            for safe_first in (True, False):
+                for rep in range(reps):
+                    mode = "text" if rng.random() < text_arm_share else "tool"
+                    trials.append(Trial(
+                        trial_id=tid, gamble_id=g.gamble_id,
+                        sure=g.sure, hi=g.hi, p=g.p,
+                        ev_ratio=round(g.ev_ratio, 4),
+                        template_id=template_id, safe_first=safe_first,
+                        rep=rep, response_mode=mode,
+                    ))
+                    tid += 1
+    rng.shuffle(trials)  # randomize run order so drift/rate-limits don't confound conditions
+    return trials
+\end{lstlisting}
+
+The four nested \verb|for| loops are a \term{full factorial}: every combination of every factor. For
+each of the forty gambles, for each of the five templates, for each of the two orders (safe first or
+risky first), for each of the three repetitions, the code builds one \file{Trial}. That is
+$40 \times 5 \times 2 \times 3 = 1{,}200$ questions, which is where the ``\textasciitilde 1{,}200
+calls'' figure comes from.
+
+Two details deserve a note. This line,
+
+\begin{lstlisting}[style=sh]
+mode = "text" if rng.random() < text_arm_share else "tool"
+\end{lstlisting}
+
+sends about 10 percent of questions down a plain-text path instead of the forced-tool path (Section 5
+explains both). This is a validation arm: it lets me check that forcing the model to answer through a
+tool does not itself change the answers. And the final \verb|rng.shuffle(trials)| scrambles the run
+order. Without it, all the ``template 0'' questions would run first, then all the ``template 1''
+questions, and if the model or the network drifted over the run, that drift would masquerade as a
+template effect. Shuffling breaks any link between when a question runs and which condition it belongs
+to.
+
+\begin{plainbox}
+\file{build\_trials} produces the master list of about 1{,}200 questions by taking every gamble, in
+every wording, in both orders, repeated three times. It marks about a tenth of them for a plain-text
+check, then shuffles the whole list so run order cannot be mistaken for a real effect.
+\end{plainbox}
+
+% ============================================================
+\section{Stage 1b: The Phase 2 Wording (\texttt{design\_phase2.py})}
+
+Phase 2 reuses the entire Phase 1 machinery and adds one thing: framing. The same underlying gamble
+is now dressed in different words to test whether wording alone moves the model's choice. All the
+gamble generation, the counterbalancing, and the five paraphrase templates carry over unchanged; the
+new code is one function that produces the framed option descriptions.
+
+\subsection{\texttt{framed\_options}: one gamble, four sets of words}
+
+\begin{lstlisting}[style=py,firstnumber=63]
+def framed_options(frame: str, s: int, h: int, p: float) -> tuple[str, str, str]:
+    """Return (endowment_line, safe_description, target_description) for a frame.
+
+    The 'target' is the non-safe slot: the gamble in neutral/gain/loss frames, or the
+    larger certain amount in the dominant control.
+    """
+    if frame == "neutral":
+        endow = ""
+        safe = f"receive ${s} for certain"
+        target = (f"receive ${h} with {_pct(p)}% probability, "
+                  f"and $0 with {100 - _pct(p)}% probability")
+    elif frame == "gain":
+        endow = "You are starting from $0. "
+        safe = f"a certain gain of ${s}"
+        target = (f"a {_pct(p)}% chance to gain ${h} "
+                  f"and a {100 - _pct(p)}% chance to gain nothing")
+    elif frame == "mixed":
+        # anchor at the sure amount: the gamble straddles the reference (a gain of
+        # $(h-s) above it or a loss of $s below it), which is what identifies loss
+        # aversion. Terminal wealth still matches the gain frame exactly.
+        endow = f"You have been given ${s} up front. "
+        safe = f"keep your ${s} with no change"
+        target = (f"a {_pct(p)}% chance to rise to ${h} (a gain of ${h - s}) "
+                  f"and a {100 - _pct(p)}% chance to drop to $0 (a loss of ${s})")
+    elif frame == "dominant":  # positive control: h is a strictly larger certain amount
+        endow = ""
+        safe = f"receive ${s} for certain"
+        target = f"receive ${h} for certain"
+    else:
+        raise ValueError(f"unknown frame: {frame}")
+    return endow, safe, target
+\end{lstlisting}
+
+This function is the heart of Phase 2. It takes a frame name and the gamble's numbers, and returns
+three strings: an optional opening line (\file{endow}), a description of the safe option, and a
+description of the ``target'' (the gamble, or in the control, the larger sure amount). Walk the four
+frames:
+
+\begin{itemize}
+\item \textbf{neutral} reproduces the Phase 1 wording exactly: a plain ``receive \$s for certain''
+versus ``receive \$h with some percent probability.'' No opening line, no gain-or-loss language. This
+is the baseline for comparison.
+\item \textbf{gain} states an explicit starting point of \$0 and frames both options as gains: ``a
+certain gain of \$s'' versus ``a chance to gain \$h.'' Everything is worded as money coming in.
+\item \textbf{mixed} is the crucial frame, and it is the only one that says the word ``loss.'' It
+hands the reader \$s up front, so the safe option becomes ``keep your \$s with no change,'' and the
+gamble is worded as ``a chance to rise to \$h (a gain of \$(h$-$s)) and a chance to drop to \$0 (a
+loss of \$s).'' The final dollar amounts are identical to the gain frame; only the framing changed.
+This is the wording that produces the framing result.
+\item \textbf{dominant} is a positive control. It offers ``\$s for certain'' versus a strictly larger
+``\$h for certain.'' Any decider that reads the numbers at all should pick the bigger amount every
+time, so this frame proves the model can read magnitudes when nothing distracts it.
+\end{itemize}
+
+The key idea to hold onto: the same underlying gamble, the same terminal wealth, becomes visibly
+different text depending on the frame. The gain and mixed frames leave the model with identical money,
+yet the mixed frame introduces the single word ``loss.'' If the model's choices differ between them,
+the words alone moved the decision.
+
+\subsection{\texttt{Phase2Trial.prompt}: same slotting, framing-aware}
+
+\begin{lstlisting}[style=py,firstnumber=111]
+    def prompt(self) -> str:
+        endow, safe, target = framed_options(self.frame, self.sure, self.hi, self.p)
+        first, second = (safe, target) if self.safe_first else (target, safe)
+        return PHASE2_TEMPLATES[self.template_id].format(endow=endow, first=first, second=second)
+\end{lstlisting}
+
+This mirrors \file{Trial.prompt} from Phase 1, with two changes. It calls \file{framed\_options} to
+get the framed descriptions, and the Phase 2 templates carry an extra \verb|{endow}| slot for the
+opening line (``You have been given \$s up front.''). The counterbalancing swap and the final
+\verb|.format(...)| are the same idea as before: decide which description is first, then drop
+everything into the chosen wording.
+
+\subsection{Seeing one prompt per frame}
+
+The file ends with a small self-test that prints one assembled prompt for each frame, so I can eyeball
+the actual text.
+
+\begin{lstlisting}[style=py,firstnumber=163]
+if __name__ == "__main__":  # quick visual check of one trial per frame
+    g = generate_gambles(3, seed=42)[0]
+    for frame in ("neutral", "gain", "mixed", "dominant"):
+        anchor = g.sure if frame == "mixed" else 0
+        h = g.sure + 30 if frame == "dominant" else g.hi
+        t = Phase2Trial(0, 0, frame, anchor, g.sure, h, g.p if frame != "dominant" else 1.0,
+                        1.0, 0, True, 0, "tool")
+        print(f"\n===== {frame} =====\n{t.prompt()}")
+\end{lstlisting}
+
+The guard \verb|if __name__ == "__main__":| means ``run this block only when the file is executed
+directly, not when it is imported.'' Running \verb|python src/design_phase2.py| prints four blocks of
+text, one per frame, each showing exactly what the model would read. It is a cheap sanity check that
+the wording came out as intended before spending anything on live calls.
+
+\begin{plainbox}
+Phase 2 keeps all of Phase 1 and adds \file{framed\_options}, which re-describes one gamble under four
+frames. The neutral frame matches Phase 1; the gain frame words everything as gains; the mixed frame
+is the only one that says ``loss'' and is what drives the framing result; the dominant frame is a
+read-the-numbers control. \file{Phase2Trial.prompt} slots these into the same five paraphrases.
+\end{plainbox}
+
+% ============================================================
+\section{Stage 2: Asking the Model (\texttt{harness.py})}
+
+Now the questions exist as a list. This file sends each one to the model and records the answer. I
+cover four pieces: how the API key is read, how the model is forced to answer cleanly, the fake
+decider used for dry runs, and the main loop that writes the CSV.
+
+\subsection{Reading the API key without hard-coding it}
+
+\begin{lstlisting}[style=py,firstnumber=37]
+def load_dotenv() -> None:
+    """Read KEY=VALUE lines from the project-root .env (gitignored) into the
+    environment, so the API key never lives in code or shell profiles."""
+    env_file = PROJECT_ROOT / ".env"
+    if not env_file.exists():
+        return
+    for line in env_file.read_text().splitlines():
+        line = line.strip().removeprefix("export ").strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+\end{lstlisting}
+
+\begin{defbox}[API and API key]
+An \term{API} (Application Programming Interface) is a structured way for one program to send requests
+to another. Here my code sends a money question to Anthropic's servers and gets back the model's
+answer. An \term{API key} is a secret password that proves I am allowed to make those requests and
+tells the provider whose account to bill. Because it is a secret, it must never be written into the
+code or committed to version control; anyone who reads the key can spend money as me.
+\end{defbox}
+
+\file{load\_dotenv} reads a file named \file{.env} that sits in the project root and is deliberately
+excluded from version control (``gitignored''). Each line looks like \verb|ANTHROPIC_API_KEY=sk-...|.
+The function walks the lines, skips blanks and comments, splits each on the first \verb|=|, and loads
+the result into the program's environment. The key thus lives in one local, private file, never in the
+code. \verb|os.environ.setdefault| means ``only set this if it is not already set,'' so a key already
+present in the shell wins and is not overwritten.
+
+\subsection{Forcing a clean answer: the choice tool}
+
+Left to its own devices, a chat model might answer a money question with a paragraph of reasoning. I
+do not want a paragraph; I want a single letter I can tally. The solution is tool use.
+
+\begin{lstlisting}[style=py,firstnumber=49]
+CHOICE_TOOL = {
+    "name": "submit_choice",
+    "description": "Submit your choice between the two options.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"choice": {"type": "string", "enum": ["A", "B"]}},
+        "required": ["choice"],
+    },
+}
+\end{lstlisting}
+
+\begin{defbox}[Tool use]
+\term{Tool use} lets a language model return a structured, machine-readable action instead of free
+text. I define a ``tool'' named \file{submit\_choice} whose only input is a field called \file{choice}
+that must be either ``A'' or ``B'' (that is what \verb|"enum": ["A", "B"]| enforces). When I require
+the model to answer through this tool, its reply is guaranteed to be a clean A or B, with no essay to
+parse and no ambiguity about what it meant. It converts an open-ended chat into a crisp multiple-choice
+button press.
+\end{defbox}
+
+\subsection{\texttt{ClaudeAgent.choose}: one question, one fresh conversation}
+
+\begin{lstlisting}[style=py,firstnumber=73]
+class ClaudeAgent:
+    """Live elicitation against the Anthropic API. Fresh context per call
+    (independence); forced tool output on 'tool' trials, first-token parse
+    on 'text' trials (the validation arm)."""
+
+    def __init__(self, model: str, temperature: float):
+        import anthropic
+        self.client = anthropic.Anthropic()
+        self.model = model
+        self.temperature = temperature
+
+    def choose(self, trial: Trial) -> tuple[str | None, str]:
+        prompt = trial.prompt()
+        if trial.response_mode == "tool":
+            resp = self.client.messages.create(
+                model=self.model, max_tokens=64, temperature=self.temperature,
+                tools=[CHOICE_TOOL],
+                tool_choice={"type": "tool", "name": "submit_choice"},
+                messages=[{"role": "user", "content": prompt}],
+            )
+            for block in resp.content:
+                if block.type == "tool_use":
+                    return block.input.get("choice"), str(block.input)
+            return None, str(resp.content)
+        # plain-text validation arm
+        resp = self.client.messages.create(
+            model=self.model, max_tokens=5, temperature=self.temperature,
+            messages=[{"role": "user", "content":
+                       prompt + "\nRespond with only the letter A or B."}],
+        )
+        text = resp.content[0].text.strip() if resp.content else ""
+        letter = text[:1].upper()
+        return (letter if letter in ("A", "B") else None), text
+\end{lstlisting}
+
+The \file{choose} method is the live counterpart to a single question. It starts by calling
+\verb|trial.prompt()|, the exact function from Section 3.6, to build the question text. Then it
+branches on the response mode.
+
+On a ``tool'' trial it calls the API with the choice tool attached and this argument,
+
+\begin{lstlisting}[style=sh]
+tool_choice={"type": "tool", "name": "submit_choice"}
+\end{lstlisting}
+
+which forces the model to answer through the tool. It then scans the reply for the tool-use block and returns the chosen letter. On a
+``text'' trial (the 10 percent validation arm) it instead appends ``Respond with only the letter A or
+B'' and reads the first character of the plain reply. Either way, \file{choose} returns a tuple: the
+letter (or \verb|None| if the model somehow failed to give a clean one) and a raw copy of what came
+back, for logging.
+
+The single most important design choice here is invisible unless you look for it. Each call passes
+\verb|messages=[{"role": "user", "content": prompt}]|, a message list containing only this one
+question. There is no history. Every question is a brand-new conversation with a model that remembers
+nothing of the previous questions. This independence is what lets me treat the 1{,}200 answers as
+1{,}200 clean data points rather than one long, self-influencing dialogue.
+
+\begin{plainbox}
+\file{ClaudeAgent.choose} builds one question with \file{trial.prompt}, sends it to the model, and
+forces a clean A or B back, either through the choice tool or, for a tenth of trials, by asking for a
+bare letter. Crucially, each question is its own fresh conversation, so answers stay independent.
+\end{plainbox}
+
+\subsection{The fake decider for dry runs}
+
+\begin{lstlisting}[style=py,firstnumber=108]
+class SimulatedCRRAAgent:
+    """Synthetic subject for --dry-run: a CRRA expected-utility maximizer with
+    logit choice noise and known parameters. Running the pipeline against it
+    and recovering (r, mu) in analysis/ validates the whole loop end to end."""
+
+    def __init__(self, r: float = 0.5, mu: float = 0.15, seed: int = 7):
+        self.r, self.mu = r, mu
+        self.rng = random.Random(seed)
+        self.model = f"simulated-crra(r={r},mu={mu})"
+        self.temperature = float("nan")
+
+    def _u(self, x: float) -> float:
+        if x <= 0:
+            return 0.0
+        return math.log(x) if abs(self.r - 1) < 1e-9 else x ** (1 - self.r) / (1 - self.r)
+
+    def choose(self, trial: Trial) -> tuple[str, str]:
+        eu_safe = self._u(trial.sure)
+        eu_gamble = trial.p * self._u(trial.hi)
+        # scale utilities so mu is comparable across stake levels
+        scale = self._u(max(trial.hi, trial.sure))
+        p_gamble = 1 / (1 + math.exp(-(eu_gamble - eu_safe) / (self.mu * scale)))
+        chose_gamble = self.rng.random() < p_gamble
+        letter = trial.gamble_letter if chose_gamble else ("A" if trial.gamble_letter == "B" else "B")
+        return letter, f"simulated p_gamble={p_gamble:.3f}"
+\end{lstlisting}
+
+This class is a stand-in for the real model, and its answers are known by construction. It computes
+expected utility from a CRRA utility function with a fixed risk-aversion \verb|r=0.5|, applies the
+same logit choice rule the estimator assumes, and flips a weighted coin to pick. Because I built it
+with $r = 0.5$ and $\mu = 0.15$, the estimator must recover those numbers if it is working. Notice
+that \file{choose} here has the exact same shape as \file{ClaudeAgent.choose}, it takes a trial and
+returns a (letter, raw) tuple, so the runner cannot tell the difference. That interchangeability is
+the whole trick: I can swap the fake decider in for the real one and exercise the entire pipeline
+without spending anything.
+
+\subsection{\texttt{run}: the loop that writes the CSV}
+
+\begin{lstlisting}[style=py,firstnumber=179]
+def run(trials, agent, seed: int, out_path: Path, row_fn,
+        max_retries: int = 3, sleep_s: float = 0.05) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    new_file = not out_path.exists()
+    n_done = n_discard = 0
+    fieldnames = list(row_fn(trials[0]).keys()) + RUN_FIELDS
+
+    with open(out_path, "a", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if new_file:
+            writer.writeheader()
+
+        for i, t in enumerate(trials):
+            letter, raw, latency = None, "", float("nan")
+            for attempt in range(max_retries):
+                t0 = time.time()
+                try:
+                    letter, raw = agent.choose(t)
+                    latency = time.time() - t0
+                    break
+                except Exception as e:  # rate limits, transient API errors
+                    raw = f"ERROR: {e}"
+                    wait = 2 ** attempt
+                    print(f"  trial {t.trial_id}: {e} (retry in {wait}s)", file=sys.stderr)
+                    time.sleep(wait)
+
+            discarded = letter not in ("A", "B")
+            chose_gamble = "" if discarded else int(letter == t.gamble_letter)
+            row = row_fn(t) | {
+                "model": agent.model, "temperature": agent.temperature, "seed": seed,
+                "letter": letter or "", "chose_gamble": chose_gamble,
+                "raw": (raw or "")[:200], "discarded": int(discarded),
+                "latency_s": round(latency, 3) if latency == latency else "",
+                "ts_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            }
+            writer.writerow(row)
+            f.flush()  # interrupted runs keep their data
+
+            n_done += 1
+            n_discard += int(discarded)
+            if n_done % 25 == 0 or n_done == len(trials):
+                print(f"{n_done}/{len(trials)} trials | discards: {n_discard}")
+            time.sleep(sleep_s)
+\end{lstlisting}
+
+The \file{run} function loops over every trial and writes one CSV row per answer. Three robustness
+details are worth pointing out, because they are what let a long, paid run survive real-world hiccups.
+
+\textbf{Retry on error.} The inner \verb|for attempt in range(max_retries)| loop wraps the
+\file{choose} call in a \verb|try/except|. If the API throws an error (a rate limit, a transient
+network failure), the code waits \verb|2 ** attempt| seconds, one, then two, then four, and tries
+again. This is exponential backoff: a brief network stumble does not kill the run or lose a question.
+
+\textbf{Flush after every row.} The line \verb|f.flush()| forces the just-written row to disk
+immediately rather than sitting in a buffer. If the run is interrupted after 800 of 1{,}200 questions,
+all 800 answers are already safely on disk. The comment says it plainly: interrupted runs keep their
+data.
+
+\textbf{Discard tracking.} A response is \term{discarded} if the letter is not a clean ``A'' or ``B.''
+The code records \verb|discarded| as a flag and leaves \file{chose\_gamble} blank for those rows, and
+it tallies the discard count so I can watch the rate. A high discard rate would signal that something
+is wrong with the elicitation, so it is surfaced immediately. This line,
+
+\begin{lstlisting}[style=sh]
+chose_gamble = int(letter == t.gamble_letter)
+\end{lstlisting}
+
+is the moment a raw letter becomes the analysis variable: it is 1 exactly when the model's letter
+matches the gamble's letter for this trial.
+
+\begin{plainbox}
+\file{run} walks the question list, calls the agent on each, and writes a fully-labeled CSV row per
+answer. It retries on API errors with growing waits, flushes each row to disk so an interrupted run
+keeps its data, and flags any answer that was not a clean A or B. The line that turns the model's
+letter into \file{chose\_gamble} is where an answer becomes data.
+\end{plainbox}
+
+% ============================================================
+\section{Stage 3: Fitting the Math to the Answers (\texttt{estimate\_crra.py})}
+
+The CSV now holds a pile of 1s and 0s: for each question, did the model take the gamble? Stage 3 asks
+the reverse question. What risk attitude would make this exact pattern of 1s and 0s least surprising?
+That is the job of the estimator.
+
+\subsection{The utility function and the choice probability}
+
+\begin{lstlisting}[style=py,firstnumber=33]
+def crra_u(x: np.ndarray, r: float) -> np.ndarray:
+    x = np.maximum(x, 1e-12)
+    if abs(r - 1.0) < 1e-9:
+        return np.log(x)
+    return x ** (1.0 - r) / (1.0 - r)
+
+
+def choice_prob(df: pd.DataFrame, r: float, mu: float) -> np.ndarray:
+    """Pr(choose gamble) for each row under (r, mu)."""
+    eu_safe = crra_u(df["sure"].values.astype(float), r)
+    eu_gamble = df["p"].values * crra_u(df["hi"].values.astype(float), r)
+    scale = np.abs(crra_u(np.maximum(df["hi"].values, df["sure"].values).astype(float), r))
+    z = (eu_gamble - eu_safe) / (mu * np.maximum(scale, 1e-12))
+    return 1.0 / (1.0 + np.exp(-np.clip(z, -35, 35)))
+\end{lstlisting}
+
+These two functions are the theory from the teaching guide, written as code. \file{crra\_u} is the
+CRRA utility function, exactly $u(x) = x^{1-r}/(1-r)$, with the standard special case that at $r = 1$
+utility becomes the natural logarithm. The clamp \verb|np.maximum(x, 1e-12)| just avoids taking a
+power of zero.
+
+\file{choice\_prob} is the logit choice rule. Line by line it mirrors the equation
+$P(\text{gamble}) = 1/(1 + e^{-(EU_g - EU_s)/(\mu \cdot \text{scale})})$. It computes the sure option's
+utility (\file{eu\_safe}), the gamble's expected utility (\file{eu\_gamble}, which is
+$p \times u(\text{hi})$), divides their difference by the noise $\mu$ times a scale factor, and passes
+that through the logistic curve \verb|1/(1 + exp(-z))|. The output is one predicted probability of
+choosing the gamble for every row in the data. Feed it a candidate $r$ and $\mu$ and it tells you how
+likely each observed choice was under those values. The \verb|np.clip(z, -35, 35)| guards against
+overflow in the exponential; it does not change any realistic result.
+
+\subsection{Scoring a guess: negative log-likelihood}
+
+\begin{lstlisting}[style=py,firstnumber=49]
+def neg_loglik(theta: np.ndarray, df: pd.DataFrame) -> float:
+    r, log_mu = theta
+    mu = np.exp(log_mu)  # mu > 0 via log transform
+    pg = choice_prob(df, r, mu)
+    y = df["chose_gamble"].values.astype(float)
+    ll = y * np.log(np.clip(pg, 1e-12, 1)) + (1 - y) * np.log(np.clip(1 - pg, 1e-12, 1))
+    return -ll.sum()
+\end{lstlisting}
+
+\begin{defbox}[Maximum likelihood]
+\term{Maximum likelihood} is a recipe for choosing parameter values. For any candidate values, the
+model assigns a probability to each choice the model actually made. Multiply those probabilities
+together (or, equivalently and more safely, add their logarithms) and you get one score for how
+unsurprising the observed choices are under those values. The maximum-likelihood estimate is the set
+of values that makes that score as high as possible: the values under which the real choices look as
+expected, as unsurprising, as possible.
+\end{defbox}
+
+\file{neg\_loglik} computes that score, with two practical twists. First, it works with
+\verb|log_mu| and immediately takes \verb|mu = np.exp(log_mu)|; because the exponential of any number
+is positive, this guarantees the noise $\mu$ stays positive no matter what the search tries. Second,
+it returns the \emph{negative} of the log-likelihood. The reason is purely mechanical: the optimizer
+in the next function is a minimizer, and minimizing the negative is the same as maximizing the
+original. The formula
+\verb|ll = y * log(pg) + (1 - y) * log(1 - pg)| is the standard log-likelihood for a yes/no outcome:
+when the model chose the gamble (\verb|y = 1|) it credits \verb|log(pg)|, and when it chose the sure
+thing (\verb|y = 0|) it credits \verb|log(1 - pg)|. Summing across all rows and negating gives the
+number to minimize. In one sentence: \file{neg\_loglik} measures how surprised a given $(r, \mu)$ is
+by the choices that were actually made.
+
+\subsection{Searching for the best fit}
+
+\begin{lstlisting}[style=py,firstnumber=70]
+def estimate(df: pd.DataFrame) -> dict:
+    best = None
+    for r0 in (0.1, 0.5, 0.9, 1.5):  # multi-start; the likelihood can be flat in r
+        res = optimize.minimize(neg_loglik, x0=np.array([r0, np.log(0.2)]),
+                                args=(df,), method="Nelder-Mead",
+                                options={"xatol": 1e-6, "fatol": 1e-8, "maxiter": 5000})
+        if best is None or res.fun < best.fun:
+            best = res
+
+    r_hat, log_mu_hat = best.x
+    mu_hat = float(np.exp(log_mu_hat))
+
+    H = numerical_hessian(lambda th: neg_loglik(th, df), best.x)
+    try:
+        cov = np.linalg.inv(H)
+        se_r = float(np.sqrt(max(cov[0, 0], 0)))
+        # delta method for mu = exp(log_mu)
+        se_mu = float(np.sqrt(max(cov[1, 1], 0)) * mu_hat)
+    except np.linalg.LinAlgError:
+        se_r = se_mu = float("nan")
+
+    return {"r": float(r_hat), "se_r": se_r, "mu": mu_hat, "se_mu": se_mu,
+            "loglik": -float(best.fun), "n": len(df), "converged": bool(best.success)}
+\end{lstlisting}
+
+\begin{defbox}[Optimizer]
+An \term{optimizer} is a search routine that hunts for the input that makes a function as small (or as
+large) as possible. Here \verb|optimize.minimize| walks around the space of possible $(r, \mu)$ values,
+repeatedly calling \file{neg\_loglik}, and homes in on the pair with the lowest surprise score. It is
+a systematic version of ``try values, keep whichever fits best.''
+\end{defbox}
+
+\file{estimate} runs the optimizer and packages the result. The \verb|for r0 in (0.1, 0.5, 0.9, 1.5)|
+loop is a \term{multi-start}: it launches the search from four different starting points and keeps the
+best result. The reason is in the comment, the likelihood can be flat in $r$, meaning the surprise
+surface can have gentle regions where a search starting in the wrong place could stall. Starting from
+several places and keeping the best guards against getting stuck in one.
+
+The last block turns the curvature of the surprise surface into a \term{standard error}.
+
+\begin{defbox}[Standard error]
+A \term{standard error} is the give-or-take on an estimate: how much the estimated number would wobble
+if I reran the whole experiment. It comes from how sharply curved the surprise surface is at the best
+fit. A sharp, narrow minimum means the data pin the value down tightly (small standard error); a broad,
+flat minimum means many values fit almost as well (large standard error). The code measures that
+curvature with the \term{Hessian} (a matrix of second derivatives), inverts it to get the variance,
+and takes the square root.
+\end{defbox}
+
+The \verb|numerical_hessian| call measures how fast the surprise score rises as I move away from the
+best fit in every direction. Inverting that matrix and taking square roots gives the standard errors
+\file{se\_r} and \file{se\_mu}. The comment \verb|# delta method for mu = exp(log_mu)| flags a small
+correction: because the search worked in \verb|log_mu| but I report \verb|mu|, the standard error is
+scaled by \verb|mu_hat| to translate the wobble back onto the natural scale.
+
+\begin{plainbox}
+\file{estimate} searches for the $(r, \mu)$ that best explain the choices, starting from several
+places so it does not get stuck, then reads the give-or-take on each number from how sharply the fit
+degrades nearby. It returns the risk-aversion estimate, the noise estimate, their standard errors, and
+whether the search converged.
+\end{plainbox}
+
+\subsection{The guardrails: sanity checks}
+
+Before trusting any estimate, the code runs a battery of checks. These are the referees that must pass
+before the numbers mean anything.
+
+\begin{lstlisting}[style=py,firstnumber=99]
+def sanity_checks(df: pd.DataFrame) -> None:
+    print("Sanity checks ")
+
+    # 1. Discard rate
+    if "discarded" in df.columns:
+        rate = df["discarded"].mean()
+        print(f"discard rate:        {rate:.1%}" + ("   FLAG (>2%)" if rate > 0.02 else "   ok"))
+
+    kept = df[df.get("discarded", 0) == 0].copy()
+    kept["chose_gamble"] = kept["chose_gamble"].astype(int)
+
+    # 2. Label/position balance: chose_gamble should not depend on where the safe
+    #    option sat. A significant gap = position bias masquerading as preference.
+    by_pos = kept.groupby("safe_first")["chose_gamble"].agg(["mean", "count"])
+    if len(by_pos) == 2:
+        a = kept[kept["safe_first"] == True]["chose_gamble"]
+        b = kept[kept["safe_first"] == False]["chose_gamble"]
+        _, pval = stats.ttest_ind(a, b)
+        gap = abs(a.mean() - b.mean())
+        print(f"position gap: ...")
+
+    # 3. Monotonicity: P(gamble) should rise with the gamble's EV ratio.
+    kept["ev_bin"] = pd.qcut(kept["ev_ratio"], 4, labels=False, duplicates="drop")
+    means = kept.groupby("ev_bin")["chose_gamble"].mean()
+    mono = means.is_monotonic_increasing
+
+    # 5. Template spread (preview of the random-effects question)
+    by_t = kept.groupby("template_id")["chose_gamble"].mean()
+\end{lstlisting}
+
+(The excerpt above trims the print formatting to keep the logic visible; the real file prints each
+result with an ``ok'' or ``FLAG'' label.) The checks, and why each one guards the result:
+
+\begin{itemize}
+\item \textbf{Discard rate.} If more than about 2 percent of answers were not a clean A or B, something
+is wrong with the elicitation and the code flags it. A clean run should discard almost nothing.
+\item \textbf{Position balance.} It compares gamble-taking when the safe option was listed first versus
+second. If those differ significantly, a position habit is leaking into the data and masquerading as a
+preference. The counterbalancing in Stage 1 is what makes this check possible.
+\item \textbf{Monotonicity.} It sorts gambles into four bins by how good a deal they are (\file{ev\_ratio})
+and checks that gamble-taking rises across the bins. If a decider takes better deals more often, this
+should hold; if it does not, the data are not behaving like choices at all.
+\item \textbf{Response-mode comparison.} It compares the forced-tool answers to the plain-text answers
+(the validation arm from Stage 1). If they agree, forcing the model to answer through a tool did not
+distort its choices.
+\item \textbf{Template spread.} It reports how much gamble-taking varies across the five wordings. A
+large spread would warn that the wording itself is doing a lot of work, which is exactly the kind of
+thing to know before interpreting the headline number.
+\end{itemize}
+
+\begin{plainbox}
+\file{sanity\_checks} is the pre-flight inspection. It confirms the model answered cleanly, that
+position did not sway it, that it took better deals more often, that the tool and text arms agree, and
+that no single wording dominates. Only if these pass do the fitted numbers deserve trust.
+\end{plainbox}
+
+% ============================================================
+\section{Stage 3, Continued: The Richer Model (\texttt{estimate\_cpt.py})}
+
+The plain CRRA model of Section 6 fit the Phase 1 data badly: the model chased win probability far
+more than plain risk aversion can explain. \file{estimate\_cpt.py} adds the missing piece,
+probability weighting, and then formally compares models. I touch it lightly, because the machinery
+(negative log-likelihood, multi-start optimizer, Hessian standard errors) is the same as before. The
+new ingredient is one function.
+
+\subsection{The Prelec probability-weighting function}
+
+\begin{lstlisting}[style=py,firstnumber=39]
+def prelec_w(p: np.ndarray, gamma: float) -> np.ndarray:
+    p = np.clip(p, 1e-9, 1 - 1e-9)
+    return np.exp(-((-np.log(p)) ** gamma))
+\end{lstlisting}
+
+This is the Prelec weighting function $w(p) = \exp(-(-\ln p)^{\gamma})$, one line of code. It converts
+a real, stated probability \file{p} into a \emph{felt} probability that the decider acts on. When
+$\gamma = 1$ it does nothing (felt equals real). When $\gamma > 1$ it bends into an S-shape that
+crushes small probabilities toward zero, so long shots feel even more hopeless than they are, which is
+exactly the Phase 1 finding. The \verb|np.clip| just keeps the logarithm away from the forbidden values
+0 and 1.
+
+\subsection{Three models, one contest}
+
+The richer model uses \file{prelec\_w} in place of the raw probability. It is compared against two
+others:
+
+\begin{lstlisting}[style=py,firstnumber=78]
+MODELS = {
+    "M1 CRRA":            (prob_m1, ["r", "log_mu"],                      [0.3, np.log(0.2)]),
+    "M2 CRRA+Prelec+pos": (prob_m2, ["r", "log_gamma", "log_mu", "delta"],[0.3, 0.3, np.log(0.2), 0.5]),
+    "M3 p-only":          (prob_m3, ["a", "b"],                           [-4.0, 8.0]),
+}
+\end{lstlisting}
+
+The three contestants are: \textbf{M1}, the plain CRRA plus logit from Section 6; \textbf{M2}, the same
+plus Prelec probability weighting and a position term (the improved model); and \textbf{M3}, a stripped
+``probability heuristic'' that ignores the payoffs entirely and predicts choice from the win
+probability alone. The script fits all three, prints a comparison table with each model's fit and its
+AIC and BIC (standard penalties for complexity), and runs a likelihood-ratio test of M1 against M2.
+
+\begin{lstlisting}[style=py,firstnumber=161]
+    m1, m2 = results["M1 CRRA"], results["M2 CRRA+Prelec+pos"]
+    lr = 2 * (m2["ll"] - m1["ll"])
+    p_lr = stats.chi2.sf(lr, df=m2["k"] - m1["k"])
+\end{lstlisting}
+
+The likelihood-ratio statistic \verb|lr = 2 * (m2["ll"] - m1["ll"])| measures how much better the
+richer model M2 explains the data than the plain M1. In the Phase 1 data the improvement was
+overwhelming: adding probability weighting wins massively, and the ``p-only'' M3 nearly ties the full
+structural model, both signs that the model is pricing probability rather than payoffs.
+
+\begin{plainbox}
+\file{estimate\_cpt.py} adds one function, \file{prelec\_w}, that bends a real probability into a felt
+one, and stages a three-way contest: plain risk aversion, risk aversion plus probability weighting,
+and a probability-only heuristic. The probability-weighting model wins by a wide margin, which is the
+quantitative core of the Phase 1 headline.
+\end{plainbox}
+
+% ============================================================
+\section{Follow One Choice All the Way Through}
+
+To tie the three stages into a single story, here is the life of one choice, from a row in a list to a
+term in a likelihood.
+
+\begin{enumerate}
+\item \textbf{Design.} \file{build\_trials} creates a \file{Trial}, say gamble 12, template 0, safe
+listed first, repetition 1. At this point it is just a labeled row of numbers in a Python list.
+\item \textbf{Wording.} The harness calls \verb|trial.prompt()|. \file{Trial.prompt} builds
+``receive \$58 with certainty'' and ``receive \$116 with 66\% probability, and \$0 with 34\%
+probability,'' puts the safe one first (because \file{safe\_first} is true), and slots them into
+template 0. Out comes the exact question text.
+\item \textbf{Ask.} \file{ClaudeAgent.choose} sends that text to the model as a fresh, one-message
+conversation with the choice tool attached. The model answers ``B.''
+\item \textbf{Record.} Back in \file{run}, the code compares ``B'' to \verb|trial.gamble_letter|.
+Because the safe option was first, the gamble is ``B,'' so the letters match and
+\verb|chose_gamble = 1|. That 1, along with \file{sure}, \file{hi}, \file{p}, and every design label,
+is written as one CSV row and flushed to disk.
+\item \textbf{Fit.} Much later, \file{neg\_loglik} reads that row. For a candidate $(r, \mu)$,
+\file{choice\_prob} predicts some probability \file{pg} that the gamble would be chosen here. Because
+this row has \verb|chose_gamble = 1|, the row contributes \verb|log(pg)| to the score. The optimizer
+nudges $r$ and $\mu$ until the total surprise across all rows, this one included, is as small as
+possible.
+\end{enumerate}
+
+One choice, five steps, three files. That is the entire experiment in miniature.
+
+% ============================================================
+\section{Try It Yourself}
+
+Everything in Sections 3 through 7 can be run without an API key, because of the dry-run path. Here is
+the minimum that a reader can execute right now.
+
+\begin{lstlisting}[style=sh]
+# 1. Ask a known fake decider 1,200 questions and save the answers.
+python src/harness.py --phase 1 --dry-run --reps 3
+
+# 2. Fit the model to those answers and read the estimates back.
+python analysis/estimate_crra.py data/phase1_dryrun.csv
+\end{lstlisting}
+
+The first command builds the full question list, runs it against \file{SimulatedCRRAAgent} (the fake
+decider built with $r = 0.5$ and $\mu = 0.15$), and writes \file{data/phase1\_dryrun.csv}. The second
+command reads that CSV, runs the sanity checks, and fits the CRRA model. What you should see is the
+estimator recovering the fake decider's known settings: an $r$ near $0.5$ and a $\mu$ near $0.15$,
+with the sanity checks passing. That recovery is the proof that the pipeline is wired correctly, and
+it is exactly the rehearsal I run before ever spending a cent on the live model.
+
+If you want to see the Phase 2 wording with your own eyes, run \verb|python src/design_phase2.py| and
+read the four printed prompts. The mixed frame is the one that says ``loss.''
+
+\vspace{8pt}
+{\color{rulegray}\rule{\linewidth}{0.8pt}}\\[3pt]
+{\footnotesize\color{mutegray} Every code block in this walkthrough is copied verbatim from the
+repository as of July 2026: \file{src/design.py}, \file{src/design\_phase2.py}, \file{src/harness.py},
+\file{analysis/estimate\_crra.py}, and \file{analysis/estimate\_cpt.py}. Where a block was trimmed for
+readability (only in the sanity-check listing), the omission is noted in the surrounding text and no
+logic was altered.}
+
+\end{document}
