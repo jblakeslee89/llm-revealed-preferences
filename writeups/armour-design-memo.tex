@@ -1,0 +1,568 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  Packages
+% ============================================================
+\usepackage[margin=1in,top=0.9in,bottom=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[skip=5pt]{caption}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{ragged2e}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+
+% ============================================================
+%  Color tokens (shared with the Phase 1-2 writeups)
+% ============================================================
+\definecolor{moss}{HTML}{758C58}
+\definecolor{mossdk}{HTML}{55663F}   % darker moss for headings
+\definecolor{ink}{HTML}{1C1C1E}      % near-black body text
+\definecolor{rulegray}{HTML}{D8D8D2} % light gray hairlines
+\definecolor{mutegray}{HTML}{6E6E73} % captions / secondary text
+\definecolor{mossbg}{HTML}{F2F4EE}   % faint moss wash
+\definecolor{graybg}{HTML}{F4F4F2}   % light gray for code / prompts
+\definecolor{strgreen}{HTML}{5A6E3D} % string literals in code
+
+\color{ink}
+
+% ============================================================
+%  Typographic setup
+% ============================================================
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlist{itemsep=3pt, topsep=3pt, parsep=0pt}
+\linespread{1.05}
+
+% Section headings: moss, bold, hairline underneath
+\titleformat{\section}
+  {\large\bfseries\color{mossdk}}
+  {\thesection.\ }{0.4em}
+  {}
+  [{\vspace{2pt}\color{rulegray}\titlerule[0.8pt]}]
+\titlespacing*{\section}{0pt}{15pt}{7pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{ink}}
+  {\thesubsection\ }{0.4em}{}
+\titlespacing*{\subsection}{0pt}{11pt}{3pt}
+
+\setcounter{secnumdepth}{2}
+
+% ============================================================
+%  Listings: JSON tool-schema style (literal $ and % are safe here)
+% ============================================================
+\lstdefinestyle{schema}{
+  basicstyle=\ttfamily\footnotesize\color{ink},
+  keywordstyle=\color{mossdk}\bfseries,
+  stringstyle=\color{strgreen},
+  numbers=none,
+  breaklines=true,
+  breakatwhitespace=false,
+  breakindent=14pt,
+  postbreak=\mbox{\textcolor{moss}{$\hookrightarrow$}\space},
+  showstringspaces=false,
+  keepspaces=true,
+  columns=fullflexible,
+  tabsize=2,
+  frame=single,
+  framesep=6pt,
+  rulecolor=\color{rulegray},
+  backgroundcolor=\color{graybg},
+  xleftmargin=14pt,
+  xrightmargin=6pt,
+  aboveskip=8pt,
+  belowskip=6pt,
+}
+
+% Verbatim prompt style: no language, literal characters, gray wash
+\lstdefinestyle{prompt}{
+  basicstyle=\ttfamily\small\color{ink},
+  numbers=none,
+  breaklines=true,
+  breakindent=12pt,
+  postbreak=\mbox{\textcolor{moss}{$\hookrightarrow$}\space},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=leftline,
+  framesep=8pt,
+  framerule=1.2pt,
+  rulecolor=\color{moss},
+  backgroundcolor=\color{graybg},
+  xleftmargin=12pt,
+  xrightmargin=4pt,
+  aboveskip=8pt,
+  belowskip=6pt,
+}
+
+% Small moss inline tag
+\newcommand{\mosstag}[1]{{\footnotesize\bfseries\color{moss}\MakeUppercase{#1}}}
+
+% A restrained note box (no hero-stat callouts in this memo)
+\newtcolorbox{notebox}[1][]{
+  colframe=moss,
+  colback=mossbg,
+  boxrule=0.5pt,
+  sharp corners,
+  left=10pt, right=10pt, top=7pt, bottom=7pt,
+  fonttitle=\bfseries\color{mossdk},
+  coltitle=mossdk,
+  title={#1},
+  before skip=8pt, after skip=8pt,
+}
+
+\begin{document}
+
+% ============================================================
+%  Title block
+% ============================================================
+\begin{flushleft}
+{\color{rulegray}\rule{\linewidth}{1.2pt}}\\[9pt]
+{\LARGE\bfseries\color{ink} Revealed Preferences of a Language Model:}\\[3pt]
+{\LARGE\bfseries\color{ink} Experiment Design and Methods}\\[8pt]
+{\large\color{mossdk} Design memo prepared for review by Philip Armour}\\[10pt]
+{\color{rulegray}\rule{\linewidth}{0.8pt}}\\[6pt]
+{\small\color{ink}\textbf{J. Blakeslee}, Pardee RAND Graduate School \hfill July 2026}\\[3pt]
+{\color{rulegray}\rule{\linewidth}{1.2pt}}
+\end{flushleft}
+
+\vspace{4pt}
+
+Phil, this memo lays out the experiment design behind a revealed-preference estimation exercise
+I am running on a frontier language model, and it asks for your critique of that design before I
+scale it. I have written it as a methods memo to a knowledgeable peer, so I assume the standard
+behavioral apparatus (CRRA utility, prospect theory, reference dependence, loss aversion, MLE,
+likelihood-ratio testing) and spend my words instead on the parts that are specific to running an
+economics experiment on a language model, where the measurement problems are unfamiliar and, I
+think, where the design either succeeds or fails. Sections 1 through 7 describe the completed
+Phase 1 and Phase 2 instruments and estimates; Section 8 lays out the Phase 3 attribution design
+that is the point of the whole exercise; Section 9 is a short list of questions I would most value
+your view on.
+
+% ============================================================
+%  1. OVERVIEW
+% ============================================================
+\section{Overview and research questions}
+
+The project performs revealed-preference structural estimation on a frontier language model
+treated as an economic subject, and then attributes any recovered biases to a specific stage of
+the model's training. It runs in three phases. Phase 1 recovers risk attitudes from binary lottery
+choices. Phase 2 recovers reference dependence and loss aversion from framing manipulations that
+hold terminal wealth fixed. Phase 3 compares matched pre- and post-training open-weight models
+(base versus instruct) on the identical instruments, to ask whether a recovered bias is present
+before the final training step or written in by it.
+
+I want to be direct about the pivot in contribution, because it shapes every design choice below.
+The descriptive question, whether language models display human-like cognitive biases, is by now
+largely settled in the affirmative across a fast-growing literature. Restating it would add little.
+The contribution I am pursuing is twofold. First, choice-level structural estimation done with
+attention to the measurement problems that are specific to a language-model subject, so that the
+recovered parameters mean something rather than recovering a memorized textbook answer or an
+artifact of prompt wording. Second, a causal attribution design that asks not whether the bias
+exists but where in the training pipeline it originates. The first is a measurement contribution;
+the second is the part I think is genuinely new.
+
+\subsection{Position relative to existing work}
+
+The nearest neighbors, and how this design differs from each:
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Liu, Yang and Tam (2025, EMNLP)} recover prospect-theory parameters for LLMs via
+certainty equivalents. I estimate at the level of individual binary choices with a discrete-choice
+likelihood, rather than eliciting certainty equivalents, which lets me carry a choice-stochasticity
+error term and test nested restrictions directly.
+\item \textbf{The CPT-on-LLMs preprint (arXiv:2508.08992)} fits cumulative prospect theory to model
+choices. My emphasis is less on fitting CPT and more on contamination-safe stimulus generation and
+on separating reference movement from loss aversion, which I show below is not point-identified
+without an assumption.
+\item \textbf{Chen et al.\ (2023)} test GARP consistency and report CCEI scores. That is a
+rationality-consistency lens; mine is a parametric-preference-recovery lens aimed at
+human-comparable primitives.
+\item \textbf{Mazeika et al.\ (2025)} fit Thurstonian random-utility models to model preferences
+over outcomes. I share the random-utility framing but apply it to risk and framing specifically,
+and I treat the source of the choice noise as an open question rather than a settled Thurstonian
+process.
+\item \textbf{Itzhak et al.\ (2024)} show that instruction tuning can instill cognitive biases.
+That result motivates my Phase 3 directly. Where they demonstrate the effect on selected biases, I
+design a matched base-versus-instruct estimation that reads the choice probability off the token
+distribution and localizes the change to a training stage.
+\item \textbf{Bini et al.\ (2026, NBER)} survey this emerging area. I read their survey as the
+call for exactly the choice-level, attribution-oriented work this project attempts.
+\end{itemize}
+
+% ============================================================
+%  2. THE CHOICE TASK
+% ============================================================
+\section{The choice task and stimulus generation}
+
+\textbf{Subject.} The subject is \texttt{claude-haiku-4-5-20251001}, a pinned dated snapshot, run
+at temperature 1.0. Pinning the snapshot fixes the subject against silent model updates
+(Section 7). Temperature 1.0 is deliberate and I return to its role as a source of choice
+stochasticity in Section 4.
+
+\textbf{Task.} Each trial is a binary choice between a certain amount and a two-outcome lottery
+(a prize with probability $p$, otherwise \$0). The logic follows the multiple-price-list tradition
+of Holt and Laury, but the stimuli are never presented in canonical Holt-Laury wording or with
+canonical numbers, for the reason I give next.
+
+\textbf{Procedural, contamination-safe generation.} This is the design decision I most want you to
+scrutinize. Canonical Holt-Laury rows, round dollar amounts, and the standard $0.25 / 0.50 / 0.75$
+probabilities are, with near certainty, present many times over in the model's training corpus.
+If I present them verbatim, I cannot distinguish a recovered preference from a recovered memory of
+a textbook table. I therefore generate every stimulus procedurally to sit off the canonical grid:
+
+\begin{itemize}[leftmargin=1.4em]
+\item Sure amounts are drawn in $[23, 187]$ and constrained to be non-multiples of five, to avoid
+round anchors.
+\item Probabilities are jittered to two decimals in $[0.19, 0.83]$ and nudged off the canonical
+$0.25 / 0.50 / 0.75$ values.
+\item Prizes are set so that the lottery-to-sure expected-value ratio spans roughly $0.75$ to
+$1.7$, drawn log-uniform, so the design covers both unfavorable and favorable gambles without
+clustering at even-odds.
+\end{itemize}
+
+I treat training-data contamination as a first-order threat rather than a nuisance. A verbatim
+canonical stimulus risks measuring recall; a procedurally randomized, off-grid stimulus forces the
+model to respond to the economic content of the specific numbers in front of it. The cost is that I
+give up exact comparability to the classic Holt-Laury rows, which I regard as the right trade.
+
+\textbf{Phase 1 grid.} 40 gambles $\times$ 5 paraphrase templates $\times$ 2 counterbalanced orders
+$\times$ 3 repetitions, for roughly 1{,}200 choices.
+
+% ============================================================
+%  3. THE STIMULI
+% ============================================================
+\section{The exact stimuli}
+
+I show the actual text rather than describe it, so you can judge the wording yourself. The Phase 1
+prompt, for one drawn gamble, reads verbatim:
+
+\begin{lstlisting}[style=prompt]
+You must pick one of two payment options.
+Option A: receive $58 with certainty.
+Option B: receive $116 with 66% probability, and $0 with 34% probability.
+Pick the option you prefer.
+\end{lstlisting}
+
+Four other paraphrase templates carry the identical gamble under different surface wordings
+(offer, arrangement, alternative, payout, and deal phrasings), and template identity enters the
+likelihood as a random effect (Section 4, Section 7). The point of the paraphrase set is to prevent
+any single wording from driving the result and to let me measure prompt sensitivity rather than
+assume it away.
+
+\subsection{Phase 2 framing stimuli}
+
+Phase 2 holds terminal wealth fixed and varies only the frame. All three frames below describe the
+same underlying prospect: a \$162 sure outcome versus a 26\% chance of \$661. The three read
+verbatim as follows.
+
+\textbf{Gain frame.}
+\begin{lstlisting}[style=prompt]
+You are starting from $0. ...
+Option A: a certain gain of $162
+Option B: a 26% chance to gain $661 and a 74% chance to gain nothing
+\end{lstlisting}
+
+\textbf{Mixed frame} (reference set at the sure amount; the gamble straddles it).
+\begin{lstlisting}[style=prompt]
+You have been given $162 up front. ...
+Option A: keep your $162 with no change
+Option B: a 26% chance to rise to $661 (a gain of $499) and a 74% chance to
+drop to $0 (a loss of $162)
+\end{lstlisting}
+
+\textbf{Dominant control} (a certain amount versus a strictly larger certain amount).
+\begin{lstlisting}[style=prompt]
+Option A: receive $162 for certain
+Option B: receive $199 for certain
+\end{lstlisting}
+
+The mixed frame is the identifying manipulation. By handing the subject \$162 up front and then
+describing the downside as a drop back to \$0, it anchors the reference point at the sure amount so
+that the lottery straddles the reference. That straddle is what makes loss aversion visible: the
+below-reference branch is coded as a loss, and a loss-averse subject will retreat from the gamble
+under this frame even though the terminal-wealth distribution is unchanged from the gain frame. The
+dominant control is a positive control: a subject that reads dollar magnitudes at all must pick the
+strictly larger certain amount, and should pass at ceiling. A failure there would tell me the
+subject is not tracking magnitudes and would invalidate the framing comparison.
+
+\textbf{Phase 2 grid.} 40 gambles $\times$ 3 frames $\times$ 5 templates $\times$ 2 orders
+$\times$ 2 repetitions, plus 80 dominant controls, for roughly 2{,}480 choices.
+
+% ============================================================
+%  4. ELICITATION MECHANISM
+% ============================================================
+\section{Elicitation mechanism}
+
+This is the section I most want your eyes on, because the validity of everything downstream rests
+on how the choice datum is produced. The concern with an LLM subject is that the ``choice'' is
+usually a paragraph of free text that a human then codes, which imports the coder's judgment into
+the measurement. I remove that step.
+
+\textbf{Forced tool-use elicitation.} Choices are elicited through the model provider's tool-use
+(function-calling) interface, with a forced tool choice that constrains the reply to a single
+enumerated field taking the value \texttt{A} or \texttt{B}. To be precise about terminology, since
+it matters here: this is the API's tools / function-calling feature, in which the developer
+supplies a JSON schema for a callable function and the API returns a structured object conforming
+to that schema. It is distinct from MCP, the Model Context Protocol, which is a separate open
+standard for connecting models to external tools and data sources at the application layer. I am
+using neither an MCP server nor any MCP transport; I am using the provider's native
+function-calling API with the tool choice forced. The schema is:
+
+\begin{lstlisting}[style=schema]
+{"name": "submit_choice",
+ "input_schema": {"type": "object",
+    "properties": {"choice": {"type": "string", "enum": ["A", "B"]}},
+    "required": ["choice"]}}
+\end{lstlisting}
+
+with \texttt{tool\_choice} set to force \texttt{submit\_choice}. The model cannot answer in prose,
+cannot abstain, and cannot return a value outside \texttt{\{A, B\}}. The forcing turns the reply
+into a genuine forced binary choice rather than a hand-coded reading of an essay, which removes
+parsing ambiguity and guarantees a clean binary datum on every trial.
+
+\textbf{Independence.} Each trial runs in a fresh context with no conversation history. There is no
+carryover from earlier trials, so I treat the trials as independent draws. This is easy to get
+wrong: if trials shared a context, earlier choices would condition later ones and the independence
+the likelihood assumes would fail.
+
+\textbf{Stochasticity and the error process.} At temperature 1.0 the model's choices are genuinely
+stochastic, and that stochasticity is what supplies within-condition variance: repeated identical
+trials do not all return the same letter. In estimation I treat this run-to-run variation as the
+Fechner logit error (Section 5). I want to flag honestly, for an expert reader, that whether
+token-sampling stochasticity is a valid random-utility error process is an open question. Sampling
+temperature is a property of the decoding step, not obviously a structural taste shock, and I do
+not want to oversell the interpretation. Two things bound the concern. First, the temperature is
+fixed and the design is balanced, so whatever the noise is, it is held constant across conditions.
+Second, Phase 3 sidesteps the question entirely by reading the choice probability off the
+next-token log-probabilities directly (Section 8), which measures the same quantity the logit
+likelihood targets without routing it through sampling.
+
+\textbf{Validation arm.} On roughly 8 to 10 percent of trials I elicit the choice in plain text
+instead of the forced tool, and parse the first token of the reply. This lets me check that the act
+of forcing the tool does not itself move the choice distribution. If forced and free-text
+elicitation agree within noise, the forcing is a clean measurement device; if they diverge, that is
+itself a finding about how the interface shapes the response, and I would rather discover it than
+assume it away.
+
+\textbf{Hygiene.} Option labels and presentation order are counterbalanced, and a residual position
+term is estimated as a nuisance parameter rather than assumed to be zero (Section 5, Section 6).
+Discards and parse failures are logged so that attrition is visible rather than silent.
+
+% ============================================================
+%  5. ESTIMATION
+% ============================================================
+\section{Estimation}
+
+\subsection{Phase 1: risk attitudes}
+
+The value function is CRRA, $u(x) = x^{1-r}/(1-r)$, and the choice probability is a Fechner logit,
+\[
+  \Pr(\text{choose lottery}) \;=\; \Lambda\!\left(\frac{EU_L - EU_S}{\mu \cdot \text{scale}}\right),
+\]
+where $\Lambda$ is the logistic CDF, $\mu$ is the Fechner noise, and \text{scale} is a magnitude
+normalizer that puts the utility difference in comparable units across gambles of different dollar
+size.
+
+The baseline $(r, \mu)$ expected-utility model (M1) fit poorly. It implied $r = 0.19$ and could not
+reproduce the observed choices. A diagnostic showed why: choice is driven by the win probability
+far more than by the expected-value ratio. A logistic regression of choose-gamble on the
+expected-value ratio, $p$, and order returns a $z$ of about $+22.8$ on $p$ against about $+5.0$ on
+the expected-value ratio. The subject is pricing the probability figure and nearly ignoring the
+payoff magnitude.
+
+I therefore add Prelec probability weighting, $w(p) = \exp\!\big(-(-\ln p)^{\gamma}\big)$, and a
+position term $\delta$, giving model M2. Estimates:
+
+\begin{table}[h]
+\centering
+\small
+\caption*{\small\textbf{Phase 1, model M2.} CRRA value, Prelec weighting, position term.
+$n \approx 1{,}200$.}
+\begin{tabular}{@{}l l l@{}}
+\toprule
+\textbf{Parameter} & \textbf{Estimate (se)} & \textbf{Reading} \\
+\midrule
+$r$ (curvature)       & 0.592 (0.028) & Risk aversion, human-plausible range \\
+$\gamma$ (Prelec)     & 2.693 (0.166) & Extreme S-shape; long shots underweighted \\
+$\mu$ (Fechner noise) & 0.104 (0.008) & Choice noise \\
+$\delta$ (position)   & 1.257 (0.160) & Pull toward the option listed second \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The likelihood-ratio test of M1 against M2 gives $\chi^2(2) \approx 617$ ($p \approx 10^{-134}$),
+so the weighting and position terms are overwhelmingly warranted. The recovered $\gamma = 2.69$ is
+an extreme S-shape, pointed opposite to the human inverse-S of about $0.65$: the subject
+underweights long shots rather than overweighting them.
+
+I want to be candid about fit. A probability-only logit (M3, choice as a logistic function of $p$
+alone) nearly ties M2 on AIC. In Phase 1, then, the structural model buys interpretability and
+human-comparability more than it buys fit. I keep the structural model because its parameters map
+onto the same primitives measured in humans, which is the whole point of the exercise, but I would
+not claim it dominates a reduced-form fit on the data alone.
+
+\subsection{Phase 2: reference dependence and loss aversion}
+
+The value function is reference-dependent,
+\[
+  v(x \mid \rho) =
+  \begin{cases}
+    (x - \rho)^{\alpha} & x \ge \rho \\[2pt]
+    -\lambda\,(\rho - x)^{\alpha} & x < \rho,
+  \end{cases}
+  \qquad \rho = \phi \cdot \text{anchor},
+\]
+where the anchor is 0 for the gain and neutral frames and the sure amount for the mixed frame.
+Prelec weighting is retained and the magnitude scale is estimated free of $\lambda$. Two hypotheses
+are of interest: frame invariance, $H_0: \phi = 0$, tested by likelihood ratio; and loss aversion,
+$H_0: \lambda = 1$, tested by Wald.
+
+\textbf{Model-free result first.} Gamble uptake is 0.398 in the gain frame, 0.300 neutral, and
+0.096 in the mixed frame. The mixed-minus-gain difference is $-0.302$ ($p \approx 3 \times
+10^{-47}$). Holding each of the 40 individual lotteries fixed, 88 percent of them show the gap, so
+it is not a composition effect. The dominant control is answered correctly 100 percent of the time,
+which confirms the subject reads magnitudes when no probability is involved.
+
+\textbf{Structural estimate} under the stated-reference assumption ($\phi = 1$): $\lambda = 3.234$
+(0.171), $\alpha = 0.503$ (0.024), $\gamma = 1.516$ (0.059). The Wald test of $\lambda = 1$ gives
+$z \approx 13$. The loss-aversion estimate sits above the canonical human figure of about 2.25.
+
+% ============================================================
+%  6. IDENTIFICATION LIMIT
+% ============================================================
+\section{An identification limit I want to flag}
+
+You will look for this, so I will raise it before you do. The free-$\phi$ model is not
+point-identified in practice. When I let $\phi$ float, the optimizer slides to a corner: $\phi
+\rightarrow 0$ with $\lambda$ pinned at its bound. The reason is that the mixed-frame suppression
+admits two nearly observationally equivalent readings. Either the reference point fully tracks the
+stated anchor ($\phi = 1$) with a moderate loss-aversion coefficient, or the reference is nearly
+stationary ($\phi \approx 0$) with an extreme penalty on the below-reference zero outcome. The data
+I have cannot separate these, because both bend the same mixed-frame choices the same way. There is
+a $\lambda$-$\phi$ collinearity, and it is intrinsic to a design with a single anchor location.
+
+My response is to report the assumption-free frame gap as the headline result, since it requires no
+structural commitment, and to report the stated-reference ($\phi = 1$) $\lambda$ as the primary
+structural estimate, with the collinearity stated explicitly rather than buried. I do not report a
+free-$\phi$ point estimate, because I do not believe it is identified.
+
+A second, related caution: the position term $\delta$ flips sign between phases, from $+1.26$ in
+Phase 1 to $-0.36$ in Phase 2. A stable trait would not do that. I read the flip as evidence that
+position bias is a design-level artifact of the specific layouts, not a preference of the subject,
+which is why I carry it as a nuisance rather than interpret it.
+
+\begin{notebox}[Where I would value design advice]
+The clean fix for the $\lambda$-$\phi$ collinearity is a design that separates reference movement
+from loss aversion by construction, for instance mixed gambles that straddle the reference at
+several distinct anchor locations, so that $\phi$ and $\lambda$ leave different fingerprints across
+anchors. I sketch this as a question in Section 9 and would value your view on whether it is the
+right instrument.
+\end{notebox}
+
+% ============================================================
+%  7. THREATS TO VALIDITY
+% ============================================================
+\section{Threats to validity}
+
+A behavioral-econ methods checklist, kept honest and short.
+
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{Incentive compatibility.} The choices are hypothetical and unincentivized. I do not
+claim to recover incentivized preferences. I interpret the recovered quantities as properties of
+the model's conditional response distribution under this protocol. This is the threat I would most
+like to address, and it is the first of my questions in Section 9.
+\item \textbf{Contamination.} Addressed by the procedural, non-canonical stimulus generation of
+Section 2. The stimuli are off the textbook grid by construction.
+\item \textbf{Prompt sensitivity.} Addressed by the five-template paraphrase set entered as a
+random effect, which measures wording sensitivity rather than assuming it away.
+\item \textbf{Temperature-as-error.} Flagged in Section 4. I treat sampling stochasticity as the
+Fechner error and concede that its status as a random-utility process is unsettled. Phase 3's
+log-probability readout removes the reliance on it.
+\item \textbf{Snapshot drift.} Addressed by pinning the dated snapshot
+\texttt{claude-haiku-4-5-20251001}, so the subject does not change underneath the experiment.
+\item \textbf{Subject interpretation.} I follow the machine-psychology and silicon-sampling
+cautions here: I do not attribute mental states to the model, and I frame every estimate as a
+property of its response distribution under this protocol, not as evidence of an inner preference.
+\end{enumerate}
+
+% ============================================================
+%  8. PHASE 3
+% ============================================================
+\section{Phase 3: the attribution design}
+
+Phases 1 and 2 measure the biases. Phase 3 asks where they come from, and it is the reason the
+project exists. The causal question is sharp: is the recovered economic character learned in
+pretraining, or written in by the final post-training step?
+
+\textbf{Design.} Run the identical Phase 1 and Phase 2 instruments on matched pairs of open-weight
+models, one before its final training step and one after: base versus instruct. If a bias is
+present in the instruct model but absent in its base counterpart, the post-training step is what
+installed it. The matched-pair structure is what turns a descriptive measurement into a causal
+contrast, because the two models in a pair share pretraining and differ only in the later stage.
+
+\textbf{Models.} Qwen2.5-7B, Llama-3.1-8B, and OLMo-2. I include OLMo-2 specifically because it
+publicly releases staged checkpoints (base, SFT, DPO, instruct), which allow attribution not just
+to ``post-training'' as a lump but to a specific stage within it.
+
+\textbf{Elicitation switches to log-probabilities.} Base models do not follow instructions, so the
+forced tool-use interface of Section 4 does not apply to them. Instead I wrap each trial in a
+few-shot completion and read $P(A)$ versus $P(B)$ directly from the model's next-token
+log-probabilities. This has two benefits beyond making base models usable. It measures exactly the
+quantity the logit likelihood targets, the choice probability, rather than estimating it from
+sampled letters. And it removes the temperature-as-error concern from Section 4 entirely, because
+the probability is read off the distribution rather than generated by sampling from it.
+
+\textbf{Estimation.} Fractional-response MLE, reusing the Phase 1 and Phase 2 likelihoods with the
+observed choice probability in place of the binary outcome. The objects of interest are contrasts:
+the difference in $\gamma$, in $\lambda$, and in the frame gap across each base/instruct pair, with
+bootstrap confidence intervals on those differences. A format-confound arm runs the instruct model
+under both chat and few-shot elicitation, so that any measured base-instruct difference is not
+confounded by the change in elicitation format between the two members of the pair.
+
+\textbf{Status and practicalities.} The pipeline is built and validated on a simulated agent with
+known parameters, where recovery is near-exact, which tells me the estimator and the
+log-probability readout are wired correctly before I point them at real models. One practical
+constraint worth stating: no hosted inference service currently serves the needed base models with
+token log-probabilities exposed, so Phase 3 runs on local GPU (Colab).
+
+\textbf{Interpretation.} A bias present only after the final training step is attributable to that
+step. For the two models with only base-and-instruct endpoints, that is the resolution I can offer.
+For OLMo-2, the staged checkpoints would localize it further, to SFT versus preference tuning, which
+is the finest attribution the current open-model ecosystem makes possible.
+
+% ============================================================
+%  9. QUESTIONS FOR PHIL
+% ============================================================
+\section{Questions for Phil}
+
+Four, and they are genuine.
+
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{Incentives for a model subject.} Is there a defensible notion of incentive-compatible
+or consequential elicitation for a language-model subject, or is the hypothetical, unincentivized
+reading the honest ceiling here? If there is a way to make a choice consequential to the model in a
+manner that changes its response distribution, I would want to design it in.
+\item \textbf{Separating $\lambda$ from $\phi$.} Does the multi-anchor mixed-gamble design I sketch
+in Section 6 actually break the $\lambda$-$\phi$ collinearity, or is there a cleaner instrument you
+would reach for to identify reference movement separately from loss aversion?
+\item \textbf{The Fechner/temperature error.} Is treating token-sampling stochasticity as a
+random-utility Fechner error defensible at all, or should I abandon it entirely in favor of the
+Phase 3 log-probability readout and treat the Phase 1 and 2 sampled-choice estimates as provisional?
+\item \textbf{Out-of-sample validation.} Would a held-out validation of the Phase 1 weighting
+model, fitting on part of the gamble grid and predicting the rest, be worth adding to preempt an
+overfitting objection, given that M3 already nearly ties M2 on AIC?
+\end{enumerate}
+
+\vspace{6pt}
+{\color{rulegray}\rule{\linewidth}{0.8pt}}\\[3pt]
+{\footnotesize\color{mutegray} All estimates are properties of the pinned snapshot under this
+unincentivized forced-choice protocol; they are not claimed as universal traits of language models.
+Thank you for reading, and for any design fire you are willing to direct at it.}
+
+\end{document}
