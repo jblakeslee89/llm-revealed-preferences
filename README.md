@@ -4,7 +4,7 @@ Structural estimation of economic preference primitives (risk aversion, loss ave
 reference dependence) from elicited LLM choices, with a base-vs-instruct contrast to test
 whether post-training instills the biases.
 
-Summer OJT Practicum (Course 1012), Pardee RAND, Jun 29 - Sep 4 2026.
+Summer OJT Practicum (Course 1012), RAND School of Public Policy, Jun 29 - Sep 4 2026.
 
 ## Layout
 
