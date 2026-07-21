@@ -331,7 +331,9 @@ carryover from earlier trials, so I treat the trials as independent draws. This 
 wrong: if trials shared a context, earlier choices would condition later ones and the independence
 the likelihood assumes would fail.
 
-\textbf{Stochasticity and the error process.} At temperature 1.0 the model's choices are genuinely
+\textbf{Stochasticity and the error process.} At temperature 1.0 (temperature is the decoding knob
+that governs randomness; at 1.0 the model samples from its own next-token probabilities as-is,
+which is what supplies the run-to-run variation) the model's choices are genuinely
 stochastic, and that stochasticity is what supplies within-condition variance: repeated identical
 trials do not all return the same letter. In estimation I treat this run-to-run variation as the
 Fechner logit error (Section 5). I want to flag honestly, for an expert reader, that whether
@@ -340,8 +342,9 @@ temperature is a property of the decoding step, not obviously a structural taste
 not want to oversell the interpretation. Two things bound the concern. First, the temperature is
 fixed and the design is balanced, so whatever the noise is, it is held constant across conditions.
 Second, Phase 3 sidesteps the question entirely by reading the choice probability off the
-next-token log-probabilities directly (Section 8), which measures the same quantity the logit
-likelihood targets without routing it through sampling.
+next-token log-probabilities directly (log-probabilities being the model's internal probability for
+each possible next token, read off directly rather than obtained by sampling; Section 8), which
+measures the same quantity the logit likelihood targets without routing it through sampling.
 
 \textbf{Validation arm.} On roughly 8 to 10 percent of trials I elicit the choice in plain text
 instead of the forced tool, and parse the first token of the reply. This lets me check that the act
@@ -349,6 +352,24 @@ of forcing the tool does not itself move the choice distribution. If forced and 
 elicitation agree within noise, the forcing is a clean measurement device; if they diverge, that is
 itself a finding about how the interface shapes the response, and I would rather discover it than
 assume it away.
+
+\textbf{Validation arm: result.} The two modes do not agree uniformly, and the disagreement is
+itself informative. In Phase 1 they agree: free-text gamble-taking is 0.61 against 0.55 under the
+forced tool ($n_{\text{text}} = 130$), a difference that is not statistically significant
+($p = 0.19$), so for Phase 1 the forcing is a clean measurement device. In Phase 2 they diverge,
+and the divergence bears on the headline. Splitting the framing gap (gain minus mixed) by
+elicitation mode, under the forced tool the gap is $+0.33$ (gain 0.385, mixed 0.057), while under
+free text it is only $+0.09$ (gain 0.527, mixed 0.434). Allowing a free-text reply, which permits a
+little reasoning before the answer, sharply attenuates the framing effect, so the roughly fourfold
+forced-choice framing result is specific to the forced, immediate-answer format. I read this as
+consistent with the finding that permitting deliberation reduces framing susceptibility, which
+makes it both a caveat on the Phase 2 magnitude and arguably a result in its own right; I state it
+as a limitation, not a triumph. Two honest caveats bound how far I push it. The free-text arm is
+smaller (about 74 to 83 parseable choices per frame cell), and its parseable subset may be
+selected, since I keep only replies that lead with a bare letter and discard any that open with
+reasoning such as ``I would choose.'' This motivates a dedicated reason-then-answer arm as a
+cleaner follow-up. The within-mode framing gap under the forced tool remains a valid result for the
+immediate-choice condition; what is format-dependent is its magnitude.
 
 \textbf{Hygiene.} Option labels and presentation order are counterbalanced, and a residual position
 term is estimated as a nuisance parameter rather than assumed to be zero (Section 5, Section 6).
@@ -544,19 +565,34 @@ is the finest attribution the current open-model ecosystem makes possible.
 Four, and they are genuine.
 
 \begin{enumerate}[leftmargin=1.5em]
-\item \textbf{Incentives for a model subject.} Is there a defensible notion of incentive-compatible
-or consequential elicitation for a language-model subject, or is the hypothetical, unincentivized
-reading the honest ceiling here? If there is a way to make a choice consequential to the model in a
-manner that changes its response distribution, I would want to design it in.
+\item \textbf{Incentives for a model subject.} In human experiments we make choices consequential
+with real money, for instance by paying out one randomly selected decision (the BDM mechanism, or
+random-lottery-incentive schemes), and that real consequence is what underwrites incentive
+compatibility. A language model has no wealth and no consumption, so none of those mechanisms
+transfer, and the current methodological consensus treats an LLM's choices as hypothetical, meaning
+properties of its response distribution rather than incentivized preferences. I can see two
+speculative directions for giving a choice genuine consequence to the model, and I would value your
+read on whether either is defensible, or whether you know of a better one. First, embed the lottery
+inside an agentic or reinforcement-learning task so the payoff is denominated in something the model
+actually optimizes, a task budget, the tokens or compute left to finish, or a task score, which
+would make the choice consequential to the model's own objective. Second, a training-side route that
+makes resources genuinely matter to the model before elicitation (payment-augmented RL, along the
+lines of the ``risk-averse AIs'' program). Is either a defensible notion of consequential
+elicitation for a model subject, or is the hypothetical, unincentivized reading the honest ceiling
+here?
 \item \textbf{Separating $\lambda$ from $\phi$.} Does the multi-anchor mixed-gamble design I sketch
 in Section 6 actually break the $\lambda$-$\phi$ collinearity, or is there a cleaner instrument you
 would reach for to identify reference movement separately from loss aversion?
 \item \textbf{The Fechner/temperature error.} Is treating token-sampling stochasticity as a
 random-utility Fechner error defensible at all, or should I abandon it entirely in favor of the
 Phase 3 log-probability readout and treat the Phase 1 and 2 sampled-choice estimates as provisional?
-\item \textbf{Out-of-sample validation.} Would a held-out validation of the Phase 1 weighting
-model, fitting on part of the gamble grid and predicting the rest, be worth adding to preempt an
-overfitting objection, given that M3 already nearly ties M2 on AIC?
+\item \textbf{Out-of-sample validation.} By held-out validation I mean fitting the Phase 1
+weighting model on part of the gamble grid, for instance 30 of the 40 gambles, then predicting the
+choices on the held-out 10 that the model never saw during fitting. The motivation is direct:
+because a probability-only reduced form (M3) nearly ties the structural model (M2) on AIC, an
+overfitting objection is natural, and a held-out test would show directly whether the estimated
+probability-weighting is real structure or fitted noise. Is it worth adding? My lean is yes, since
+it is cheap.
 \end{enumerate}
 
 \vspace{6pt}
