@@ -194,37 +194,13 @@ the same way that a human underwriter's or a trader's judgment is a governance o
 audit, and stress-test human judgment in those positions. We will need to do the same for the AI agents,
 and that requires first being able to measure what the model's decision rule actually is.
 
-\textbf{Phase 1:} An agent that prices the probability of an outcome and underweights the size of the
-payoff will make a specific, predictable error: it will systematically decline high-value, low-probability
-options and over-accept likely-but-modest ones. In an economic seat that means passing on research bets,
-tail-risk hedges, and catastrophe insurance, the exact places where a small probability guards against a
-large loss, while leaning into safe, small, high-probability gains. This is a directional distortion, not
-random noise, which makes it both exploitable by a counterparty who understands it and invisible to the
-accuracy metrics we usually score models on. A model can look excellent on task accuracy and still carry
-this bias untouched.
-
-\textbf{Phase 2:} Frame dependence means the same decision, worded two ways that a rational agent would
-treat as identical, yields two different choices. Whoever controls the wording or the interface therefore
-controls the agent's decision. That is a manipulation problem: an adversary who can shape how a situation
-is described to the model can steer its choice without touching the underlying economics. It is also a
-consistency and fairness problem when the decisions concern people, because two applicants, two claims, or
-two counterparties presented in different but economically equivalent language would be treated
-differently by the same system.
-
-The validation-arm nuance is itself policy-relevant. I find that the measured size of the framing bias
-depends on how the model is queried, larger under a forced immediate choice and much smaller under free
-text. That has a direct implication for any evaluation or certification standard: the standard has to fix
-the elicitation protocol, or two evaluators will report different bias levels for the same model and both
-will be right about what they measured. A bias number without a stated elicitation protocol is not a
-comparable number.
-
 There is a specific safety and AI-control angle. A live class of control proposals wants to use a model's
 risk attitude as a safety lever. The sharpest is the Forethought ``risk-averse AIs'' program (Newberry
 and Ord, 2025).\footnote{\url{https://www.forethought.org/research/risk-averse-ais}} The idea is to pay a
 possibly-misaligned model a modest sure amount so that it prefers that to a low-probability attempt at
 seizing power, which works out to an expected-utility comparison the model is assumed to perform.
 
-Attribution is actionable. Knowing whether these biases are learned in broad pretraining or written in by
+Knowing whether these biases are learned in broad pretraining or written in by
 the final alignment step tells a developer where to intervene, and tells a policymaker whether the remedy
 is a data question or a training-procedure question.
 
