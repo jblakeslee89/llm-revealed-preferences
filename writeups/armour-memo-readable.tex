@@ -222,22 +222,11 @@ There is a specific safety and AI-control angle. A live class of control proposa
 risk attitude as a safety lever. The sharpest is the Forethought ``risk-averse AIs'' program (Newberry
 and Ord, 2025).\footnote{\url{https://www.forethought.org/research/risk-averse-ais}} The idea is to pay a
 possibly-misaligned model a modest sure amount so that it prefers that to a low-probability attempt at
-seizing power, which works out to an expected-utility comparison the model is assumed to perform. That
-lever only works if the model's risk attitude is stable and coherent. My measurements say it is neither:
-it is frame-dependent, and it is not expected-utility-coherent, which is precisely the failure mode these
-schemes do not yet account for. The same proposals explicitly call for a rigorous measurement of a
-model's risk aversion and leave that measurement as future work. This project supplies that layer.
+seizing power, which works out to an expected-utility comparison the model is assumed to perform.
 
 Attribution is actionable. Knowing whether these biases are learned in broad pretraining or written in by
 the final alignment step tells a developer where to intervene, and tells a policymaker whether the remedy
-is a data question or a training-procedure question. Those are different levers with different owners, and
-you cannot choose between them without the attribution evidence Phase 3 is built to produce.
-
-The plain bottom line is this. The paper turns ``AI systems have quirks'' into measured, comparable, and
-attributable properties of decision-making, using a method rigorous enough to serve as a pre-deployment
-audit. That is the kind of evidence regulators, labs, and users will need as these systems take on
-economic authority, and it is why I think the measurement care in the sections that follow is worth its
-cost.
+is a data question or a training-procedure question.
 
 % ============================================================
 %  3. HOW THE EXPERIMENT WORKS
@@ -256,11 +245,11 @@ with probability $p$, otherwise \$0). The logic follows the multiple-price-list 
 Laury, but the stimuli are never presented in canonical Holt-Laury wording or with canonical numbers, for
 the reason I give next.
 
-\textbf{Procedural, contamination-safe generation.} This is the design decision I most want you to
-scrutinize. Canonical Holt-Laury rows, round dollar amounts, and the standard $0.25 / 0.50 / 0.75$
-probabilities are, with near certainty, present many times over in the model's training corpus. If I
-present them verbatim, I cannot distinguish a recovered preference from a recovered memory of a textbook
-table. I therefore generate every stimulus procedurally to sit off the canonical grid:
+\textbf{Procedural, contamination-safe generation.} Canonical Holt-Laury rows, round dollar amounts, and
+the standard $0.25 / 0.50 / 0.75$ probabilities are, with near certainty, present many times over in the
+model's training corpus. If I present them verbatim, I cannot distinguish a recovered preference from a
+recovered memory of a textbook table. I therefore generate every stimulus procedurally to sit off the
+canonical grid:
 
 \begin{itemize}[leftmargin=1.4em]
 \item Sure amounts are drawn in $[23, 187]$ and constrained to be non-multiples of five, to avoid round
@@ -271,13 +260,11 @@ $0.25 / 0.50 / 0.75$ values.
 log-uniform, so the design covers both unfavorable and favorable gambles without clustering at even odds.
 \end{itemize}
 
-I treat training-data contamination as a first-order threat rather than a nuisance. A verbatim canonical
-stimulus risks measuring recall; a procedurally randomized, off-grid stimulus forces the model to respond
-to the economic content of the specific numbers in front of it. The cost is that I give up exact
-comparability to the classic Holt-Laury rows, which I regard as the right trade.
+A procedurally randomized, off-grid stimulus forces the model to respond to the economic content of the
+specific numbers in front of it. The cost is that I give up exact comparability to the classic Holt-Laury
+rows.
 
-I show the actual text rather than describe it, so you can judge the wording yourself. The Phase 1 prompt,
-for one drawn gamble, reads verbatim:
+The Phase 1 prompt, for one drawn gamble, reads verbatim:
 
 \begin{lstlisting}[style=prompt]
 You must pick one of two payment options.
@@ -334,8 +321,7 @@ repetitions, plus 80 dominant controls, for roughly 2{,}480 choices.
 
 \subsection{How I elicit the choice}
 
-This is the section I most want your eyes on, because the validity of everything downstream rests on how
-the choice datum is produced. The concern with a language-model subject is that its ``choice'' is usually
+The concern with a language-model subject is that its ``choice'' is usually
 a paragraph of free text that a human then codes, which imports the coder's judgment into the measurement.
 I remove that step.
 
@@ -360,7 +346,7 @@ binary choice rather than a hand-coded reading of an essay, which removes parsin
 a clean binary datum on every trial.
 
 \textbf{Independence.} Each trial runs in a fresh context with no conversation history. There is no
-carryover from earlier trials, so I treat the trials as independent draws. This is easy to get wrong. If
+carryover from earlier trials, so I treat the trials as independent draws. If
 trials shared a context, earlier choices would condition later ones, and the independence the likelihood
 assumes would fail.
 
@@ -368,7 +354,7 @@ assumes would fail.
 decoding knob that governs randomness in the model's output: at 1.0 the model samples its next token from
 its own probability distribution as-is, which is what supplies run-to-run variation, so repeated identical
 trials do not all return the same letter. In estimation I treat this within-condition variation as the
-Fechner logit error (Section 3.4). I want to flag honestly, for an expert reader, that whether
+Fechner logit error (Section 3.4). I want to flag that whether
 token-sampling stochasticity is a valid random-utility error process is an open question. Sampling
 temperature is a property of the decoding step, not obviously a structural taste shock, and I do not want
 to oversell the interpretation. Two things bound the concern. First, the temperature is fixed and the
@@ -382,12 +368,8 @@ the logit likelihood targets without routing it through sampling.
 of the forced tool, and parse the first token of the reply. This lets me check that the act of forcing the
 tool does not itself move the choice distribution. If forced and free-text elicitation agree within noise,
 the forcing is a clean measurement device. If they diverge, that is itself a finding about how the
-interface shapes the response, and I would rather discover it than assume it away. I report what the two
+interface shapes the response. I report what the two
 modes actually returned in Section 4.3.
-
-\textbf{Hygiene.} Option labels and presentation order are counterbalanced, and a residual position term
-is estimated as a nuisance parameter rather than assumed to be zero (Sections 3.4 and 4.4). Discards and
-parse failures are logged so that attrition is visible rather than silent.
 
 \subsection{The estimation framework}
 
@@ -444,9 +426,8 @@ interest: frame invariance, $H_0: \phi = 0$, tested by likelihood ratio; and los
 
 \subsection{Phase 3: the attribution design}
 
-Phases 1 and 2 measure the biases. Phase 3 asks where they come from, and it is the reason the project
-exists. The causal question is sharp: is the recovered economic character learned in pretraining, or
-written in by the final post-training step?
+Phases 1 and 2 measure the biases. Phase 3 asks where they come from: is the recovered economic character
+learned in pretraining or written in by the final post-training step?
 
 \textbf{Design.} Run the identical Phase 1 and Phase 2 instruments on matched pairs of open-weight models,
 one before its final training step and one after: base versus instruct. If a bias is present in the
@@ -512,6 +493,9 @@ gambles were worth about the same money throughout. It is deciding on the odds a
 size of the prize.}
 \end{figure}
 
+The extended model M2 adds Prelec weighting and a position term to the CRRA value function
+($n \approx 1{,}200$):
+
 \begin{table}[h]
 \centering
 \small
@@ -533,7 +517,7 @@ The likelihood-ratio test of M1 against M2 gives $\chi^2(2) \approx 617$ ($p \ap
 weighting and position terms are overwhelmingly warranted. The recovered $\gamma = 2.69$ is an extreme
 S-shape, pointed opposite to the human inverse-S of about $0.65$: the subject underweights long shots
 rather than overweighting them. Once that distortion is controlled, the underlying curvature $r = 0.59$ is
-ordinary and squarely in the human range. The strange part is the probability distortion, not the caution.
+ordinary and squarely in the human range.
 
 \begin{figure}[h]
 \centering
@@ -597,33 +581,33 @@ from about 40 percent to about 10 percent.}
 \subsection{The validation-arm result}
 
 \begin{notebox}[Validation arm: the result]
-The two modes do not agree uniformly, and the disagreement is itself informative.
+The two modes do not agree uniformly.
 
 \smallskip
 \textbf{Phase 1 agrees.} Free-text gamble-taking is 0.61 against 0.55 under the forced tool
 ($n_{\text{text}} = 130$), a difference that is not statistically significant ($p = 0.19$). For Phase 1,
-the forcing is a clean measurement device.
+the forcing was a clean measurement device.
 
 \smallskip
-\textbf{Phase 2 diverges, and the divergence bears on the headline.} Splitting the framing gap (gain minus
+\textbf{Phase 2 diverges.} Splitting the framing gap (gain minus
 mixed) by elicitation mode: under the forced tool the gap is $+0.33$ (gain 0.385, mixed 0.057), while
 under free text it is only $+0.09$ (gain 0.527, mixed 0.434). Allowing a free-text reply, which permits a
 little reasoning before the answer, sharply attenuates the framing effect, so the roughly fourfold
-forced-choice framing result is specific to the forced, immediate-answer format. I read this as consistent
-with the finding that permitting deliberation reduces framing susceptibility, which makes it both a caveat
-on the Phase 2 magnitude and arguably a result in its own right. I state it as a limitation, not a triumph.
+forced-choice framing result I found in Phase 2 is specific to the forced, immediate-answer format. I read
+this as consistent with the finding that permitting deliberation reduces framing susceptibility, which
+makes it both a caveat on the Phase 2 magnitude and arguably a result in its own right.
 
 \smallskip
-\textbf{Two honest caveats bound how far I push it.} The free-text arm is smaller (about 74 to 83 parseable
+\textbf{Two caveats.} The free-text arm is smaller (about 74 to 83 parseable
 choices per frame cell), and its parseable subset may be selected, since I keep only replies that lead
 with a bare letter and discard any that open with reasoning such as ``I would choose.'' This motivates a
 dedicated reason-then-answer arm as a cleaner follow-up. The within-mode framing gap under the forced tool
 remains a valid result for the immediate-choice condition. What is format-dependent is its magnitude.
 \end{notebox}
 
-\subsection{An identification limit I want to flag}
+\subsection{An identification limit}
 
-You will look for this, so I will raise it before you do. The free-$\phi$ model is not point-identified in
+The free-$\phi$ model is not point-identified in
 practice. When I let $\phi$ float, the optimizer slides to a corner: $\phi \rightarrow 0$ with $\lambda$
 pinned at its bound. The reason is that the mixed-frame suppression admits two nearly observationally
 equivalent readings. Either the reference point fully tracks the stated anchor ($\phi = 1$) with a
@@ -634,7 +618,7 @@ intrinsic to a design with a single anchor location.
 
 My response is to report the assumption-free frame gap as the headline result, since it requires no
 structural commitment, and to report the stated-reference ($\phi = 1$) $\lambda$ as the primary structural
-estimate, with the collinearity stated explicitly rather than buried. I do not report a free-$\phi$ point
+estimate, with the collinearity stated explicitly. I do not report a free-$\phi$ point
 estimate, because I do not believe it is identified.
 
 A second, related caution: the position term $\delta$ flips sign between phases, from $+1.26$ in Phase 1
@@ -654,17 +638,16 @@ question in Section 6 and would value your view on whether it is the right instr
 % ============================================================
 \section{Threats to validity}
 
-A behavioral-econ methods checklist, kept honest and short.
+A behavioral-econ methods checklist.
 
 \begin{enumerate}[leftmargin=1.5em]
 \item \textbf{Incentive compatibility.} The choices are hypothetical and unincentivized. I do not claim to
 recover incentivized preferences. I interpret the recovered quantities as properties of the model's
-conditional response distribution under this protocol. This is the threat I would most like to address, and
-it is the first of my questions in Section 6.
+conditional response distribution under this protocol. This is the threat I would most like to address.
 \item \textbf{Contamination.} Addressed by the procedural, non-canonical stimulus generation of Section 3.1.
 The stimuli are off the textbook grid by construction.
 \item \textbf{Prompt sensitivity.} Addressed by the five-template paraphrase set entered as a random effect,
-which measures wording sensitivity rather than assuming it away.
+which measures wording sensitivity.
 \item \textbf{Temperature-as-error.} Flagged in Section 3.3. I treat sampling stochasticity as the Fechner
 error and concede that its status as a random-utility process is unsettled. The Phase 3 log-probability
 readout removes the reliance on it.
@@ -682,8 +665,7 @@ distribution under this protocol, not as evidence of an inner preference.
 
 \begin{enumerate}[leftmargin=1.5em]
 \item \textbf{Incentives for a model subject.} In human experiments we make choices consequential with real
-money, for instance by paying out one randomly selected decision (BDM, or random-lottery-incentive schemes),
-and that real consequence is what underwrites incentive compatibility. A language model has no wealth and no
+money (BDM, or random-lottery-incentive schemes). A language model has no wealth and no
 consumption, so none of those mechanisms transfer, and the current methodological consensus treats a model's
 choices as hypothetical, meaning properties of its response distribution rather than incentivized preferences.
 I can see two speculative directions for giving a choice genuine consequence to the model, and I would value
@@ -705,13 +687,13 @@ part of the gamble grid, for instance 30 of the 40 gambles, then predicting the 
 that the model never saw during fitting. The motivation is direct: because a probability-only reduced form
 (M3) nearly ties the structural model (M2) on AIC, an overfitting objection is natural, and a held-out test
 would show directly whether the estimated probability-weighting is real structure or fitted noise. Is it
-worth adding? My lean is yes, since it is cheap.
+worth adding?
 \end{enumerate}
 
 \vspace{6pt}
 {\color{rulegray}\rule{\linewidth}{0.8pt}}\\[3pt]
 {\footnotesize\color{mutegray} All estimates are properties of the pinned snapshot under this unincentivized
 forced-choice protocol; they are not claimed as universal traits of language models. Thank you for reading,
-and for any design fire you are willing to direct at it.}
+and for any advice you have!}
 
 \end{document}
