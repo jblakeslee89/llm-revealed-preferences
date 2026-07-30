@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  21 JUL 2026 15:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  29 JUL 2026 17:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -804,24 +804,24 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 (./armour-memo-readable.aux)
 \openout1 = `armour-memo-readable.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 141.
-LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 123.
+LaTeX Font Info:    ... okay on input line 123.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -890,7 +890,7 @@ Package: inputenc 2024/02/08 v1.3d Input encoding file
 \inpenc@prehook=\toks44
 \inpenc@posthook=\toks45
 )
-Package hyperref Info: Link coloring OFF on input line 141.
+Package hyperref Info: Link coloring OFF on input line 123.
 
 (./armour-memo-readable.out) (./armour-memo-readable.out)
 \@outlinefile=\write4
@@ -900,24 +900,23 @@ Package hyperref Info: Link coloring OFF on input line 141.
 
 [1
 
-{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-
-[2{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
-}]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 296
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
+al/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+LaTeX Font Info:    Trying to load font information for U+msa on input line 223
 .
- (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 296
+LaTeX Font Info:    Trying to load font information for U+msb on input line 223
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
-[3]
-Overfull \hbox (6.75296pt too wide) in paragraph at lines 341--343
+[2]
+Overfull \hbox (6.75296pt too wide) in paragraph at lines 268--270
 []\OT1/cmr/m/n/10.95 Probabilities are jit-tered to two dec-i-mals in $[0\OML/c
 mm/m/it/10.95 :\OT1/cmr/m/n/10.95 19\OML/cmm/m/it/10.95 ; \OT1/cmr/m/n/10.95 0\
 OML/cmm/m/it/10.95 :\OT1/cmr/m/n/10.95 83]$ and nudged off the canon-i-cal $0\O
@@ -928,29 +927,36 @@ ML/cmm/m/it/10.95 :\OT1/cmr/m/n/10.95 25\OML/cmm/m/it/10.95 =\OT1/cmr/m/n/10.95
 
 
 
-[4]
+[3]
 
-[5]
+[4]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-438.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 438.
+358.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 358.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 438.
+(Font)              for symbol `textbraceleft' on input line 358.
 
 
+
+[5]
 
 [6]
 
 [7]
-<figures/fig3_empirical_p1.pdf, id=173, 393.24872pt x 277.7283pt>
+<figures/fig3_empirical_p1.pdf, id=177, 393.24872pt x 277.7283pt>
 File: figures/fig3_empirical_p1.pdf Graphic file (type pdf)
 <use figures/fig3_empirical_p1.pdf>
-Package pdftex.def Info: figures/fig3_empirical_p1.pdf  used on input line 530.
+Package pdftex.def Info: figures/fig3_empirical_p1.pdf  used on input line 505.
 
 (pdftex.def)             Requested size: 375.80544pt x 265.42531pt.
+<figures/fig2_weighting.pdf, id=178, 378.74991pt x 306.6363pt>
+File: figures/fig2_weighting.pdf Graphic file (type pdf)
+<use figures/fig2_weighting.pdf>
+Package pdftex.def Info: figures/fig2_weighting.pdf  used on input line 540.
+(pdftex.def)             Requested size: 375.80544pt x 304.27272pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -958,43 +964,37 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 [8 <./figures/fig3_empirical_p1.pdf>]
-<figures/fig2_weighting.pdf, id=224, 378.74991pt x 306.6363pt>
-File: figures/fig2_weighting.pdf Graphic file (type pdf)
-<use figures/fig2_weighting.pdf>
-Package pdftex.def Info: figures/fig2_weighting.pdf  used on input line 579.
-(pdftex.def)             Requested size: 375.80544pt x 304.27272pt.
-
-
-[9 <./figures/fig2_weighting.pdf>]
-<figures/fig5_framing.pdf, id=275, 407.65747pt x 277.50839pt>
+<figures/fig5_framing.pdf, id=229, 407.65747pt x 277.50839pt>
 File: figures/fig5_framing.pdf Graphic file (type pdf)
 <use figures/fig5_framing.pdf>
-Package pdftex.def Info: figures/fig5_framing.pdf  used on input line 627.
+Package pdftex.def Info: figures/fig5_framing.pdf  used on input line 569.
 (pdftex.def)             Requested size: 375.80544pt x 255.82318pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/fig4_lossaversion.pdf, id=276, 378.74097pt x 306.6363pt>
+
+
+[9 <./figures/fig2_weighting.pdf>]
+<figures/fig4_lossaversion.pdf, id=279, 378.74097pt x 306.6363pt>
 File: figures/fig4_lossaversion.pdf Graphic file (type pdf)
 <use figures/fig4_lossaversion.pdf>
-Package pdftex.def Info: figures/fig4_lossaversion.pdf  used on input line 645.
+Package pdftex.def Info: figures/fig4_lossaversion.pdf  used on input line 587.
 
 (pdftex.def)             Requested size: 375.80544pt x 304.27272pt.
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-[10]
+[10 <./figures/fig5_framing.pdf>]
 
-[11 <./figures/fig5_framing.pdf>]
+[11 <./figures/fig4_lossaversion.pdf>]
 
-[12 <./figures/fig4_lossaversion.pdf>]
+[12]
 
-[13]
-
-[14] (./armour-memo-readable.aux)
+[13] (./armour-memo-readable.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1004,36 +1004,35 @@ L3 programming layer <2025-01-18>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `armour-memo-readable.out' has not changed.
-(rerunfilecheck)             Checksum: 1152E1D4DA4F2A034CD55BC6CEB1104C;2825.
+(rerunfilecheck)             Checksum: 8CF7D75C2C06C9527E270D12AB8EE9D2;2974.
  ) 
 Here is how much of TeX's memory you used:
- 29728 strings out of 473190
- 592769 string characters out of 5715801
- 1147231 words of memory out of 5000000
- 52461 multiletter control sequences out of 15000+600000
+ 29710 strings out of 473190
+ 592415 string characters out of 5715801
+ 1146375 words of memory out of 5000000
+ 52443 multiletter control sequences out of 15000+600000
  569697 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 116i,9n,121p,456b,1348s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 116i,9n,121p,456b,1211s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
 /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
 usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
 r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
-local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/lo
-cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local
-/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/te
-xlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texli
-ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texliv
-e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/
-2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2
-025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/202
-5/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/
-texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on armour-memo-readable.pdf (14 pages, 299918 bytes).
+local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/loc
+al/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/
+texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/tex
+live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texliv
+e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive
+/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2
+025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/202
+5/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
+Output written on armour-memo-readable.pdf (13 pages, 283733 bytes).
 PDF statistics:
- 491 PDF objects out of 1000 (max. 8388607)
- 250 compressed objects within 3 object streams
+ 486 PDF objects out of 1000 (max. 8388607)
+ 248 compressed objects within 3 object streams
  68 named destinations out of 1000 (max. 500000)
- 297 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 305 words of extra memory for PDF output out of 10000 (max. 10000000)
 
