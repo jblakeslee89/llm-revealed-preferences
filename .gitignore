@@ -8,3 +8,6 @@ proposal/*.out
 
 # Office lock files
 ~$*
+
+# Literature PDFs (copyrighted, keep local)
+literature/
