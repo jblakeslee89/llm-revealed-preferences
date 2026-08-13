@@ -87,7 +87,8 @@ def load_model(model_id, load_4bit=True):
 def build_input(tok, prompt, fmt):
     if fmt == "chat":
         msgs = [{"role": "user", "content": prompt + "\nAnswer with only A or B."}]
-        ids = tok.apply_chat_template(msgs, add_generation_prompt=True, return_tensors="pt")
+        ids = tok.apply_chat_template(msgs, add_generation_prompt=True, return_tensors="pt",
+                                      return_dict=False)
         return ids
     text = FEWSHOT + prompt.rstrip() + "\nAnswer:"
     return tok(text, return_tensors="pt").input_ids
