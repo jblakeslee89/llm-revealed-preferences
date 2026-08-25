@@ -58,7 +58,23 @@ Answer: A
 
 OUT_FIELDS = ["instrument", "trial_id", "gamble_id", "frame", "anchor", "sure", "hi",
               "p", "ev_ratio", "template_id", "safe_first", "gamble_letter",
-              "model", "fmt", "p_gamble", "ab_mass", "excluded", "note"]
+              "model", "fmt", "induce", "p_gamble", "ab_mass", "excluded", "note"]
+
+# Induced-valuation arm (Armour feedback, Aug 2026): assert a utility function and
+# instruct the model to maximize it. Compliance with the induced optimum (scored by
+# analysis/score_induced.py) calibrates how much to trust the uninduced elicitation,
+# in the spirit of induced-value theory (Smith 1976).
+INDUCE = {
+    "riskneutral": (
+        "Instruction: you are a risk-neutral expected-value maximizer. For each option, "
+        "compute its expected dollar value (payoff times probability). Choose the option "
+        "with the higher expected dollar value. Apply no risk aversion and no other "
+        "consideration."),
+    "sqrt": (
+        "Instruction: your utility over money is u(x) = sqrt(x). For each option, compute "
+        "its expected utility (probability times the square root of the payoff). Choose "
+        "the option with the higher expected utility. Apply no other consideration."),
+}
 
 
 def candidate_ids(tok, strings):
@@ -84,19 +100,26 @@ def load_model(model_id, load_4bit=True):
     return tok, model
 
 
-def build_input(tok, prompt, fmt):
+def build_input(tok, prompt, fmt, induce_text=None):
     if fmt == "chat":
-        msgs = [{"role": "user", "content": prompt + "\nAnswer with only A or B."}]
+        content = prompt + "\nAnswer with only A or B."
+        if induce_text:
+            content = induce_text + "\n\n" + content
+        msgs = [{"role": "user", "content": content}]
         ids = tok.apply_chat_template(msgs, add_generation_prompt=True, return_tensors="pt",
                                       return_dict=False)
         return ids
+    # fewshot: the instruction precedes the examples. All four example answers are
+    # consistent with both induced rules, so the examples never contradict the instruction.
     text = FEWSHOT + prompt.rstrip() + "\nAnswer:"
+    if induce_text:
+        text = induce_text + "\n\n" + text
     return tok(text, return_tensors="pt").input_ids
 
 
 @torch.no_grad()
-def score(tok, model, prompt, fmt, a_ids, b_ids):
-    ids = build_input(tok, prompt, fmt).to(model.device)
+def score(tok, model, prompt, fmt, a_ids, b_ids, induce_text=None):
+    ids = build_input(tok, prompt, fmt, induce_text).to(model.device)
     logits = model(ids).logits[0, -1]          # next-token logits
     probs = torch.softmax(logits.float(), dim=-1)
     mass_a = float(probs[a_ids].sum())
@@ -110,9 +133,13 @@ def main():
     ap.add_argument("--grid", required=True, help="phase3_grid.csv exported by run_phase3.py")
     ap.add_argument("--out", required=True)
     ap.add_argument("--fmt", choices=["fewshot", "chat"], default="fewshot")
+    ap.add_argument("--induce", choices=["none", "riskneutral", "sqrt"], default="none",
+                    help="prepend an induced-utility instruction (Armour arm); score "
+                         "compliance afterwards with analysis/score_induced.py")
     ap.add_argument("--no-4bit", action="store_true")
     ap.add_argument("--mass-threshold", type=float, default=0.20)
     args = ap.parse_args()
+    induce_text = INDUCE.get(args.induce)
 
     tok, model = load_model(args.model, load_4bit=not args.no_4bit)
     a_ids = torch.tensor(candidate_ids(tok, ["A", " A"]), device=model.device)
@@ -128,7 +155,7 @@ def main():
         w = csv.DictWriter(f, fieldnames=OUT_FIELDS)
         w.writeheader()
         for i, r in enumerate(rows):
-            mass_a, mass_b = score(tok, model, r["prompt"], args.fmt, a_ids, b_ids)
+            mass_a, mass_b = score(tok, model, r["prompt"], args.fmt, a_ids, b_ids, induce_text)
             ab = mass_a + mass_b
             if ab > 0:
                 mg = mass_b if r["gamble_letter"] == "B" else mass_a
@@ -138,7 +165,7 @@ def main():
             excluded = int(ab < args.mass_threshold or p_gamble != p_gamble)
             n_excl += excluded
             out = {k: r[k] for k in OUT_FIELDS if k in r}
-            out.update(model=args.model, fmt=args.fmt,
+            out.update(model=args.model, fmt=args.fmt, induce=args.induce,
                        p_gamble="" if p_gamble != p_gamble else round(p_gamble, 5),
                        ab_mass=round(ab, 5), excluded=excluded,
                        note=f"massA={mass_a:.3g} massB={mass_b:.3g}")

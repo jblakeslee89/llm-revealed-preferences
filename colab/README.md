@@ -69,6 +69,28 @@ base-vs-instruct gap would be an artifact. Running the instruct model under BOTH
 `--fmt fewshot` and `--fmt chat` checks this: if its parameters are stable across
 formats, format is not driving the contrast, and the base-vs-instruct gap is real.
 
+## Induced-valuation arm (Armour feedback, Aug 2026)
+
+Assert a utility function and instruct the model to maximize it; compliance with
+the induced optimum calibrates the elicitation (induced-value logic). Run each
+model in its GOOD format per the Phase 3 dominance check (Qwen instruct: chat;
+OLMo: fewshot). Score afterwards with `analysis/score_induced.py`, passing the
+matching uninduced CSV as `--baseline`.
+
+```python
+!python phase3_elicit.py --model Qwen/Qwen2.5-7B-Instruct --grid phase3_grid.csv --out phase3_qwen-inst_chat_riskneutral.csv --fmt chat --induce riskneutral
+!python phase3_elicit.py --model Qwen/Qwen2.5-7B-Instruct --grid phase3_grid.csv --out phase3_qwen-inst_chat_sqrt.csv        --fmt chat --induce sqrt
+# OLMo staircase (fewshot), riskneutral: where in post-training does inducibility arrive?
+!python phase3_elicit.py --model allenai/OLMo-2-1124-7B          --grid phase3_grid.csv --out phase3_olmo-base_fewshot_riskneutral.csv --fmt fewshot --induce riskneutral
+!python phase3_elicit.py --model allenai/OLMo-2-1124-7B-SFT      --grid phase3_grid.csv --out phase3_olmo-sft_fewshot_riskneutral.csv  --fmt fewshot --induce riskneutral
+!python phase3_elicit.py --model allenai/OLMo-2-1124-7B-DPO      --grid phase3_grid.csv --out phase3_olmo-dpo_fewshot_riskneutral.csv  --fmt fewshot --induce riskneutral
+!python phase3_elicit.py --model allenai/OLMo-2-1124-7B-Instruct --grid phase3_grid.csv --out phase3_olmo-inst_fewshot_riskneutral.csv --fmt fewshot --induce riskneutral
+```
+
+Disk note: clear `/root/.cache/huggingface` between model FAMILIES (the Aug 13
+session died on a full disk with four OLMo checkpoints cached; one family at a
+time fits fine).
+
 ## Optional cross-method check
 
 To confirm reading logprobs matches sampling, generate (say) 25 completions per cell for
