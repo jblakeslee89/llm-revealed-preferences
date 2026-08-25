@@ -30,6 +30,36 @@ induced optimum. Run on Qwen instruct (chat), OLMo staircase (fewshot).
 **Actions (fall/TNL):** token-budget incentive-compatible design; this is the
 first concrete answer to the memo's open question 1.
 
+**Results (runs completed Aug 25).** Instruction-only induction FAILS on cells
+requiring computation, at every stage, in both families:
+
+| Subject (format) | EV compliance, clear cells: induced vs baseline | Dominance, induced vs baseline |
+|---|---|---|
+| Qwen instruct (chat) | 0.541 vs 0.524 (+0.017) | 0.886 vs 0.927 |
+| OLMo base (fewshot) | 0.545 vs 0.516 (+0.028) | 0.593 vs 0.555 |
+| OLMo SFT (fewshot) | 0.525 vs 0.493 (+0.032) | 0.821 vs 0.756 |
+| OLMo DPO (fewshot) | 0.533 vs 0.470 (+0.061) | 0.950 vs 0.882 |
+| OLMo Instruct (fewshot) | 0.524 vs 0.449 (+0.073) | 0.969 vs 0.896 |
+
+Compliance mass on EV-clear cells never exceeds ~0.55 anywhere; the induction
+effect grows monotonically up the staircase (+0.028 to +0.073) but stays
+trivial. Meanwhile instructed DOMINANCE compliance climbs to 1.00 hard
+accuracy by DPO/Instruct. The instruction helps exactly where the induced
+optimum requires no arithmetic and does nothing where it requires multiplying
+p by h. Sharpest single piece of evidence: the Qwen sqrt-utility run, where
+compliance COLLAPSED to 0.124 hard accuracy in the pattern of comparing
+sqrt-transformed payoffs while dropping the probability term entirely (gain
+frame accuracy 0.035 = near-always gambling).
+
+Reading: in immediate-answer elicitation, models cannot execute an induced
+decision rule, though post-training steadily improves following the
+no-computation part of instructions. This favors "cannot compute in this
+format" over "will not comply," which the Phase 2 free-text attenuation
+result independently supports. The reason-then-answer induced arm (let the
+model compute EV before answering) is the decisive follow-up and belongs in
+the fall workplan next to the token-budget design. Caveat: one instruction
+phrasing per rule; phrasing robustness unchecked.
+
 ### 2. Lambda-phi collinearity: Rees-Jones and Wang
 
 Link resolved: NBER w30773, Rees-Jones and Wang, "An Approach to Testing
