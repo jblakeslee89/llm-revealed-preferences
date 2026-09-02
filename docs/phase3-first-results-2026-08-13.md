@@ -22,9 +22,24 @@ logprobs, 4-bit quantization, free Colab T4.
 | `phase3_olmo-inst_fewshot.csv` | OLMo-2-1124-7B-Instruct | fewshot | 0% | 0.992 (0.689) |
 | `phase3_olmo-inst_chat.csv` | OLMo-2-1124-7B-Instruct | chat | 0% | 0.985 (0.753) |
 
-Llama-3.1-8B is not run: it is HF-gated and logging in requires John's token,
-which the overnight agent does not handle. The pair can be added in a fresh
-Colab session in about an hour.
+**Llama update (Aug 31):** the gated pair ran once John's HF access was
+approved (device-flow login, authorized by John in person). All three runs
+clean, 0% excluded, ab_mass medians 0.96 to 0.999:
+`phase3_llama-base_fewshot.csv`, `phase3_llama-inst_fewshot.csv`,
+`phase3_llama-inst_chat.csv`.
+
+Llama headline numbers: base dominance 0.623 (weak engagement, matching the
+other base models); instruct dominance 0.782 fewshot / 0.804 chat. Llama
+instruct is the first model that is roughly FORMAT-STABLE on the model-free
+quantities (dominance and frame gap similar across formats), which completes a
+three-way pattern: Qwen coherent only in chat, OLMo only in fewshot, Llama
+moderately engaged in both. Llama is also nearly frame-INVARIANT (gaps +0.034
+fewshot, -0.051 chat), so the Finding 3 sign-flip claim should be stated as
+three families, three framing responses: Haiku suppresses, Qwen/OLMo amplify,
+Llama barely reacts. Attribution: Delta lambda +1.18 (CI [+1.05, +1.25]) and
+Delta gamma -0.98 (CI [-1.65, -0.71]) from base to instruct, with the base fit
+boundary-pinned as usual. Holdout validation on Llama instruct: structural
+beats p-only 10/10 splits (deviance 0.094 vs 0.117), third family confirmed.
 
 ## Headline model-free quantities
 
