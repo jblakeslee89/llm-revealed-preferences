@@ -354,7 +354,17 @@ OLMo Instruct shows the same instability in the opposite direction. Few-shot is 
 (dominance 0.896, frame gap $+0.349$); the chat format degrades it (dominance 0.636, frame gap $+0.078$,
 $\delta = +3.83$). Llama Instruct is the exception that makes the pattern legible: it is roughly stable
 across both formats, with dominance 0.782 few-shot and 0.804 chat, and frame gaps of $+0.034$ and
-$-0.051$.
+$-0.051$. Figure~\ref{fig:format} puts the three families side by side.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/phase3_format.pdf}
+\caption{Dominance compliance by elicitation format for the three instruct models. Which format elicits
+an engaged subject reverses between Qwen and OLMo, and Llama is stable across both. The same weights
+score 0.680 or 0.927 depending only on how the prompt is packaged, so format is part of the measurement
+rather than a neutral container for it.}
+\label{fig:format}
+\end{figure}
 
 Two methodological consequences follow. Format instability generalizes across model families, while
 which format elicits engaged behavior does not. And a cross-model comparison must hold format fixed
@@ -417,6 +427,19 @@ indifference. The induction effect grows monotonically up the OLMo staircase (fr
 on all core cells, $+0.029$ to $+0.075$ on clear cells) and stays trivial in absolute terms. Instructed
 dominance compliance moves the opposite way, climbing to 0.950 and 0.969 in probability mass at the DPO
 and Instruct stages, which is 1.000 in hard accuracy: every dominant control answered correctly.
+Figure~\ref{fig:induced} sets the two against each other.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/phase3_induced.pdf}
+\caption{Compliance with an instructed decision rule, by what the rule demands. The bars are
+expected-value compliance on cells where following the rule requires multiplying $p$ by $h$: uninduced
+against induced, both hugging chance at every training stage. The line is accuracy on the dominant
+controls under the same instruction, where the induced optimum requires no arithmetic, reaching 1.000 by
+DPO. Post-training buys instruction-following on the cells that need no computation and does not buy the
+computation.}
+\label{fig:induced}
+\end{figure}
 
 The instruction helps exactly where the induced optimum requires no arithmetic and does nothing where it
 requires multiplying $p$ by $h$. The sharpest evidence is the square-root run. Told that
@@ -441,7 +464,18 @@ the 10 held-out gambles, over 10 random splits, the structural model wins on eve
 families tested. Mean held-out per-cell deviance is 0.297 for the structural model against 0.401 for the
 probability-only logit and 0.411 for the constant on Qwen Instruct chat; 0.285 against 0.333 and 0.345 on
 OLMo Instruct few-shot; and 0.094 against 0.117 and 0.125 on Llama Instruct few-shot. The tally is 10/10
-splits in each family, and the ordering is the same on root mean squared error.
+splits in each family (Figure~\ref{fig:holdout}), and the ordering is the same on root mean squared
+error.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/phase3_holdout.pdf}
+\caption{Held-out mean per-cell deviance on gambles the fit never saw, averaged over 10 random 30/10
+splits. The structural model beats the probability-only reduced form in every family and on every
+individual split, and the constant benchmark trails both. Phase 1's in-sample near-tie between the
+structural model and the probability-only logit does not survive out of sample.}
+\label{fig:holdout}
+\end{figure}
 
 The structural model therefore earns its place on prediction, not on interpretability alone. Win
 probability explains a great deal of the behavior, as Phase 1 found. It does not explain the behavior on

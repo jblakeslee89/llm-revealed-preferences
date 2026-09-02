@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  1 SEP 2026 18:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  1 SEP 2026 19:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -475,20 +475,36 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [6]
 
 [7 <./figures/phase3_staircase.pdf>]
+<figures/phase3_format.pdf, id=202, 701.09677pt x 205.87689pt>
+File: figures/phase3_format.pdf Graphic file (type pdf)
+<use figures/phase3_format.pdf>
+Package pdftex.def Info: figures/phase3_format.pdf  used on input line 361.
+(pdftex.def)             Requested size: 469.75502pt x 137.94308pt.
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+
+[8 <./figures/phase3_format.pdf>]
+<figures/phase3_induced.pdf, id=256, 688.7003pt x 220.35776pt>
+File: figures/phase3_induced.pdf Graphic file (type pdf)
+<use figures/phase3_induced.pdf>
+Package pdftex.def Info: figures/phase3_induced.pdf  used on input line 434.
+(pdftex.def)             Requested size: 469.75502pt x 150.30528pt.
 
 
+[9 <./figures/phase3_induced.pdf>]
+<figures/phase3_holdout.pdf, id=316, 701.09744pt x 203.21803pt>
+File: figures/phase3_holdout.pdf Graphic file (type pdf)
+<use figures/phase3_holdout.pdf>
+Package pdftex.def Info: figures/phase3_holdout.pdf  used on input line 472.
+(pdftex.def)             Requested size: 469.75502pt x 136.16156pt.
 
-[8]
 
-[9]
-
-[10]
+[10 <./figures/phase3_holdout.pdf>]
 
 [11]
 
-[12] (./phase3-writeup.aux)
+[12]
+
+[13] (./phase3-writeup.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -497,13 +513,13 @@ Package rerunfilecheck Info: File `phase3-writeup.out' has not changed.
 (rerunfilecheck)             Checksum: 43E6B1B3AE4FDE36BDDA6C787C5E7907;4444.
  ) 
 Here is how much of TeX's memory you used:
- 11426 strings out of 473190
- 173281 string characters out of 5715801
- 601273 words of memory out of 5000000
- 34489 multiletter control sequences out of 15000+600000
+ 11454 strings out of 473190
+ 174105 string characters out of 5715801
+ 602552 words of memory out of 5000000
+ 34513 multiletter control sequences out of 15000+600000
  567452 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,10n,79p,540b,444s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,661b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -517,10 +533,10 @@ l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local
 exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/te
 xlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/tex
 live/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on phase3-writeup.pdf (12 pages, 225788 bytes).
+Output written on phase3-writeup.pdf (13 pages, 269493 bytes).
 PDF statistics:
- 311 PDF objects out of 1000 (max. 8388607)
- 213 compressed objects within 3 object streams
- 57 named destinations out of 1000 (max. 500000)
- 174 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 476 PDF objects out of 1000 (max. 8388607)
+ 239 compressed objects within 3 object streams
+ 61 named destinations out of 1000 (max. 500000)
+ 189 words of extra memory for PDF output out of 10000 (max. 10000000)
 
