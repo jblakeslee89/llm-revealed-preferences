@@ -29,15 +29,9 @@ I will keep this short. The nearest structural incumbents, and how this design d
 
 AI systems are moving into roles where they make consequential economic decisions under risk. Language models are already being wired into pricing engines, procurement workflows, resource allocation, credit and insurance triage, negotiation, and treasury and portfolio judgments inside agentic systems. Once a model is choosing among options with uncertain payoffs, its decision rule becomes a governance object in the same way that a human underwriter's or a trader's judgment is a governance object. We regulate, audit, and stress-test human judgment in those positions. We will need to do the same for the AI agents, and that requires first being able to measure what the model's decision rule actually is.
 
-Phase 1: An agent that prices the probability of an outcome and underweights the size of the payoff will make a specific, predictable error: it will systematically decline high-value, low-probability options and over-accept likely-but-modest ones. In an economic seat that means passing on research bets, tail-risk hedges, and catastrophe insurance, the exact places where a small probability guards against a large loss, while leaning into safe, small, high-probability gains. This is a directional distortion, not random noise, which makes it both exploitable by a counterparty who understands it and invisible to the accuracy metrics we usually score models on. A model can look excellent on task accuracy and still carry this bias untouched.
+There is also a specific safety and AI-control angle. A live class of control proposals wants to use a model's risk attitude as a safety lever. The sharpest is the Forethought "risk-averse AIs" program (Newberry and Ord, 2025). [Footnote: https://www.forethought.org/research/risk-averse-ais] The idea is to pay a possibly-misaligned model a modest sure amount so that it prefers that to a low-probability attempt at seizing power, which works out to an expected-utility comparison the model is assumed to perform.
 
-Phase 2: Frame dependence means the same decision, worded two ways that a rational agent would treat as identical, yields two different choices. Whoever controls the wording or the interface therefore controls the agent's decision. That is a manipulation problem: an adversary who can shape how a situation is described to the model can steer its choice without touching the underlying economics. It is also a consistency and fairness problem when the decisions concern people, because two applicants, two claims, or two counterparties presented in different but economically equivalent language would be treated differently by the same system.
-
-The validation-arm nuance is itself policy-relevant. I find that the measured size of the framing bias depends on how the model is queried, larger under a forced immediate choice and much smaller under free text. That has a direct implication for any evaluation or certification standard: the standard has to fix the elicitation protocol, or two evaluators will report different bias levels for the same model and both will be right about what they measured. A bias number without a stated elicitation protocol is not a comparable number.
-
-There is a specific safety and AI-control angle. A live class of control proposals wants to use a model's risk attitude as a safety lever. The sharpest is the Forethought "risk-averse AIs" program (Newberry and Ord, 2025). [Footnote: https://www.forethought.org/research/risk-averse-ais] The idea is to pay a possibly-misaligned model a modest sure amount so that it prefers that to a low-probability attempt at seizing power, which works out to an expected-utility comparison the model is assumed to perform.
-
-Attribution is actionable. Knowing whether these biases are learned in broad pretraining or written in by the final alignment step tells a developer where to intervene, and tells a policymaker whether the remedy is a data question or a training-procedure question.
+Knowing whether these biases are learned in broad pretraining or written in by the final alignment step tells a developer where to intervene, and tells a policymaker whether the remedy is a data question or a training-procedure question.
 
 ## 3. How the experiment works
 
@@ -176,7 +170,7 @@ Interpretation. A bias present only after the final training step is attributabl
 
 ## 4. What I found in Phases 1 and 2
 
-I now turn to what these instruments actually recovered.
+I now turn to what these instruments actually showed.
 
 ### 4.1 Phase 1 results
 
@@ -197,7 +191,7 @@ The likelihood-ratio test of M1 against M2 gives χ²(2) ≈ 617 (p ≈ 10^-134)
 
 [FIGURE: fig2_weighting | Figure 2. The probability-weighting curve, model versus human versus rational. The horizontal axis is the stated probability; the vertical axis is the decision weight the decider acts on. The diagonal is a rational decider (γ = 1, weight equals probability). The human curve (γ ≈ 0.65) sits above the diagonal at the low end: people overweight small chances, which is why lottery tickets sell. The model's curve (Claude at γ = 2.69) does the opposite, diving below the diagonal at the low end, so it underweights small chances and treats a long shot as even more hopeless than it is. In practical terms this model will refuse a low-chance gamble at almost any prize.]
 
-A candid note on fit.
+A note on fit.
 
 I do not want to oversell M2 on fit. A probability-only logit (call it M3: choice as a logistic function of p alone) nearly ties M2 on AIC. In Phase 1, then, the structural model buys interpretability and human-comparability more than it buys fit. I keep the structural model because its parameters map onto the same primitives we measure in humans, which is the whole point of the exercise, but I would not claim it dominates a reduced-form fit on the data alone. This is exactly what motivates the out-of-sample test I raise in Section 6.
 
@@ -234,8 +228,6 @@ Where I would value design advice.
 The clean fix for the λ-φ collinearity is a design that separates reference movement from loss aversion by construction, for instance mixed gambles that straddle the reference at several distinct anchor locations, so that φ and λ leave different fingerprints across anchors. I sketch this as a question in Section 6 and would value your view on whether it is the right instrument.
 
 ## 5. Threats to validity
-
-A behavioral-econ methods checklist.
 
 1. Incentive compatibility. The choices are hypothetical and unincentivized. I do not claim to recover incentivized preferences. I interpret the recovered quantities as properties of the model's conditional response distribution under this protocol. This is the threat I would most like to address.
 2. Contamination. Addressed by the procedural, non-canonical stimulus generation of Section 3.1. The stimuli are off the textbook grid by construction.

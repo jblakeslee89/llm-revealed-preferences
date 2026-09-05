@@ -1,0 +1,56 @@
+\documentclass[10pt]{article}
+
+% One-page dissertation pitch. Shares color tokens with the Phase 1-3 writeups.
+\usepackage[margin=0.7in,top=0.55in,bottom=0.6in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{moss}{HTML}{758C58}
+\definecolor{mossdk}{HTML}{55663F}
+\definecolor{ink}{HTML}{1C1C1E}
+\definecolor{rulegray}{HTML}{D8D8D2}
+\definecolor{mutegray}{HTML}{6E6E73}
+
+\color{ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em}
+\setlist{itemsep=1.5pt, topsep=2pt, parsep=0pt, leftmargin=1.2em}
+\linespread{0.98}
+
+\titleformat{\section}
+  {\normalsize\bfseries\color{mossdk}}
+  {}{0em}{}
+  [{\vspace{1pt}\color{rulegray}\titlerule[0.8pt]}]
+\titlespacing*{\section}{0pt}{6pt}{3pt}
+
+\pagestyle{empty}
+
+\begin{document}
+\enlargethispage{3\baselineskip}
+
+{\LARGE\bfseries Do AI Agents Favor Their Own?}\\[2pt]
+{\large Model-family favoritism in cooperation games}\\[3pt]
+{\color{mutegray}\small John Blakeslee \,\textbullet\, RAND School of Public Policy \,\textbullet\, Dissertation concept, August 2026}
+
+\section{The question}
+When two AI agents meet in a strategic setting, does what each believes about the other's origin change how they play? Do LLM agents cooperate, trust, and collude more with counterparts they believe come from their own model family than with counterparts from a rival family, an unknown system, or a human?
+
+\section{Where it starts from}
+This extends my summer practicum with Philip Armour. I built and validated a platform that treats LLMs as experimental subjects; it elicits thousands of binary lottery choices, reads choice probabilities directly from log-probabilities, and structurally estimates risk aversion, loss aversion, and probability weighting. Three results so far: instruction-tuned models hold measurable, manipulable risk preferences; a one-word change in framing cut one model's gambling fourfold; and, using AllenAI's OLMo checkpoints, which publish the model at each training stage, these preferences appear at supervised fine-tuning and are untouched by later stages. The dissertation points the same apparatus at social preferences, with the counterpart's identity as the randomized treatment. In-group favoritism is a benchmarked object in behavioral economics (Tajfel; Chen and Li 2009), so every estimate attaches to a human baseline.
+
+\section{Design}
+Three one-shot games with binary actions readable from log-probabilities: a prisoner's dilemma over procedurally varied payoff matrices, a binarized trust game (Berg et al.\ 1995), and a two-firm pricing game whose high-high cell is the collusive outcome. The treatment is the counterpart's stated identity, randomized across five arms: another instance of the same model, an older model from the same developer, a named competitor, an unspecified AI, a human. A correlation arm (the counterpart's play is described as statistically similar or dissimilar, with no identity named) separates a taste for kin from a strategic response to expected play. Headline outcomes are model-free cooperation-rate gaps by arm; structural social-preference parameters (Fehr-Schmidt 1999) follow. Two identification lessons carry over from the risk work: dominance trials screen each model for engagement in a given prompt format, and a prime-versus-preference control attaches the same identity statements to solo lotteries, separating favoritism toward kin from a generic persona shift. A second phase replaces stated identity with inferred identity (transcripts of the counterpart's play or prose), testing recognition rather than instruction. The OLMo staircase then asks where in post-training any favoritism appears.
+
+\section{What exists, and the gap}
+Adjacent literatures each hold one piece. LLM pricing agents learn to collude (Fish et al.\ 2024); copies of the same algorithm coordinate better for purely mechanical reasons (Loots and den Boer 2022). LLMs favor their own text (Panickssery et al.\ 2024; Laurito et al.\ 2025) and treat humans as an out-group in allocation tasks (arXiv:2601.00240). Two 2026 papers are closest. One gives agents graded similarity scores and finds higher scores usually raise cooperation (arXiv:2608.12125). The other (Za et al.\ 2026, workshop) varies stated opponent identity directly (self, human, named rival families) and finds large, family-heterogeneous self-effects that a believed-correlation manipulation mostly explains, with a small residual identity effect. The open ground is the economics: they report cooperation rates at fixed payoffs from sampled text. This dissertation estimates social-preference parameters from log-probabilities over varied payoff matrices, benchmarks them to human in-group results (Chen and Li 2009), adds the prime control and the collusion game, and attributes effects to a training stage, the step their own future-work section names but cannot take with closed models.
+
+\section{Why it matters}
+Multi-agent deployment is already ordinary; agents negotiate, price, and procure against other agents. If cooperation depends on perceived family membership, three policy conversations gain an empirical parameter. First, agent identification and visibility infrastructure (Chan et al.\ 2024): whether agents should know who they are dealing with becomes a measured trade-off. Second, collusion oversight: same-family agent pairs may sustain collusive pricing at different rates than mixed pairs, which matters for antitrust monitoring of algorithmic markets. Third, procurement: single-vendor agent ecosystems may behave differently from mixed ones, a testable question for government buyers.
+
+\section{Dissertation shape}
+Paper 1, the stated-identity experiment across model families; the harness exists, and a minimum version (one game, three arms, two families) is a pilot I can run this fall. Paper 2, recognition: inferred identity from transcripts, including whether models discount unverifiable identity claims. Paper 3, attribution and policy: the training staircase plus implications for agent identification and collusion oversight. The core idea grew out of conversations with Tate Tower.
+
+\end{document}
