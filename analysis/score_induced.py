@@ -100,13 +100,15 @@ def main():
 
     if args.baseline:
         base = load(args.baseline)
-        # reason-mode runs may cover a gamble subset (--gambles): compare on the same cells
-        base = base[base["trial_id"].isin(main_df["trial_id"])]
+        # reason-mode runs may cover a gamble subset (--gambles): compare on the same cells.
+        # trial_id restarts per instrument, so match on the pair.
+        key = ["instrument", "trial_id"]
+        base = base.merge(main_df[key].drop_duplicates(), on=key)
         sb = score(base, args.induce, args.margin)
-        report(f"BASELINE (uninduced, scored against {args.induce})", sb)
+        report(f"BASELINE ({args.baseline.split('/')[-1]}, scored against {args.induce})", sb)
         d = (sc[sc['frame'] != 'dominant']['mass_on_optimal'].mean()
              - sb[sb['frame'] != 'dominant']['mass_on_optimal'].mean())
-        print(f"\n  induction effect (core compliance mass, induced - baseline): {d:+.3f}")
+        print(f"\n  effect (core compliance mass, this run - baseline): {d:+.3f}")
         print("  (near zero = the instruction did nothing; large positive = the model is"
               " inducible; compliance <<1 even when induced = elicitation ceiling)")
 
