@@ -33,3 +33,85 @@ Bug found: `score_induced.py --baseline` matched on trial_id alone, which
 repeats across instruments (1,280 unique ids for 1,680 cells), so the baseline
 picked up extra cells (130 core instead of 80). Fixed to match on
 (instrument, trial_id).
+
+## Full run: Qwen instruct, chat, induced risk-neutral, reasoning (840 cells)
+
+`data/phase3_qwen-inst_chat_reason_riskneutral.csv`: `--gambles 20` (20 of 40
+gambles per instrument, seed 0), 840 cells, 0 excluded, every cell ended with
+the model's own "Answer:" line. Run time about 39 min on a free T4.
+
+Scored on matched cells (instrument, trial_id):
+
+| Same 620 clear core cells | EV compliance mass | hard accuracy |
+|---|---|---|
+| immediate answer, uninduced | 0.536 | 0.532 |
+| immediate answer, induced | 0.562 | 0.569 |
+| reason first, induced | 0.965 | 0.965 |
+
+Dominance controls (40): 1.000 with reasoning, vs 0.868 immediate induced and
+0.925 uninduced.
+
+Hard accuracy by frame with reasoning: gain 1.000, risk 1.000, neutral 0.994,
+**mixed 0.869**. The pilot's reading holds: the immediate-answer failure was a
+computation ceiling.
+
+### The residual framing effect is a reference-point accounting error
+
+21 of the 22 misses are in the mixed (loss-worded) frame, and all 21 are cells
+where the gamble has the higher EV and the model chose the sure amount.
+In the mixed frame, accuracy is 1.000 when EV favors the sure amount and 0.767
+when it favors the gamble.
+
+The reasoning shows how. The model computes the gamble as a change from current
+wealth and compares it with the sure option as a level, e.g. sure $98,
+gamble 47% of $227: "E_A = (0.47 x 227) + (0.53 x 0) - 98 = 8.69 ... E_B = 98 ...
+choose B". Another variant nets the gain and loss correctly
+("0.68 x 120 - 0.32 x 81 = 55.68") and then compares that net change with the
+$81 level. Every error of this kind favors the safe option. The three misses read
+closely all follow the pattern; a rough text check finds a subtracted or
+negative loss term in all 21.
+
+So with reasoning allowed, the loss wording no longer shifts a snap judgment; it
+induces an inconsistent reference point in explicit arithmetic, which is the
+Phase 2 framing effect reappearing as mental-accounting error. Worth a targeted
+follow-up: score each reasoning trace for which reference point it uses, and
+test whether a one-line clarification ("compare final dollar amounts") removes it.
+
+## Full run: Qwen instruct, chat, uninduced, reasoning (840 cells)
+
+`data/phase3_qwen-inst_chat_reason.csv`: same 840 cells, 0 excluded, every cell
+ended with "Answer:". Both full runs took 1 h 12 min in one Colab session.
+
+All four conditions on the same 840 cells (EV agreement on the 620 clear core
+cells; uptake = mean P(gamble)):
+
+| Condition | Dominance | EV agreement | Gain uptake | Mixed uptake | Frame gap |
+|---|---|---|---|---|---|
+| immediate, uninduced | 0.925 | 0.532 | 0.267 | 0.893 | +0.626 |
+| immediate, induced | 0.868 | 0.569 | 0.441 | 0.843 | +0.401 |
+| reason, uninduced | 1.000 | 0.829 | 0.535 | 0.400 | -0.135 |
+| reason, induced | 1.000 | 0.965 | 0.600 | 0.455 | -0.145 |
+
+Three readings.
+
+1. **Reasoning alone moves the model most of the way to EV.** Uninduced, every
+   trace (100%) frames the choice as expected value without being asked, and EV
+   agreement rises from 0.532 to 0.829. The instruction adds the rest (0.965).
+2. **The framing effect reverses sign under reasoning.** Immediate answer: loss
+   wording raises gambling (+0.626, the textbook direction). With reasoning: it
+   lowers it (-0.135), the direction Phase 2 found for Haiku (-0.302). The
+   mechanism is visible in the traces: the same reference-point slip as in the
+   induced run (gamble EV as net change, e.g. "0.68 x 120 + 0.32 x (-81) =
+   55.68", compared with the sure amount as a level, $81), which always favors
+   the safe option. 34 uninduced mixed-frame misses where EV favored the gamble.
+3. **So "the framing effect" of a model depends on the elicitation regime, and
+   under reasoning it is an arithmetic error with a fixed direction.** Hypothesis
+   worth testing: Haiku's anti-textbook Phase 2 gap reflects the same deliberate
+   but mis-referenced computation.
+
+Open: the non-mixed EV misses in the uninduced reasoning run (risk and neutral
+frames at ~0.79) are not yet classified (risk aversion stated in the trace vs
+arithmetic error). A trace-coding pass would split them.
+
+Next: same two runs on OLMo Instruct and SFT (fewshot), then Llama instruct
+(chat), one model per Colab session.
