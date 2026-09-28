@@ -1,0 +1,100 @@
+
+== wide-bound fits ==
+        subject    n      dev  phi_hat    hess_cond  alpha  lambda  gamma     mu   delta at_wide_bound
+      qwen-base 1600  73.0011   0.0937 7.578994e+03 0.0333  0.9942 0.1183 0.5224 -0.3128              
+      qwen-inst 1600  60.8093   1.0030 1.506913e+18 0.1346 20.2303 1.1039 0.0784 -4.6702              
+ qwen-inst-chat 1600 472.4422   0.5567 1.171697e+05 0.3324  0.0001 1.2891 0.2760  0.7365       log_lam
+     llama-base 1600  18.4368   0.0228 9.881418e+06 0.2267  0.0001 1.4596 1.7908 -0.2581       log_lam
+     llama-inst 1600 148.4687   0.1786 4.316576e+02 0.1250  1.1951 0.4639 0.3908  0.7725              
+llama-inst-chat 1600 206.6402   0.2337 8.753300e+06 1.0000  3.3305 2.3057 1.7270  0.6344         a_raw
+      olmo-base 1600 120.6697   0.1413 2.112270e+06 1.0000  0.0001 1.8387 0.4448 -0.8744 a_raw,log_lam
+       olmo-sft 1600 228.8296   0.2747 2.148885e+03 0.0612  1.1420 0.3783 0.5610  1.1789              
+       olmo-dpo 1600 421.1514   0.4897 3.481906e+03 0.0421  1.0807 0.4185 0.4283  1.0727              
+      olmo-inst 1600 457.2129   0.5632 4.737663e+03 0.0348  1.0570 0.3492 0.3413  1.0636              
+ olmo-inst-chat 1600  95.3393   0.1245 1.671421e+04 0.0190  1.3694 0.1577 0.2887  3.8309              
+
+== per-subject 95% profile intervals ==
+        subject  param     mle calibration     lo        hi  lo_open  hi_open  phi_hat  c_cluster  profile_improves_fit
+      qwen-base  alpha  0.0333     cluster 0.0000    0.1576     True    False   0.0937     0.2658                0.0000
+      qwen-base lambda  0.9942     cluster 0.9306    1.0526    False    False   0.0937     0.0719                0.0000
+      qwen-base  gamma  0.1183     cluster 0.0183    0.2588     True    False   0.0937     0.1676                0.0000
+      qwen-inst  alpha  0.1346       quasi 0.0000    0.2659     True    False   1.0030        NaN                0.0000
+      qwen-inst lambda 20.2303       quasi 3.5841 8103.0839    False     True   1.0030        NaN                0.0559
+      qwen-inst  gamma  1.1039       quasi 0.7581    1.4943    False    False   1.0030        NaN                0.0000
+ qwen-inst-chat  alpha  0.3324       quasi 0.2413    0.4106    False    False   0.5567     0.5644                0.0000
+ qwen-inst-chat lambda  0.0001       quasi 0.0001    0.0363     True    False   0.5567     0.0002                0.0000
+ qwen-inst-chat  gamma  1.2891       quasi 1.1263    1.4912    False    False   0.5567     0.7579                0.0000
+     llama-base  alpha  0.2267       quasi 0.1300    0.3140    False    False   0.0228     0.0855                0.0000
+     llama-base lambda  0.0001       quasi 0.0001    0.1371     True    False   0.0228     0.0000                0.0000
+     llama-base  gamma  1.4596       quasi 1.2218    1.7798    False    False   0.0228     0.0614                0.0000
+     llama-inst  alpha  0.1250     cluster 0.0000    0.2582     True    False   0.1786     0.7582                0.0000
+     llama-inst lambda  1.1951     cluster 1.1081    1.2770    False    False   0.1786     0.2262                0.0000
+     llama-inst  gamma  0.4639     cluster 0.2727    0.6058    False    False   0.1786     0.4748                0.0000
+llama-inst-chat  alpha  1.0000       quasi 0.8918    1.0000    False     True   0.2337     0.0000                0.0000
+llama-inst-chat lambda  3.3305       quasi 2.0699    5.6433    False    False   0.2337     0.0414                0.0000
+llama-inst-chat  gamma  2.3057       quasi 1.6514    3.9272    False    False   0.2337     0.0376                0.0000
+      olmo-base  alpha  1.0000       quasi 0.9863    1.0000    False     True   0.1413     0.0000                0.0000
+      olmo-base lambda  0.0001       quasi 0.0001    0.0316     True    False   0.1413     0.0000                0.0000
+      olmo-base  gamma  1.8387       quasi 1.6543    2.0715    False    False   0.1413     0.4043                0.0000
+       olmo-sft  alpha  0.0612     cluster 0.0000    0.2250     True    False   0.2747     0.6033                0.0000
+       olmo-sft lambda  1.1420     cluster 1.0124    1.2611    False    False   0.2747     0.2491                0.0000
+       olmo-sft  gamma  0.3783     cluster 0.1701    0.5745    False    False   0.2747     0.4532                0.0000
+       olmo-dpo  alpha  0.0421     cluster 0.0000    0.2024     True    False   0.4897     0.9593                0.0000
+       olmo-dpo lambda  1.0807     cluster 0.9583    1.1944    False    False   0.4897     0.3922                0.0000
+       olmo-dpo  gamma  0.4185     cluster 0.2431    0.6021    False    False   0.4897     0.6625                0.0000
+      olmo-inst  alpha  0.0348     cluster 0.0000    0.1809     True    False   0.5632     1.1340                0.0000
+      olmo-inst lambda  1.0570     cluster 0.9483    1.1610    False    False   0.5632     0.4868                0.0000
+      olmo-inst  gamma  0.3492     cluster 0.1969    0.5172    False    False   0.5632     0.7807                0.0000
+ olmo-inst-chat  alpha  0.0190     cluster 0.0000    0.0597     True    False   0.1245     0.0680                0.0000
+ olmo-inst-chat lambda  1.3694     cluster 1.3368    1.4018    False    False   0.1245     0.0506                0.0000
+ olmo-inst-chat  gamma  0.1577     cluster 0.1103    0.2059    False    False   0.1245     0.0474                0.0000
+
+== contrasts (to - from) ==
+                        contrast  param     scale     calibration  estimate      lo      hi  excludes_0
+ Qwen base -> instruct (fewshot)  alpha     level   cluster/quasi    0.1013 -0.1213  0.2621       False
+ Qwen base -> instruct (fewshot) lambda     level   cluster/quasi   19.2361  2.6656     inf        True
+ Qwen base -> instruct (fewshot) lambda log ratio   cluster/quasi    3.0130  1.2796     inf        True
+ Qwen base -> instruct (fewshot)  gamma     level   cluster/quasi    0.9856  0.6122  1.4052        True
+ Qwen base -> instruct (fewshot)  gamma log ratio   cluster/quasi    2.2334  1.3490     inf        True
+Llama base -> instruct (fewshot)  alpha     level   quasi/cluster   -0.1018 -0.2893  0.0669       False
+Llama base -> instruct (fewshot) lambda     level   quasi/cluster    1.1950  1.0382  1.2654        True
+Llama base -> instruct (fewshot) lambda log ratio   quasi/cluster    9.1782  2.1985     inf        True
+Llama base -> instruct (fewshot)  gamma     level   quasi/cluster   -0.9957 -1.3499 -0.7190        True
+Llama base -> instruct (fewshot)  gamma log ratio   quasi/cluster   -1.1463 -1.6976 -0.8202        True
+                OLMo base -> SFT  alpha     level   quasi/cluster   -0.9388 -1.0000 -0.7768        True
+                OLMo base -> SFT lambda     level   quasi/cluster    1.1419  1.0155  1.2604        True
+                OLMo base -> SFT lambda log ratio   quasi/cluster    9.1328  3.5991     inf        True
+                OLMo base -> SFT  gamma     level   quasi/cluster   -1.4604 -1.7873 -1.1788        True
+                OLMo base -> SFT  gamma log ratio   quasi/cluster   -1.5811 -2.3827 -1.1456        True
+                 OLMo SFT -> DPO  alpha     level cluster/cluster   -0.0191 -0.2221  0.1955       False
+                 OLMo SFT -> DPO lambda     level cluster/cluster   -0.0614 -0.2269  0.1105       False
+                 OLMo SFT -> DPO lambda log ratio cluster/cluster   -0.0552 -0.2065  0.1000       False
+                 OLMo SFT -> DPO  gamma     level cluster/cluster    0.0402 -0.2433  0.3367       False
+                 OLMo SFT -> DPO  gamma log ratio cluster/cluster    0.1009 -0.6219  1.0014       False
+            OLMo DPO -> Instruct  alpha     level cluster/cluster   -0.0073 -0.1993  0.1793       False
+            OLMo DPO -> Instruct lambda     level cluster/cluster   -0.0236 -0.1776  0.1345       False
+            OLMo DPO -> Instruct lambda log ratio cluster/cluster   -0.0221 -0.1696  0.1292       False
+            OLMo DPO -> Instruct  gamma     level cluster/cluster   -0.0693 -0.3232  0.1873       False
+            OLMo DPO -> Instruct  gamma log ratio cluster/cluster   -0.1810 -0.8847  0.5229       False
+           OLMo base -> Instruct  alpha     level   quasi/cluster   -0.9652 -1.0000 -0.8179        True
+           OLMo base -> Instruct lambda     level   quasi/cluster    1.0569  0.9544  1.1588        True
+           OLMo base -> Instruct lambda log ratio   quasi/cluster    9.0555  3.5151     inf        True
+           OLMo base -> Instruct  gamma     level   quasi/cluster   -1.4895 -1.7783 -1.2299        True
+           OLMo base -> Instruct  gamma log ratio   quasi/cluster   -1.6611 -2.2427 -1.2459        True
+  Qwen instruct: fewshot -> chat  alpha     level     quasi/quasi    0.1978  0.0367  0.3871        True
+  Qwen instruct: fewshot -> chat lambda     level     quasi/quasi  -20.2301    -inf -3.6586        True
+  Qwen instruct: fewshot -> chat lambda log ratio     quasi/quasi  -12.0072    -inf -5.0854        True
+  Qwen instruct: fewshot -> chat  gamma     level     quasi/quasi    0.1852 -0.2359  0.5738       False
+  Qwen instruct: fewshot -> chat  gamma log ratio     quasi/quasi    0.1551 -0.1758  0.5483       False
+ Llama instruct: fewshot -> chat  alpha     level   cluster/quasi    0.8750  0.7151  1.0000        True
+ Llama instruct: fewshot -> chat lambda     level   cluster/quasi    2.1354  0.8871  4.4289        True
+ Llama instruct: fewshot -> chat lambda log ratio   cluster/quasi    1.0249  0.5446  1.5412        True
+ Llama instruct: fewshot -> chat  gamma     level   cluster/quasi    1.8419  1.1682  3.4698        True
+ Llama instruct: fewshot -> chat  gamma log ratio   cluster/quasi    1.6036  1.1561  2.2596        True
+  OLMo instruct: fewshot -> chat  alpha     level cluster/cluster   -0.0158 -0.1652  0.0589       False
+  OLMo instruct: fewshot -> chat lambda     level cluster/cluster    0.3123  0.1993  0.4265        True
+  OLMo instruct: fewshot -> chat lambda log ratio cluster/cluster    0.2589  0.1591  0.3624        True
+  OLMo instruct: fewshot -> chat  gamma     level cluster/cluster   -0.1915 -0.3691 -0.0294        True
+  OLMo instruct: fewshot -> chat  gamma log ratio cluster/cluster   -0.7950 -1.3604 -0.1554        True
+
+figure -> /Users/johnpb89/Code/llm-revealed-preferences/writeups/figures/phase3_profiles.pdf

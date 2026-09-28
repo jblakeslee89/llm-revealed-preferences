@@ -46,11 +46,11 @@ def value(x, rho, alpha, lam):
     return np.where(x >= rho, gain, loss)
 
 
-def unpack(theta, fix_phi=None):
+def unpack(theta, fix_phi=None, lam_clip=4.0):
     # transforms keep parameters in valid ranges
     a_raw, log_lam, log_gamma, log_mu, delta = theta[:5]
     alpha = 1 / (1 + np.exp(-a_raw))            # (0,1)
-    lam = np.exp(np.clip(log_lam, -4, 4))        # >0, bounded to [0.018, 54.6]
+    lam = np.exp(np.clip(log_lam, -lam_clip, lam_clip))  # >0; default bound [0.018, 54.6]
     gamma = np.exp(log_gamma)                    # >0
     mu = np.exp(log_mu)                          # >0
     if fix_phi is not None:
@@ -60,8 +60,8 @@ def unpack(theta, fix_phi=None):
     return alpha, lam, gamma, mu, delta, phi
 
 
-def choice_prob(df, theta, fix_phi=None):
-    alpha, lam, gamma, mu, delta, phi = unpack(theta, fix_phi)
+def choice_prob(df, theta, fix_phi=None, lam_clip=4.0):
+    alpha, lam, gamma, mu, delta, phi = unpack(theta, fix_phi, lam_clip)
     anchor = df["anchor"].values.astype(float)
     rho = phi * anchor
     s = df["sure"].values.astype(float)

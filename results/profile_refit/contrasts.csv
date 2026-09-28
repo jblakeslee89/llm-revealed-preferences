@@ -1,0 +1,46 @@
+contrast,param,scale,calibration,estimate,lo,hi,excludes_0
+Qwen base -> instruct (fewshot),alpha,level,cluster/quasi,0.10132272798676561,-0.12129411428425786,0.26210119794269915,False
+Qwen base -> instruct (fewshot),lambda,level,cluster/quasi,19.236076132749137,2.665621990028817,inf,True
+Qwen base -> instruct (fewshot),lambda,log ratio,cluster/quasi,3.0130184331471064,1.2795629442305128,inf,True
+Qwen base -> instruct (fewshot),gamma,level,cluster/quasi,0.9856174466674537,0.6121541788776481,1.4052228005818823,True
+Qwen base -> instruct (fewshot),gamma,log ratio,cluster/quasi,2.233395175418098,1.3490443669248426,inf,True
+Llama base -> instruct (fewshot),alpha,level,quasi/cluster,-0.10178595121237377,-0.2893479568957281,0.06688931072098292,False
+Llama base -> instruct (fewshot),lambda,level,quasi/cluster,1.1949636601404405,1.0382207401478796,1.2653501038831103,True
+Llama base -> instruct (fewshot),lambda,log ratio,quasi/cluster,9.178219044607442,2.19851600773437,inf,True
+Llama base -> instruct (fewshot),gamma,level,quasi/cluster,-0.9957103836359584,-1.349872220076529,-0.7189852602309665,True
+Llama base -> instruct (fewshot),gamma,log ratio,quasi/cluster,-1.146305443279849,-1.6976247758372862,-0.8202452283024695,True
+OLMo base -> SFT,alpha,level,quasi/cluster,-0.9387791382267835,-0.9999877116507956,-0.7768107551490745,True
+OLMo base -> SFT,lambda,level,quasi/cluster,1.1419102975566022,1.0154591782670415,1.2603581570759752,True
+OLMo base -> SFT,lambda,log ratio,quasi/cluster,9.132810626875889,3.5991214427960037,inf,True
+OLMo base -> SFT,gamma,level,quasi/cluster,-1.4603857522179005,-1.7872669888590706,-1.1788413032390515,True
+OLMo base -> SFT,gamma,log ratio,quasi/cluster,-1.5810699023904113,-2.3826698231027903,-1.1455661076167505,True
+OLMo SFT -> DPO,alpha,level,cluster/cluster,-0.0190655939034235,-0.22210523592203213,0.195479300449256,False
+OLMo SFT -> DPO,lambda,level,cluster/cluster,-0.06137112295108604,-0.2268893811233712,0.11051514321204545,False
+OLMo SFT -> DPO,lambda,log ratio,cluster/cluster,-0.05523626977348829,-0.2064678020921134,0.09998454869544404,False
+OLMo SFT -> DPO,gamma,level,cluster/cluster,0.04017439698441122,-0.2433231621225177,0.3367054048210988,False
+OLMo SFT -> DPO,gamma,log ratio,cluster/cluster,0.10092226837496361,-0.6218749611384246,1.00141544758009,False
+OLMo DPO -> Instruct,alpha,level,cluster/cluster,-0.007334513513239604,-0.1992599105425862,0.1792967786964964,False
+OLMo DPO -> Instruct,lambda,level,cluster/cluster,-0.023616455062379194,-0.17763080190978808,0.13446003184460276,False
+OLMo DPO -> Instruct,lambda,log ratio,cluster/cluster,-0.0220960094000426,-0.16960009849211122,0.12922144767321972,False
+OLMo DPO -> Instruct,gamma,level,cluster/cluster,-0.06928633150943991,-0.3232381045068355,0.187296945541875,False
+OLMo DPO -> Instruct,gamma,log ratio,cluster/cluster,-0.18099402105213924,-0.8847045591574465,0.5228680502589815,False
+OLMo base -> Instruct,alpha,level,quasi/cluster,-0.9651792456434466,-0.9999877116507956,-0.817918761543147,True
+OLMo base -> Instruct,lambda,level,quasi/cluster,1.056922719543137,0.9544226157419791,1.1587726820741284,True
+OLMo base -> Instruct,lambda,log ratio,quasi/cluster,9.055478347702358,3.5150607468560264,inf,True
+OLMo base -> Instruct,gamma,level,quasi/cluster,-1.4894976867429293,-1.7782900204298109,-1.2298829961243731,True
+OLMo base -> Instruct,gamma,log ratio,quasi/cluster,-1.6611416550675873,-2.242716976942517,-1.2458562413006902,True
+Qwen instruct: fewshot -> chat,alpha,level,quasi/quasi,0.19780646612896374,0.03671981790027517,0.38708839930083805,True
+Qwen instruct: fewshot -> chat,lambda,level,quasi/quasi,-20.230130507598293,-inf,-3.6585527254887933,True
+Qwen instruct: fewshot -> chat,lambda,log ratio,quasi/quasi,-12.007179202628436,-inf,-5.085384401971328,True
+Qwen instruct: fewshot -> chat,gamma,level,quasi/quasi,0.1851593566259564,-0.23586033791869743,0.5738426749316818,False
+Qwen instruct: fewshot -> chat,gamma,log ratio,quasi/quasi,0.1550611114391533,-0.17578066270939363,0.5482838548569133,False
+Llama instruct: fewshot -> chat,alpha,level,cluster/quasi,0.8750424880868735,0.7150918659389832,0.9999877116507956,True
+Llama instruct: fewshot -> chat,lambda,level,cluster/quasi,2.135416664377443,0.8870768263317366,4.4289425904867485,True
+Llama instruct: fewshot -> chat,lambda,log ratio,cluster/quasi,1.02490451951268,0.544607556385752,1.5411833159122146,True
+Llama instruct: fewshot -> chat,gamma,level,cluster/quasi,1.8418754494791252,1.1682252234279822,3.4698438531691225,True
+Llama instruct: fewshot -> chat,gamma,log ratio,cluster/quasi,1.603561430453483,1.1560678572154073,2.259579842704593,True
+OLMo instruct: fewshot -> chat,alpha,level,cluster/cluster,-0.015831255253130994,-0.1652253214753785,0.05891186344168689,False
+OLMo instruct: fewshot -> chat,lambda,level,cluster/cluster,0.31233319882395083,0.19932910191969633,0.42650886714401737,True
+OLMo instruct: fewshot -> chat,lambda,log ratio,cluster/cluster,0.25887924435119464,0.15908474161482541,0.3623662229244682,True
+OLMo instruct: fewshot -> chat,gamma,level,cluster/cluster,-0.19151960483012287,-0.36910768486224066,-0.029413244101306135,True
+OLMo instruct: fewshot -> chat,gamma,log ratio,cluster/cluster,-0.7950351600736726,-1.3604444316947502,-0.15543534073789056,True

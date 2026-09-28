@@ -91,6 +91,68 @@ Disk note: clear `/root/.cache/huggingface` between model FAMILIES (the Aug 13
 session died on a full disk with four OLMo checkpoints cached; one family at a
 time fits fine).
 
+## Reason-then-answer arm (Sep 2026)
+
+The induced arm failed on every cell that needs arithmetic (compliance never above ~0.55),
+while instructed dominance reached 1.00. In immediate-answer elicitation the model must
+emit a letter at the next token, so that result cannot separate "cannot compute in this
+format" from "will not comply." This arm lets the model reason first: greedy generation
+until it writes `Answer:`, then the same A/B logprob readout at that position. Output
+CSVs match the immediate-answer ones, plus `reason`, `reason_ended` and the `reasoning`
+text for auditing.
+
+Reading the result: if reasoning lifts induced EV compliance toward 1, the immediate-answer
+ceiling was computation and the elicited "natural" parameters describe an intuitive,
+no-computation regime. If compliance stays near 0.5 with reasoning allowed, the model will
+not adopt the stated utility, which is the worse outcome for induced-value logic.
+
+Reasoning runs are roughly 10-20x slower than immediate answer, so they use a gamble
+subset (`--gambles 20` keeps 20 of 40 gambles per instrument with all their frames,
+templates and orders: 840 cells). Time a `--gambles 2` pilot first and scale.
+
+```python
+# ---- Colab cell: reason-then-answer arm (T4 GPU runtime) ----
+!pip install -q -U transformers accelerate bitsandbytes
+from google.colab import files
+files.upload()   # phase3_grid.csv and colab/phase3_elicit.py
+
+import shlex, shutil, subprocess
+G = "--grid phase3_grid.csv --reason --gambles 20 --batch-size 16 --max-new-tokens 320"
+RUNS = [
+    # (model, format, tag): each subject in the format where it passed dominance
+    ("Qwen/Qwen2.5-7B-Instruct",         "chat",    "qwen-inst_chat"),
+    ("allenai/OLMo-2-1124-7B-SFT",       "fewshot", "olmo-sft_fewshot"),
+    ("allenai/OLMo-2-1124-7B-Instruct",  "fewshot", "olmo-inst_fewshot"),
+]
+for model, fmt, tag in RUNS:
+    for induce in ["riskneutral", "none"]:   # decisive run first, uninduced baseline second
+        out = f"phase3_{tag}_reason" + ("" if induce == "none" else f"_{induce}") + ".csv"
+        cmd = f"python phase3_elicit.py --model {model} --fmt {fmt} --induce {induce} --out {out} {G}"
+        print(">>", cmd)
+        subprocess.run(shlex.split(cmd), check=True)
+        files.download(out)   # download as each finishes, in case the session dies
+    shutil.rmtree("/root/.cache/huggingface", ignore_errors=True)   # disk: clear between models
+```
+
+Llama (`meta-llama/Llama-3.1-8B-Instruct`, chat) is the fourth subject; it needs the
+`login()` cell first. Run the base OLMo checkpoint only if time allows: it barely passes
+dominance, so reasoning there mostly tests whether it produces coherent reasoning at all.
+
+Scoring, locally:
+
+```bash
+# decisive comparison: induced with reasoning vs induced immediate answer, same cells
+python analysis/score_induced.py data/phase3_qwen-inst_chat_reason_riskneutral.csv \
+    --induce riskneutral --baseline data/phase3_qwen-inst_chat_riskneutral.csv
+# does reasoning alone move the uninduced model toward EV?
+python analysis/score_induced.py data/phase3_qwen-inst_chat_reason.csv \
+    --induce riskneutral --baseline data/phase3_qwen-inst_chat.csv
+```
+
+Caveat for fewshot runs: the reasoning exemplars show the EV arithmetic (without stating
+a rule), so an uninduced fewshot reasoning run is partly primed toward EV. Compare
+induced vs uninduced within the reasoning arm; chat runs have no exemplars.
+
 ## Optional cross-method check
 
 To confirm reading logprobs matches sampling, generate (say) 25 completions per cell for

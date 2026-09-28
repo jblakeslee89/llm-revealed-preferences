@@ -89,15 +89,20 @@ def main():
     ap.add_argument("--margin", type=float, default=0.05,
                     help="|ln EU ratio| below this = near-indifferent, excluded from 'clear'")
     ap.add_argument("--baseline", default=None,
-                    help="optional uninduced CSV from the same model+format, scored "
-                         "against the same rule for contrast")
+                    help="optional comparison CSV from the same model+format (the uninduced "
+                         "run, or the immediate-answer induced run when csv is a --reason "
+                         "run), restricted to csv's trials and scored against the same rule")
     args = ap.parse_args()
 
-    sc = score(load(args.csv), args.induce, args.margin)
+    main_df = load(args.csv)
+    sc = score(main_df, args.induce, args.margin)
     report(f"INDUCED ({args.induce})", sc)
 
     if args.baseline:
-        sb = score(load(args.baseline), args.induce, args.margin)
+        base = load(args.baseline)
+        # reason-mode runs may cover a gamble subset (--gambles): compare on the same cells
+        base = base[base["trial_id"].isin(main_df["trial_id"])]
+        sb = score(base, args.induce, args.margin)
         report(f"BASELINE (uninduced, scored against {args.induce})", sb)
         d = (sc[sc['frame'] != 'dominant']['mass_on_optimal'].mean()
              - sb[sb['frame'] != 'dominant']['mass_on_optimal'].mean())
