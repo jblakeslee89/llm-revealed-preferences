@@ -248,8 +248,12 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--plot-only", action="store_true", help="redraw the figure from profiles.csv")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
+    if args.plot_only:
+        plot(pd.read_csv(OUT / "profiles.csv"))
+        return
 
     jobs = [(k, f, args.quick) for k, f in SUBJECTS.items()]
     with ProcessPoolExecutor(args.workers) as ex:
@@ -326,10 +330,12 @@ def main():
     print(ints.round(4).to_string(index=False))
     print("\n== contrasts (to - from) ==")
     print(cons.round(4).to_string(index=False))
-    plot(profs, fits)
+    plot(profs)
 
 
-def plot(profs, fits):
+def plot(profs):
+    """Profile curves per family. Solid: cluster-calibrated; dashed: dispersion fallback.
+    Red line: 95% cutoff. Redraw from saved output with --plot-only."""
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -359,8 +365,6 @@ def plot(profs, fits):
                 ax.legend(fontsize=6, frameon=False)
             for s in ("top", "right"):
                 ax.spines[s].set_visible(False)
-    fig.suptitle("Profile deviance, wide bounds (solid: cluster-calibrated; dashed: quasi, "
-                 "boundary or unusable Hessian). Red line = 95% cutoff.", fontsize=8)
     fig.tight_layout()
     FIG.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIG)

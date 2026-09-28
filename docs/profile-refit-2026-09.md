@@ -69,7 +69,7 @@ its upper bound, quasi calibration). OLMo instruct also moves lambda (+0.31) and
 does not imply parameter stability, which strengthens the case for fixing format within
 any attribution contrast.
 
-## Edits the Phase 3 writeup needs
+## Edits the Phase 3 writeup needs (applied Sep 28 2026)
 
 1. Staircase table: replace starred values (lambda 0.018*, alpha 1.000*) with the refit
    values and profile intervals; drop the boundary-flag caveat for gamma.
