@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  1 SEP 2026 21:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  28 SEP 2026 13:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -973,7 +973,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 <figures/teach_freemoney.pdf, id=153, 379.49077pt x 146.44276pt>
 File: figures/teach_freemoney.pdf Graphic file (type pdf)
 <use figures/teach_freemoney.pdf>
-Package pdftex.def Info: figures/teach_freemoney.pdf  used on input line 415.
+Package pdftex.def Info: figures/teach_freemoney.pdf  used on input line 417.
 (pdftex.def)             Requested size: 469.75502pt x 181.28323pt.
 
 
@@ -981,7 +981,7 @@ Package pdftex.def Info: figures/teach_freemoney.pdf  used on input line 415.
 <figures/teach_staircase.pdf, id=160, 389.61183pt x 209.63092pt>
 File: figures/teach_staircase.pdf Graphic file (type pdf)
 <use figures/teach_staircase.pdf>
-Package pdftex.def Info: figures/teach_staircase.pdf  used on input line 463.
+Package pdftex.def Info: figures/teach_staircase.pdf  used on input line 468.
 (pdftex.def)             Requested size: 469.75502pt x 252.76175pt.
 
 
@@ -993,7 +993,7 @@ Package pdftex.def Info: figures/teach_staircase.pdf  used on input line 463.
 <figures/teach_format.pdf, id=197, 361.35pt x 142.01054pt>
 File: figures/teach_format.pdf Graphic file (type pdf)
 <use figures/teach_format.pdf>
-Package pdftex.def Info: figures/teach_format.pdf  used on input line 565.
+Package pdftex.def Info: figures/teach_format.pdf  used on input line 583.
 (pdftex.def)             Requested size: 469.75502pt x 184.61584pt.
 
 
@@ -1001,19 +1001,19 @@ Package pdftex.def Info: figures/teach_format.pdf  used on input line 565.
 <figures/teach_framing.pdf, id=211, 390.05098pt x 198.73071pt>
 File: figures/teach_framing.pdf Graphic file (type pdf)
 <use figures/teach_framing.pdf>
-Package pdftex.def Info: figures/teach_framing.pdf  used on input line 607.
+Package pdftex.def Info: figures/teach_framing.pdf  used on input line 627.
 (pdftex.def)             Requested size: 469.75502pt x 239.34897pt.
 
 
-[11 <./figures/teach_framing.pdf>]
-<figures/teach_induced.pdf, id=225, 389.76868pt x 230.50015pt>
+[11]
+<figures/teach_induced.pdf, id=216, 389.76868pt x 230.50015pt>
 File: figures/teach_induced.pdf Graphic file (type pdf)
 <use figures/teach_induced.pdf>
-Package pdftex.def Info: figures/teach_induced.pdf  used on input line 659.
+Package pdftex.def Info: figures/teach_induced.pdf  used on input line 679.
 (pdftex.def)             Requested size: 469.75502pt x 277.8122pt.
 
 
-[12]
+[12 <./figures/teach_framing.pdf>]
 
 [13 <./figures/teach_induced.pdf>]
 
@@ -1031,14 +1031,14 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `phase3-teaching-paper.out' has not changed.
-(rerunfilecheck)             Checksum: 9D81C764D0D2DF32A5EBE28A89C3EF9A;4164.
+(rerunfilecheck)             Checksum: 5FF2827BDD6C44FCC42C9DF15C14D9ED;4137.
  ) 
 Here is how much of TeX's memory you used:
- 31661 strings out of 473190
- 626190 string characters out of 5715801
- 1080586 words of memory out of 5000000
- 54113 multiletter control sequences out of 15000+600000
- 577876 words of font info for 216 fonts, out of 8000000 for 9000
+ 31665 strings out of 473190
+ 626240 string characters out of 5715801
+ 1081666 words of memory out of 5000000
+ 54115 multiletter control sequences out of 15000+600000
+ 577933 words of font info for 216 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  116i,7n,121p,1018b,1344s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
@@ -1055,10 +1055,10 @@ exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/tex
 live/2025/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/texli
 ve/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive
 /2025/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb>
-Output written on phase3-teaching-paper.pdf (18 pages, 314651 bytes).
+Output written on phase3-teaching-paper.pdf (18 pages, 317407 bytes).
 PDF statistics:
- 363 PDF objects out of 1000 (max. 8388607)
- 264 compressed objects within 3 object streams
- 61 named destinations out of 1000 (max. 500000)
+ 365 PDF objects out of 1000 (max. 8388607)
+ 266 compressed objects within 3 object streams
+ 63 named destinations out of 1000 (max. 500000)
  41294 words of extra memory for PDF output out of 42996 (max. 10000000)
 

@@ -193,7 +193,7 @@ def fig_staircase():
             fontsize=8.4, va="center", ha="left")
     ax.text(3.14, gap[-1], "Gambles this much more\nwhen a bet is called a loss",
             color=GRAY_TEXT, fontsize=8.4, va="center", ha="left")
-    ax.text(0.5, 101, "The whole move\nhappens here", color=PURPLE,
+    ax.text(0.5, 101, "Most of the move\nhappens here", color=PURPLE,
             fontsize=8.4, ha="center", va="bottom")
     ax.plot([0.5, 0.5], [84, 97], color=PURPLE, lw=0.6, zorder=3)
 

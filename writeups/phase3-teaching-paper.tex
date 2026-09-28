@@ -151,8 +151,10 @@ published snapshots taken at successive stages of one model's training. Five res
 Freshly pre-trained models answer with total confidence and pick the larger of two sure payments
 barely more often than a coin flip, between 55.5 and 63.9 percent of the time, so their answers
 are not preferences in any usable sense. The measurable behavior appears at the first and
-simplest stage of assistant training, supervised fine-tuning, and the two later
-human-feedback stages move nothing we can detect. The same finished model behaves like two
+simplest stage of assistant training, supervised fine-tuning, which accounts for about three
+fifths of the total change and is the only stage at which our estimated preferences move; the
+two later human-feedback stages keep pushing the behavior in the same direction without moving
+those estimates. The same finished model behaves like two
 different subjects depending on whether the question arrives as a chat message or as raw text to
 complete, and which format works reverses across model families. Rewording a bet so its downside
 reads as a loss changes gambling by $-30.2$ points in one system and $+62.6$ in another, so the
@@ -435,6 +437,9 @@ post-training bends a model's existing preferences toward or away from human pat
 models show there is very little to bend. A subject that picks \$179 over \$142 barely more often
 than chance does not have unusual preferences. It has no measurable preferences, and any utility
 function estimated from its choices is describing a pattern closer to randomness than to taste.
+Wang, Li, and Chen (2025) found the same thing from the other direction: on the same Llama and
+Qwen base models, no utility function they tried fit the choices well. The free money check says
+why.
 
 The generative story is worth stating plainly, because it is easy to misread the base model as
 strange rather than as absent. A base model has been trained to continue text plausibly. Shown
@@ -454,7 +459,7 @@ questions, and without it a published result can be entirely an artifact.
 \end{workbox}
 
 % ============================================================
-\section{Finding 2: The behavioral profile arrives at supervised fine-tuning}
+\section{Finding 2: Most of the change comes at supervised fine-tuning}
 
 Figure~\ref{fig:staircase} is the core of the paper.
 
@@ -467,31 +472,40 @@ assistant. The vertical axis is percent. The purple line is the free money check
 Figure~\ref{fig:freemoney}, and the gray line below it is the frame gap, the extra gambling the
 model does when a bet is reworded as a loss. Look at the shape rather than the levels: both lines
 make their largest move in the shaded band on the left, between the base model and supervised
-fine-tuning, then flatten. Every checkpoint was asked in the identical format, so nothing here is
+fine-tuning, then keep rising more slowly. Every checkpoint was asked in the identical format, so nothing here is
 a difference in how the question was posed.}
 \label{fig:staircase}
 \end{figure}
 
 Read the purple line first. The free money check moves from 55.5 to 75.6 percent at supervised
-fine-tuning, a jump of 20 points, and then crawls: 88.2 after preference training and 89.6 for
-the finished assistant. The gray line has the same shape. The frame gap opens from 9.9 to 24.3
-points at supervised fine-tuning, then drifts to 31.8 and 34.9.
+fine-tuning, a jump of 20 points. Preference training adds another 12.6, to 88.2, and the final
+polish adds 1.4, to 89.6. The gray line has the same shape. The frame gap opens from 9.9 to 24.3
+points at supervised fine-tuning, then rises to 31.8 and 34.9. Of the total change from base to
+finished assistant, supervised fine-tuning accounts for about three fifths on both lines, and
+preference training for most of the rest. Every step is larger than chance variation across
+the questions would produce, including the later ones.
 
-The structural estimates tell the same story with more machinery behind them. The base model's
-fitted parameters sit pinned against the edges of the allowed range, which is what an optimizer
-does when the data contain no pattern for it to describe. After supervised fine-tuning the
-parameters move to interior values. From supervised fine-tuning onward, the changes at each
-stage are indistinguishable from zero by the bootstrap: the loss-aversion parameter moves by
-$-0.06$ with an interval of $[-0.18, +1.06]$ at the preference stage and by $-0.02$ with an
-interval of $[-0.14, +0.11]$ at the final stage. Every interval covers zero.
+The structural estimates tell a sharper story. Two of the base model's three fitted parameters
+sit at the edge of their possible range. Its loss-aversion parameter is zero, which means it gives
+no weight at all to the losing side of a bet, and its curvature is at its maximum. After
+supervised fine-tuning the parameters move to interior values, and then they stop. The
+loss-aversion parameter moves by $-0.06$ with an interval of $[-0.23, +0.11]$ at the preference
+stage and by $-0.02$ with an interval of $[-0.18, +0.13]$ at the final stage. Every interval
+covers zero.
 
-Stated as the paper's central claim: in this family, on these instruments, the behavioral
-profile measured in the finished assistant is already present after supervised fine-tuning, and
-the preference-based stages neither add it nor remove it.
+So the two kinds of evidence disagree after supervised fine-tuning, and the disagreement is
+informative. The raw behavior keeps moving; the fitted preferences do not. The later movement
+shows up instead as a worse fit: the model explains the preference-trained checkpoints less well
+than the supervised one. Preference training is changing something real that our model of
+preferences does not describe. What that is remains open.
+
+Stated as the paper's central claim, in two parts: in this family, on these instruments,
+supervised fine-tuning is the largest single step and the only one at which the estimated
+preferences move; and the measurable profile is in place before preference training begins.
 
 That ordering is a surprise. Preference training is where human judgment enters the weights, and
-it is the standard explanation offered when a model shows a human-like bias. Here that stage has
-an alibi. The bias is in place before it begins.
+it is the standard explanation offered when a model shows a human-like bias. Here it arrives to
+find the bias already present, and it amplifies what it finds.
 
 \subsection{Did training create the preferences, or reveal them?}
 
@@ -507,7 +521,10 @@ model absorbed that stance, and the behavior we measure afterward did not exist 
 \textbf{Story two: revelation.} The dispositions were already latent in the pre-trained weights,
 absorbed from the enormous quantity of human writing about money that the base model read.
 Supervised fine-tuning did not install them. It taught the model to answer a question in the
-format we are asking, which switched on our ability to read what was already there.
+format we are asking, which switched on our ability to read what was already there. This is the
+account Itzhak, Belinkov, and Stanovsky (2025) give for cognitive biases in general: when they swap
+the fine-tuning data between models built on different pre-trained bases, the models' bias
+patterns follow the base, and the fine-tuning data matters less.
 
 \begin{keybox}[An analogy worth carrying]
 Imagine administering a written survey about financial risk to a person who is fluent in the
@@ -539,8 +556,9 @@ underlying mechanism and agree completely about where to look. Under creation, t
 data determined the behavior, so audit the supervised data. Under revelation, supervised
 fine-tuning selected which latent disposition became the model's operative behavior, so audit
 the supervised data. In both stories the checkpoint immediately after supervised fine-tuning is
-the earliest point at which the behavior is measurable, and the supervised stage is the last
-place where an intervention could have shaped it. The recommendation in Section~9 survives the
+the earliest point at which the behavior is measurable, and the stage at which its estimated
+parameters are set. Preference training still changes how strongly the behavior shows, so it is
+a second place to look, though a later one. The recommendation in Section~9 survives the
 ambiguity.
 
 We flag this because it is worth teaching. Distinguishing a treatment effect from a change in the
@@ -586,7 +604,9 @@ Two consequences follow, and they are the practical contribution of this section
 instability generalizes across model families. Which format elicits an engaged subject does not.
 A study that compares two models under one fixed format may be comparing an engaged subject
 against one that has checked out, and it will report the difference as a difference in
-preferences. The check costs 80 questions per model per format.
+preferences. The check costs 80 questions per model per format. It is necessary but not
+sufficient. Llama passes it equally well in both formats, yet its fitted risk parameters differ
+sharply between them, so a comparison should also hold the format fixed.
 
 One planned comparison in this project was disqualified by its own control. The Qwen
 base-to-assistant contrast under the fill-in-the-blank format shows a large parameter shift,
@@ -624,10 +644,10 @@ models as a class, and its direction is plausibly a function of the training rec
 estimates a prospect-theory parameter on one instruction-tuned model and reports it as a fact
 about language models is describing that model's manufacturing process.
 
-The staircase supplies the within-family complement. Framing sensitivity is installed early, at
-supervised fine-tuning, and then grows monotonically but modestly through the later stages: 9.9,
-24.3, 31.8, 34.9. Whatever produces the sensitivity is largely finished before human preference
-comparisons enter the picture.
+The staircase supplies the within-family complement. Framing sensitivity appears early, at
+supervised fine-tuning, and then keeps growing through the later stages: 9.9, 24.3, 31.8, 34.9.
+Most of it is in place before human preference comparisons enter the picture, and preference
+training adds a further 10.6 points on top.
 
 % ============================================================
 \section{Finding 5: You cannot just tell it what to want}
@@ -716,17 +736,24 @@ that runs, the inability reading is the better-supported one rather than the pro
 % ============================================================
 \section{What this study cannot say}
 
-Four limits, stated plainly.
+Five limits, stated plainly.
 
 \textbf{One family has published snapshots.} The stage-level attribution rests on OLMo-2, because
 it is the only family publishing intermediate checkpoints. A second staged family would turn the
 central claim into a replication. Until then it is one lineage, on one set of instruments.
 
-\textbf{Some fitted parameters sit against their bounds.} The base-model fits and the Qwen
-fill-in-the-blank fit have parameters pinned at the edge of the allowed range, where neither the
-value nor its confidence interval means anything. This is why the model-free quantities, the free
-money check and the frame gap, carry the argument throughout, and the staircase's qualitative
-claim depends on neither pinned value.
+\textbf{Some fitted parameters sit at the edge of their range.} The OLMo and Llama base models
+put loss aversion at zero, OLMo's base model puts curvature at its maximum, and Qwen's
+fill-in-the-blank fit has a loss-aversion parameter with no upper limit. Refitting with much
+wider bounds showed that the zeros are real: the base models' loss aversion is pinned down close
+to zero, not merely stuck against an arbitrary floor. For these fits our intervals ignore the
+fact that the ten wordings and orders of one gamble are related, so they are probably too narrow.
+This is why the model-free quantities, the free money check and the frame gap, carry the argument
+throughout, and the staircase's qualitative claim depends on none of these values.
+
+\textbf{What preference training changes is unexplained.} After supervised fine-tuning the raw
+behavior keeps moving while the fitted preferences hold still and the fit gets worse. The
+structural model is missing whatever preference training changes.
 
 \textbf{One phrasing per instruction.} Each induced rule was tested under a single wording. A
 compliance failure under one wording is weaker evidence than a failure under several.
@@ -765,9 +792,10 @@ inheriting the wrong prior.
 \textbf{(c) An audit regime pointed at the wrong stage.} \emph{Hypothetical.} A regulator requires
 developers to test finished assistants for decision biases before deployment, and a developer
 complies, documents a framing sensitivity, and adds a mitigation at the preference-training
-stage, which is where its safety team sits. If the behavior arrived at supervised fine-tuning, as
-it did in the one family we can observe, the mitigation is being applied downstream of the point
-where the property was set, and the free money check would have shown 75.6 out of an eventual
+stage, which is where its safety team sits. If the behavior's parameters are set at supervised
+fine-tuning, as they were in the one family we can observe, the mitigation is being applied
+downstream of the point where the property was set; it may dampen how strongly the behavior shows
+without touching its source. And the free money check would have shown 75.6 out of an eventual
 89.6 already in place before the audited stage began. Auditing the right stage means requiring
 the checkpoint immediately after supervised fine-tuning, plus the supervised data that produced
 it, and running the same fixed instrument at each stage rather than only at the end.
@@ -911,6 +939,11 @@ Itzhak, I., Stanovsky, G., Rosenfeld, N., and Belinkov, Y. (2024).
 Instructed to Bias: Instruction-Tuned Language Models Exhibit Emergent Cognitive Bias.
 \textit{Transactions of the ACL}; arXiv:2308.00225.
 
+\bibitem{itzhak2025}
+Itzhak, I., Belinkov, Y., and Stanovsky, G. (2025).
+Planted in Pretraining, Swayed by Finetuning: A Case Study on the Origins of Cognitive Biases in LLMs.
+\textit{Conference on Language Modeling (COLM)}; arXiv:2507.07186.
+
 \bibitem{kahneman1979}
 Kahneman, D., and Tversky, A. (1979).
 Prospect Theory: An Analysis of Decision under Risk. \textit{Econometrica}, 47(2), 263--291.
@@ -946,6 +979,10 @@ An Approach to Testing Reference Points. NBER Working Paper 30773.
 \bibitem{smith1976}
 Smith, V. L. (1976).
 Experimental Economics: Induced Value Theory. \textit{American Economic Review}, 66(2), 274--279.
+
+\bibitem{wang2025}
+Wang, Y., Li, X., and Chen, G. (2025).
+Risk Profiling and Modulation for LLMs. arXiv:2509.23058.
 
 \bibitem{tversky1981}
 Tversky, A., and Kahneman, D. (1981).
