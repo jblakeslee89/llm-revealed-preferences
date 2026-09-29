@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import random
 import re
 
@@ -221,7 +222,12 @@ def reason_batch(tok, model, prompts, fmt, a_ids, b_ids, induce_text, max_new_to
                add_special_tokens=add_special).to(model.device)
     # left padding: positions must count from each row's first real token, as generate() does
     pos = (enc2.attention_mask.cumsum(-1) - 1).clamp(min=0)
-    logits = model(**enc2, position_ids=pos).logits[:, -1]
+    # only the last position is needed; full-sequence logits (batch x length x vocab)
+    # ran a T4 out of memory on long OLMo traces
+    try:
+        logits = model(**enc2, position_ids=pos, logits_to_keep=1).logits[:, -1]
+    except TypeError:  # older transformers without logits_to_keep
+        logits = model(**enc2, position_ids=pos).logits[:, -1]
     probs = torch.softmax(logits.float(), dim=-1)
     mass_a = probs[:, a_ids].sum(-1).tolist()
     mass_b = probs[:, b_ids].sum(-1).tolist()
@@ -255,6 +261,8 @@ def main():
     ap.add_argument("--gambles", type=int, default=0,
                     help="keep this many gambles per instrument (0 = full grid); "
                          "reason mode is ~10-20x slower than immediate answer")
+    ap.add_argument("--resume", action="store_true",
+                    help="append to an existing --out, skipping cells already scored")
     ap.add_argument("--no-4bit", action="store_true")
     ap.add_argument("--mass-threshold", type=float, default=0.20)
     args = ap.parse_args()
@@ -270,6 +278,12 @@ def main():
         rows = list(csv.DictReader(f))
     if args.gambles:
         rows = subset_gambles(rows, args.gambles)
+    done = set()
+    if args.resume and os.path.exists(args.out):
+        with open(args.out) as f:
+            done = {(d["instrument"], d["trial_id"]) for d in csv.DictReader(f)}
+        rows = [r for r in rows if (r["instrument"], r["trial_id"]) not in done]
+        print(f"resuming: {len(done)} cells already in {args.out}")
     print(f"{len(rows)} cells to score for {args.model} ({args.fmt}"
           f"{', reason' if args.reason else ''})")
 
@@ -288,9 +302,10 @@ def main():
 
     n_excl = 0
     ended = {}
-    with open(args.out, "w", newline="") as f:
+    with open(args.out, "a" if done else "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=OUT_FIELDS)
-        w.writeheader()
+        if not done:
+            w.writeheader()
         for i, (r, mass_a, mass_b, reasoning, how) in enumerate(results()):
             ended[how] = ended.get(how, 0) + 1
             ab = mass_a + mass_b
@@ -312,7 +327,7 @@ def main():
             if (i + 1) % (args.batch_size * 4 if args.reason else 100) == 0 or i + 1 == len(rows):
                 print(f"  {i+1}/{len(rows)} | excluded {n_excl}"
                       + (f" | ended {ended}" if args.reason else ""))
-    print(f"Wrote {args.out}. Excluded (low A/B mass): {n_excl/len(rows):.1%}")
+    print(f"Wrote {args.out}. Excluded (low A/B mass): {n_excl/max(len(rows), 1):.1%}")
 
 
 if __name__ == "__main__":

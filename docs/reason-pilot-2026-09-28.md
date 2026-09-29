@@ -115,3 +115,42 @@ arithmetic error). A trace-coding pass would split them.
 
 Next: same two runs on OLMo Instruct and SFT (fewshot), then Llama instruct
 (chat), one model per Colab session.
+
+## OLMo-2 Instruct, fewshot, reasoning (induced and uninduced, 840 cells each)
+
+`data/phase3_olmo-inst_fewshot_reason_riskneutral.csv`,
+`data/phase3_olmo-inst_fewshot_reason.csv`. Same 20-gamble subset, fewshot
+format with the reasoning exemplars (`FEWSHOT_REASON`), greedy, 320-token cap.
+Both runs took 1 h 05 min in one session. 1 cell excluded (uninduced).
+
+End states: induced 829 answer / 7 eos / 4 blank; uninduced 518 answer / 234
+eos / 88 blank. The eos traces are complete (median ~395 characters, ending in a
+stated choice), not truncated at the token cap; the readout appends "Answer:"
+after them as designed.
+
+| OLMo Instruct, same cells | Dominance | EV agreement (620 clear) | Frame gap |
+|---|---|---|---|
+| immediate, uninduced | 0.897 | 0.497 | +0.346 |
+| immediate, induced | 0.976 | 0.542 | +0.003 |
+| reason, uninduced | 0.999 | 0.740 | +0.055 |
+| reason, induced | 0.974 | 0.803 | -0.024 |
+
+Induced, by frame (clear cells): gain 0.88, risk 0.94, neutral 0.83,
+**mixed 0.59**. 91% of uninduced traces invoke expected value unprompted
+(the fewshot exemplars demonstrate the arithmetic, so this is partly primed).
+
+Same qualitative result as Qwen at a lower level: reasoning lifts EV agreement
+substantially (0.50 to 0.74 uninduced; 0.54 to 0.80 induced) and removes the
+immediate-answer framing gap (+0.346 to about zero). Two differences:
+
+1. The gap goes to zero rather than reversing (Qwen: -0.135).
+2. OLMo's mixed-frame misses run in both directions (accuracy 0.52 when EV
+   favors the gamble, 0.67 when it favors the sure amount). The traces show the
+   same reference-point slip as Qwen (using the $245 gain where the $362 final
+   amount belongs) plus plain comparison errors ("Since $151.84 is less than
+   $117"), which Qwen did not make.
+
+Session note: a mis-targeted keystroke re-ran the finished Instruct cell; both
+commands were interrupted during model download, before the script opens its
+output file, and the CSVs were verified byte-identical against the copies taken
+earlier (induced) or taken from the zip written at 16:31 (uninduced).
