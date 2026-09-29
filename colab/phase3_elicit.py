@@ -138,6 +138,8 @@ def load_model(model_id, load_4bit=True):
             load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16,
             bnb_4bit_quant_type="nf4")
     model = AutoModelForCausalLM.from_pretrained(model_id, **kw)
+    if not cuda and torch.backends.mps.is_available():
+        model.to("mps")  # Apple GPU for local pilots; Colab runs use CUDA
     model.eval()
     return tok, model
 
@@ -261,6 +263,8 @@ def main():
     ap.add_argument("--gambles", type=int, default=0,
                     help="keep this many gambles per instrument (0 = full grid); "
                          "reason mode is ~10-20x slower than immediate answer")
+    ap.add_argument("--adapter", default=None,
+                    help="LoRA adapter directory from colab/rl_induce.py (Phase 4 paid models)")
     ap.add_argument("--resume", action="store_true",
                     help="append to an existing --out, skipping cells already scored")
     ap.add_argument("--no-4bit", action="store_true")
@@ -269,6 +273,11 @@ def main():
     induce_text = INDUCE.get(args.induce)
 
     tok, model = load_model(args.model, load_4bit=not args.no_4bit)
+    if args.adapter:
+        from peft import PeftModel
+        model = PeftModel.from_pretrained(model, args.adapter)
+        model.eval()
+        print(f"loaded adapter {args.adapter}")
     tok.padding_side = "left"  # batched generation and last-position readout need left padding
     a_ids = torch.tensor(candidate_ids(tok, ["A", " A"]), device=model.device)
     b_ids = torch.tensor(candidate_ids(tok, ["B", " B"]), device=model.device)

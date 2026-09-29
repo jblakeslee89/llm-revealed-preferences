@@ -153,6 +153,35 @@ Caveat for fewshot runs: the reasoning exemplars show the EV arithmetic (without
 a rule), so an uninduced fewshot reasoning run is partly primed toward EV. Compare
 induced vs uninduced within the reasoning arm; chat runs have no exemplars.
 
+## Phase 4: induced value by payment through training
+
+Design and caveats: `docs/phase4-paid-induction.md`. `colab/rl_induce.py` trains a
+LoRA adapter with REINFORCE, paying the model the realized lottery payoff (through the
+induced utility) for each A/B choice on fresh training gambles; `phase3_elicit.py
+--adapter` then scores the unchanged 1,680-cell grid with the paid model.
+
+```python
+# ---- Colab cell: Phase 4, Qwen instruct (chat), linear and sqrt utilities ----
+!test -d /content/repo || (git clone -q https://github.com/jblakeslee89/llm-revealed-preferences.git /content/repo && pip install -q -U transformers accelerate bitsandbytes peft)
+%cd /content/repo
+!git pull -q && git log --oneline -1
+!python colab/rl_induce.py --model Qwen/Qwen2.5-7B-Instruct --fmt chat --utility linear --steps 300 --batch 16 --out runs/qwen_paid_linear
+!python colab/phase3_elicit.py --model Qwen/Qwen2.5-7B-Instruct --adapter runs/qwen_paid_linear --fmt chat --grid data/phase3_grid.csv --out phase4_qwen-inst_chat_paid-linear.csv
+!python colab/rl_induce.py --model Qwen/Qwen2.5-7B-Instruct --fmt chat --utility sqrt --steps 300 --batch 16 --out runs/qwen_paid_sqrt
+!python colab/phase3_elicit.py --model Qwen/Qwen2.5-7B-Instruct --adapter runs/qwen_paid_sqrt --fmt chat --grid data/phase3_grid.csv --out phase4_qwen-inst_chat_paid-sqrt.csv
+!zip -qr phase4_qwen.zip phase4_qwen-inst_chat_paid-*.csv runs/*/train_log.csv runs/*/config.json runs/*/adapter_config.json
+```
+
+Download `phase4_qwen.zip` from the Files pane. Score locally:
+
+```bash
+python analysis/score_induced.py data/phase4_qwen-inst_chat_paid-linear.csv --induce riskneutral --baseline data/phase3_qwen-inst_chat.csv
+python analysis/score_induced.py data/phase4_qwen-inst_chat_paid-sqrt.csv --induce sqrt --baseline data/phase3_qwen-inst_chat.csv
+```
+
+Check the first run's training speed from the `secs` column in `train_log.csv` before
+queueing the second; if 300 steps will not fit in the session, lower `--steps`.
+
 ## Optional cross-method check
 
 To confirm reading logprobs matches sampling, generate (say) 25 completions per cell for
