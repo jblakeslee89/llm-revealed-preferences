@@ -152,16 +152,19 @@ Freshly pre-trained models answer with total confidence and pick the larger of t
 barely more often than a coin flip, between 55.5 and 63.9 percent of the time, so their answers
 are not preferences in any usable sense. The measurable behavior appears at the first and
 simplest stage of assistant training, supervised fine-tuning, which accounts for about three
-fifths of the total change and is the only stage at which our estimated preferences move; the
-two later human-feedback stages keep pushing the behavior in the same direction without moving
-those estimates. The same finished model behaves like two
+fifths of the total change and, when the model must answer at once, is the only stage at which our
+estimated preferences move; the two later human-feedback stages keep pushing the behavior in the
+same direction without moving those estimates. The same finished model behaves like two
 different subjects depending on whether the question arrives as a chat message or as raw text to
 complete, and which format works reverses across model families. Rewording a bet so its downside
 reads as a loss changes gambling by $-30.2$ points in one system and $+62.6$ in another, so the
 famous framing effect is a property of a particular training recipe rather than of the
 technology. Finally, instructing a model in plain language to maximize expected value raises
 compliance from about 45 to 54 percent, close to indifference, while the same instruction is
-followed almost perfectly on questions requiring no arithmetic. We treat the interpretation of
+followed almost perfectly on questions requiring no arithmetic. Allowed to work the arithmetic out
+in writing before answering, the same models follow the rule 71 to 96 percent of the time, and the
+framing effect changes with the answering mode: one model's reaction to loss wording reverses
+direction, through a bookkeeping error it makes over and over. We treat the interpretation of
 the second result as a lesson in identification: the data cannot separate training that created
 these dispositions from training that made a latent disposition readable, and we show why the
 policy conclusion holds under either story.
@@ -507,6 +510,13 @@ That ordering is a surprise. Preference training is where human judgment enters 
 it is the standard explanation offered when a model shows a human-like bias. Here it arrives to
 find the bias already present, and it amplifies what it finds.
 
+One qualification belongs here, although its evidence comes in Section~7. Every number in this
+section comes from models answering at once, with a single letter. When the same checkpoints may
+reason in writing before answering, the later stages stop being quiet. The fine-tuned model still
+gambles 37 points more under loss wording, while the finished assistant barely reacts, at 5 points.
+The central claim is therefore a claim about snap answers. How the model deliberates keeps changing
+after supervised fine-tuning.
+
 \subsection{Did training create the preferences, or reveal them?}
 
 This is where the paper needs you to be careful, and where economics students have an advantage,
@@ -649,10 +659,14 @@ supervised fine-tuning, and then keeps growing through the later stages: 9.9, 24
 Most of it is in place before human preference comparisons enter the picture, and preference
 training adds a further 10.6 points on top.
 
-% ============================================================
-\section{Finding 5: You cannot just tell it what to want}
+Section~7 adds a twist. Let Qwen reason in writing before it answers, and its 62.6-point swing
+toward gambling becomes a 13.5-point swing away from it, the direction Claude Haiku took.
 
-This one came from a reviewer, and it is the most uncomfortable result in the paper.
+% ============================================================
+\section{Finding 5: Told what to want, it complies once it can do the arithmetic}
+
+This one came from a reviewer. It began as the most uncomfortable result in the paper and ended as
+one of the most useful.
 
 \begin{keybox}[Induced value theory, and why experimentalists pay real money]
 Vernon Smith's 1976 argument founded modern experimental economics. If you want a laboratory
@@ -727,16 +741,81 @@ evidence points at the first: instruction-following on the no-arithmetic part of
 instruction is near perfect and improves steadily with post-training, which is not the profile of
 a model ignoring instructions.
 
-That puts a ceiling on the whole project, and we would rather state it than assume it away. The
-parameters we estimate in this and earlier phases describe an immediate-answer choice process.
-They do not describe a deliberate optimization that the model was capable of and chose to depart
-from. The decisive follow-up is an arm that lets the model reason before it answers, and until
-that runs, the inability reading is the better-supported one rather than the proven one.
+If that reading is right, it puts a ceiling on the whole project: the parameters we estimate in
+this and earlier phases would describe a snap answer, with nothing to say about deliberate choice. So
+we tested the reading directly.
+
+\subsection{Letting the model work it out}
+
+We re-asked half the questions, 20 of the 40 bets with every wording and order of each, and changed
+one thing. Before giving its letter, the model could write out its reasoning, up to a few hundred
+words. Then we read its answer exactly as before. Figure~\ref{fig:reason} shows what happened.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{teach_reason.pdf}
+\caption{Left: percent of clear-cut questions on which the model followed the instructed
+expected-value rule, answering at once (gray) or after reasoning in writing (purple). The dotted red
+line is a coin flip. Right: with no instruction, the frame gap, the extra gambling when a bet is
+reworded as a loss, in the same two conditions. Reasoning lifts rule-following well above chance for
+every model, reverses Qwen's reaction to loss wording, and removes most of the finished OLMo
+assistant's. The fine-tuned OLMo checkpoint keeps a large gap.}
+\label{fig:reason}
+\end{figure}
+
+The left panel settles the question the first half of this section left open. Told to maximize
+expected value and given room to work, Qwen's assistant follows the rule on 96 percent of the
+clear-cut questions, up from 57. The finished OLMo assistant goes from 54 to 80 percent, and the
+fine-tuned OLMo checkpoint from 55 to 71. Qwen shows its work: ``$(0.60 \times \$234) + (0.40 \times
+\$0) = \$140.40$ \ldots\ $\$140.40 > \$139$.'' The ceiling was the format. Even without the
+instruction, reasoning moves Qwen from 53 to 83 percent agreement with expected value, and every one
+of its written answers frames the choice as an expected-value comparison.
+
+The right panel is the stranger result. Answering at once, Qwen gambles 63 points more when a bet is
+described as a loss. Reasoning first, it gambles 14 points less, the direction Claude Haiku took in
+our earlier phase. The written reasoning shows why.
+
+\begin{workbox}[One bookkeeping error, made again and again]
+Here is one of the questions, in its loss wording. You hold \$98. Option A: a 47 percent chance your
+money rises to \$227, and a 53 percent chance it drops to \$0. Option B: keep your \$98.
+
+The expected value of A is $0.47 \times \$227 = \$106.69$, which beats \$98, so an expected-value
+maximizer takes the bet. Qwen, told to maximize expected value, wrote
+\[
+E_A = (0.47 \times 227) + (0.53 \times 0) - 98 = 8.69, \qquad E_B = 98,
+\]
+and chose B. It measured Option A as a \emph{change} in its money, an average gain of \$8.69, and
+Option B as a \emph{total}, \$98. That comparison favors the sure thing whenever the bet's expected
+value is less than twice the sure amount, which holds for every loss-worded bet in our set.
+
+This is the reference point from the framing box in Section~2, shifting in the middle of a
+calculation. In the run with the instruction, 21 of Qwen's 22 errors on clear-cut questions were of
+exactly this kind: loss wording, with the gamble the better bet. When the sure amount was the better
+bet, Qwen made no errors under loss wording at all.
+\end{workbox}
+
+Under reasoning, then, Qwen's framing effect is no longer a snap reaction. It is a specific
+arithmetic mistake with a fixed direction. The finished OLMo assistant's gap nearly vanishes when it
+reasons, falling to 5 points, and its errors under loss wording run both ways, including plain slips
+such as ``Since \$151.84 is less than \$117.''
+
+The comparison inside OLMo's staircase matters most for Finding~2. With reasoning, the fine-tuned
+checkpoint gambles 37 points more under loss wording and the finished assistant 5 points more. The
+stages after supervised fine-tuning, which left our fitted preferences untouched when the model
+answered at once, remove most of the framing effect when it reasons. We have not yet run the
+checkpoint between them, after preference training, so we cannot yet say which of the two later
+stages does the work.
+
+Two lessons follow. For the method, every parameter in this line of work describes a snap answer, and
+the same weights also run a slower process with different properties. For anyone evaluating a
+deployed system, many AI agents now reason before they act, and a bias measured on snap answers can be
+absent, or point the other way, when the system deliberates. An evaluation should say which mode it
+measured.
 
 % ============================================================
 \section{What this study cannot say}
 
-Five limits, stated plainly.
+Six limits, stated plainly.
 
 \textbf{One family has published snapshots.} The stage-level attribution rests on OLMo-2, because
 it is the only family publishing intermediate checkpoints. A second staged family would turn the
@@ -758,6 +837,12 @@ structural model is missing whatever preference training changes.
 \textbf{One phrasing per instruction.} Each induced rule was tested under a single wording. A
 compliance failure under one wording is weaker evidence than a failure under several.
 
+\textbf{The reasoning test is partial.} It covers half the questions, three models, and one wording
+of the instruction; the OLMo checkpoint after preference training and Llama remain to be run. OLMo's
+fill-in-the-blank examples show the expected-value arithmetic, which nudges its uninstructed
+reasoning toward it. And the bookkeeping error is identified by reading the written reasoning, not
+yet by coding every answer systematically.
+
 \textbf{The stakes are hypothetical.} Nothing was at stake for any subject. By Smith's own
 argument, an unincentivized elicitation is a weaker instrument than an incentivized one, and the
 induced-value arm we ran is the instruction-only half of a procedure whose other half is payment.
@@ -777,7 +862,9 @@ toward the volatile allocation; when the identical position is described as ``up
 purchase,'' it leans conservative. Nothing in the client's finances differs between the two
 templates. Our Qwen number puts an upper bound on how large such a swing could be: 62.6 points of
 additional gambling on arithmetically identical bets. A wording convention chosen by a marketing
-team would be doing the work of a risk policy.
+team would be doing the work of a risk policy. The direction would also depend on whether the
+platform lets the model reason before writing: in Qwen's case, deliberation turned that 62.6-point
+swing toward gambling into a 13.5-point swing away from it.
 
 \textbf{(b) A procurement office reading the wrong benchmark.} \emph{Hypothetical.} An agency is
 choosing between two vendor models for a contract-scoring tool. Neither vendor has published a
@@ -798,7 +885,9 @@ downstream of the point where the property was set; it may dampen how strongly t
 without touching its source. And the free money check would have shown 75.6 out of an eventual
 89.6 already in place before the audited stage began. Auditing the right stage means requiring
 the checkpoint immediately after supervised fine-tuning, plus the supervised data that produced
-it, and running the same fixed instrument at each stage rather than only at the end.
+it, and running the same fixed instrument at each stage rather than only at the end. If the deployed
+assistant reasons before it acts, the later stages matter more than this suggests (Section~7), which
+strengthens the case for testing at every stage.
 
 \textbf{(d) Two pricing agents from the same family.} \emph{Hypothetical.} A marketplace lets
 sellers deploy automated pricing agents, and two competing sellers independently choose models
@@ -814,11 +903,12 @@ that the shared component exists and identifies where it comes from.
 % ============================================================
 \section{Where research goes next}
 
-\textbf{Let the model reason before it answers.} Section~7 could not separate ``cannot compute in
-this format'' from ``will not comply.'' The fix is direct: rerun the induced arm allowing the
-model to work the expected value out in writing before committing to a letter. If compliance
-jumps, the ceiling was the format. If it does not, the ceiling is the model, and every structural
-parameter in this line of work needs to be read accordingly.
+\textbf{Finish the reasoning test.} Section~7's reasoning arm answered its main question and raised
+two new ones. Run the OLMo checkpoint after preference training, to see which of the two later
+stages removes the framing effect when the model reasons. And code every written answer for the
+reference point it uses, then test whether one clarifying line, ``compare final dollar amounts,''
+removes the bookkeeping error. If it does, the reasoning-mode framing effect is a fixable arithmetic
+habit.
 
 \textbf{Make the stakes real.} Smith's procedure needs payment, and our models were paid nothing.
 The proposal is to denominate payoffs in a resource the model actually spends, namely computation
@@ -864,13 +954,18 @@ match the real one.
   numbers would you require, and what would you refuse to require because it would not be
   informative?
 
-  \item The induced-value arm returned a negative result. Under what circumstances is a negative
+  \item The induced-value arm first returned a negative result about our own instrument, and a
+  follow-up then located the problem in the answer format. Under what circumstances is a negative
   result about your own instrument more valuable than a positive result about your subject? Give
   an example from outside this paper.
 
   \item The paper claims the framing effect belongs to a training recipe rather than to the
   technology. What evidence would overturn that claim? Be specific about the number of models,
   the number of families, and the pattern you would need to see.
+
+  \item Qwen's reaction to loss wording reverses when it reasons before answering. If you were
+  writing a benchmark for AI financial advisers, which answering mode would you measure, and why?
+  What would you miss by measuring only the other?
 \end{enumerate}
 
 % ============================================================
@@ -903,6 +998,8 @@ match the real one.
   an enormous corpus.
   \item[Preference training] The stage that adjusts a model using human comparisons between
   candidate responses. Includes RLHF and DPO.
+  \item[Reason first] Our follow-up condition: the model writes out its reasoning before giving its
+  letter, and we read the letter the same way as when it answers at once.
   \item[Revealed preference] Inferring what a subject wants from what it chooses rather than from
   what it says.
   \item[RLHF] Reinforcement learning from human feedback. The other main implementation of
