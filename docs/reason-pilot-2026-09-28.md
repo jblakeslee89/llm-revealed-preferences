@@ -154,3 +154,41 @@ Session note: a mis-targeted keystroke re-ran the finished Instruct cell; both
 commands were interrupted during model download, before the script opens its
 output file, and the CSVs were verified byte-identical against the copies taken
 earlier (induced) or taken from the zip written at 16:31 (uninduced).
+
+## OLMo-2 SFT, fewshot, reasoning (induced and uninduced, 840 cells each)
+
+`data/phase3_olmo-sft_fewshot_reason_riskneutral.csv`,
+`data/phase3_olmo-sft_fewshot_reason.csv`. The induced run hit CUDA OOM after
+560 cells (the readout computed full-sequence logits; fixed in 9f0a926 with
+`logits_to_keep=1`) and was completed with `--resume`; the uninduced run
+resumed from 16 cells. Both files have 840 unique cells, no missing values,
+0 excluded; the zip copy of the induced file is byte-identical to the resumed
+download.
+
+The SFT-to-Instruct comparison on the same cells:
+
+| Condition | SFT EV | SFT gap | Instruct EV | Instruct gap |
+|---|---|---|---|---|
+| immediate, uninduced | 0.519 | +0.241 | 0.497 | +0.346 |
+| immediate, induced | 0.545 | -0.008 | 0.542 | +0.003 |
+| reason, uninduced | 0.681 | **+0.375** | 0.740 | **+0.055** |
+| reason, induced | 0.713 | +0.358 | 0.803 | -0.024 |
+
+(EV = hard EV agreement on the 620 clear core cells; gap = mean P(gamble) in
+the mixed frame minus the gain frame. Dominance with reasoning: SFT 0.897 /
+0.958, Instruct 0.999 / 0.975.)
+
+**This qualifies the Phase 3 staircase claim.** Under immediate answer, the
+structural parameters were fixed at SFT and the later stages moved nothing
+detectable. Under reasoning, the later stages matter: the frame gap is large at
+SFT (+0.375, larger than SFT's immediate-answer gap) and nearly gone by Instruct
+(+0.055), and EV agreement rises (0.68 to 0.74 uninduced, 0.71 to 0.80 induced).
+So preference optimization (DPO and the final stage) changes how the model
+reasons about these choices, even though it leaves the immediate-answer
+parameters where SFT put them. The attribution claim should be stated per
+elicitation regime.
+
+Caveats: one family; DPO checkpoint not yet run in the reasoning arm, so the
+SFT-to-Instruct change cannot yet be split between DPO and the final stage;
+fewshot reasoning exemplars show the EV arithmetic. Next: OLMo DPO with
+reasoning (same two runs), then Llama instruct (chat).
