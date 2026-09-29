@@ -72,6 +72,13 @@ baseline.
   numbers collapses to a fixed letter (average P(gamble) exactly 0.5 under
   counterbalancing). Balanced accuracy and the letter-balance check catch it.
 
+- Local speed: Qwen2.5-0.5B on the M2 (8 GB, MPS) takes about 6 minutes per
+  step at batch 16 (1,881 s for 5 steps), so local training is not feasible;
+  1.5B does not fit in memory without swapping. Qwen2.5-0.5B also fails the
+  dominance check (0.509, P(A) = 0.81), and after 5 paid steps it had drifted
+  further into answering by letter (held-out P(gamble) = 0.500 in every frame).
+  The monitor now logs mean P(A) so a letter collapse is visible directly.
+
 ## Run plan
 
 1. Local pilot on a small Qwen that passes the dominance check, if one does

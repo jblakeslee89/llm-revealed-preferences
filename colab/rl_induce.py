@@ -107,7 +107,7 @@ def evaluate(tok, model, items, fmt, a_ids, b_ids, u):
     for frame, g, prompt, sf in items:
         pg = p_gamble(tok, model, prompt, fmt, a_ids, b_ids, sf)
         opt_g = g.p * u(g.hi) > u(g.sure)
-        rows.append((frame, pg, (pg > 0.5) == opt_g, opt_g))
+        rows.append((frame, pg, (pg > 0.5) == opt_g, opt_g, pg if not sf else 1 - pg))
     out = {}
     for fr in ("risk", "gain", "mixed"):
         sel = [r for r in rows if r[0] == fr]
@@ -117,6 +117,8 @@ def evaluate(tok, model, items, fmt, a_ids, b_ids, u):
         by_opt = [[r[2] for r in sel if r[3] == o] for o in (True, False)]
         out[f"bal_{fr}"] = sum(sum(v) / len(v) for v in by_opt if v) / sum(1 for v in by_opt if v)
     out["frame_gap"] = out["pg_mixed"] - out["pg_gain"]
+    # letter habit check: near 0 or 1 means the policy is answering by letter, not content
+    out["p_A"] = sum(r[4] for r in rows) / len(rows)
     return out
 
 
@@ -175,7 +177,7 @@ def main():
     opt = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr)
     log_path = out / "train_log.csv"
     fields = ["step", "reward", "p_opt", "kl", "agree_risk", "agree_gain", "agree_mixed",
-              "bal_risk", "bal_gain", "bal_mixed", "pg_gain", "pg_mixed", "frame_gap", "secs"]
+              "bal_risk", "bal_gain", "bal_mixed", "pg_gain", "pg_mixed", "frame_gap", "p_A", "secs"]
     logf = open(log_path, "w", newline="")
     logw = csv.DictWriter(logf, fieldnames=fields)
     logw.writeheader()
