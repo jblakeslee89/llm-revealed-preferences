@@ -76,6 +76,19 @@ Li, and Chen (2025) report for the same Llama and Qwen pairs, and the dominance 
 those fits fail. And the framing response is family-specific: Haiku suppresses gambling under loss
 wording, Qwen amplifies it sharply, OLMo amplifies it moderately, and Llama barely reacts.
 
+Everything above comes from an immediate one-letter answer, and a reason-then-answer arm, run after the
+reviewer's induced-valuation result, shows how much that restriction matters. Allowed to write out
+their reasoning before answering, the models follow an instructed expected-value rule on 0.965 of
+clear-cut cells (Qwen Instruct) and 0.803 (OLMo Instruct), against roughly 0.55 when answering
+immediately, and uninstructed they compute expected value on their own in most traces. The framing
+response changes with the regime. Qwen's strong amplification under loss wording ($+0.626$) reverses to a
+small suppression ($-0.135$, 95\% CI $[-0.221, -0.053]$), produced by one recurring accounting error:
+the model compares the gamble's expected change in wealth with the sure option's total. The staircase
+changes too. Under reasoning, OLMo SFT keeps a large frame gap ($+0.375$) that is nearly gone at the
+final Instruct checkpoint ($+0.055$), so the later training stages, invisible in the immediate-answer
+parameters, move behavior when the model deliberates. The attribution to supervised fine-tuning is a
+result about the immediate-answer regime.
+
 \section{The Result in Plain Language}
 
 An AI model is built in stages. First it is trained on a very large amount of text, producing a base
@@ -123,9 +136,11 @@ Compliance with the stated rule never rose above roughly 55\% at any training st
 flip, while the same models followed the part of the instruction requiring no arithmetic almost
 perfectly, reaching 100\% on the easy questions. Asked for a harder rule involving a square root, one
 model's compliance fell to 12\% with a legible error pattern: it compared the transformed payoffs and
-dropped the probability entirely. These models are not refusing to comply. They cannot execute an
-arithmetic decision rule in a format demanding an immediate one-letter answer, which limits what this
-kind of measurement can claim.
+dropped the probability entirely. So we let them work the problem out in writing before answering.
+Qwen then followed the rule 96\% of the time and OLMo 80\%. The obstacle was the one-letter format.
+With room to reason, the models' reaction to loss wording changed as well, and Qwen's reversed. Working
+through the arithmetic, it made the same bookkeeping mistake again and again, counting the gamble as a
+change in its money and the sure option as a total, and that mistake always favors the safe choice.
 
 \section{Experimental Design}
 
@@ -142,7 +157,8 @@ Three families, seventeen runs, 28{,}560 elicited choice probabilities. Qwen2.5-
 both formats); Llama-3.1-8B (base, Instruct under both formats), run once Hugging Face access to the
 gated repository was approved; and OLMo-2-1124-7B in four stages (base, SFT, DPO, Instruct) plus Instruct
 under the chat format. Six further induced runs cover the OLMo staircase under risk-neutral induction and
-Qwen Instruct chat under both induced rules.
+Qwen Instruct chat under both induced rules. Six reason-then-answer runs (Section~\ref{sec:reasondesign})
+cover Qwen Instruct chat and OLMo SFT and Instruct few-shot, each uninduced and induced.
 
 \subsection{Elicitation by deterministic logits}
 Base models do not follow instructions, so the Phase 1--2 forced-tool-choice harness cannot run on
@@ -178,6 +194,25 @@ induced-optimal option, reported on cells where the induced rule clearly separat
 ($|\ln(\mathrm{EU}_g/\mathrm{EU}_s)| \ge 0.05$) and separately on the dominant controls, where both
 rules agree and no arithmetic is required. This is the instruction-only version of Smith's (1976)
 induced-value procedure, without the incentive that makes the original work.
+
+\subsection{The reason-then-answer arm}\label{sec:reasondesign}
+A failure of the induced arm could mean the models cannot compute in an immediate-answer format or that
+they will not adopt the stated rule. A reason-then-answer arm separates the two. The model generates
+reasoning greedily, with no sampling and at most 320 tokens, until it writes its own \texttt{Answer:}
+line. The reasoning is kept, \texttt{Answer:} is appended, and the A/B distribution is read at that
+position exactly as in the main arm, so readout and scoring are unchanged. In the chat format the prompt
+asks the model to think the choice through and end with its answer. In the few-shot format each of the
+four exemplars gains a one-line reasoning step that states the certain amount or the probability times
+the payoff for each option, without stating a decision rule. Those exemplars demonstrate the
+expected-value arithmetic, so uninduced few-shot reasoning is partly primed toward it, and the cleanest
+comparisons are within the arm.
+
+Reasoning costs roughly ten times as much compute as an immediate answer, so the arm covers 20 of the
+40 gambles per instrument, with every frame, template and order of each (840 cells, fixed seed). All
+comparisons with the immediate-answer runs below are on these matched cells. Subjects are each model in
+the format where it passes the dominance control: Qwen Instruct in chat, OLMo SFT and OLMo Instruct in
+few-shot, each uninduced and under the risk-neutral instruction. The OLMo DPO checkpoint and Llama
+Instruct are not yet run.
 
 \section{Econometric Model and Estimation}
 
@@ -249,7 +284,7 @@ three of the four changed what this phase reports.
   CPS or ACS distributions, changes the estimand from the deployed assistant to a simulated population,
   so it belongs as an additional arm rather than a replacement.
   \item \textbf{Out-of-sample prediction.} An emphatic yes, and pure analysis on data already in hand.
-  Implemented as Section~4.2; it answers the Phase 1 near-tie (Section~5.7).
+  Implemented as Section~4.2; it answers the Phase 1 near-tie (Section~\ref{sec:holdout}).
 \end{enumerate}
 
 The project sits inside the structural behavioral economics tradition DellaVigna (2018) surveys:
@@ -471,7 +506,7 @@ instruct model and reports it as a fact about LLMs is over-generalizing from a s
 staircase supplies the complementary within-family fact: framing sensitivity is installed early, then
 grows monotonically but modestly through the later stages.
 
-\subsection{Induced valuation: the models cannot execute an induced rule}
+\subsection{Induced valuation: the models cannot execute an induced rule}\label{sec:induced}
 Table~\ref{tab:induced} reports compliance with an explicitly instructed decision rule.
 
 \begin{table}[h]
@@ -528,11 +563,83 @@ elicitation the model must emit a letter at the next token with no intermediate 
 while post-training steadily improves its following of the no-computation part of an instruction. The
 induced-value calibration therefore returns a negative result, and the negative result is informative:
 it puts a ceiling on how much any immediate-answer elicitation of this kind can claim about deliberate
-optimization. The decisive follow-up is a reason-then-answer induced arm that lets the model compute the
-expected value before committing to a letter. That arm is not in this phase, so until it runs, the
-inability reading is the better-supported one rather than the proven one.
+optimization. The decisive test is a reason-then-answer arm that lets the model compute the expected
+value before committing to a letter. Section~\ref{sec:reason} reports it, and it confirms the inability
+reading.
 
-\subsection{Held-out validation}
+\subsection{Reasoning first: the ceiling was the format}\label{sec:reason}
+Table~\ref{tab:reason} and Figure~\ref{fig:reason} compare the four conditions on the 840 matched cells.
+
+\begin{table}[h]
+\centering
+\small
+\caption{The reason-then-answer arm against the immediate-answer runs on the same 840 cells. EV is the
+share of the 620 clear core cells on which the model puts more than half its probability on the
+expected-value-optimal option (hard accuracy, so the immediate-answer figures differ slightly from the
+compliance mass in Table~\ref{tab:induced}). Gap is mean $P(\text{gamble})$ in the mixed frame minus
+the gain frame.}
+\label{tab:reason}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+ & \multicolumn{2}{c}{Qwen Instruct (chat)} & \multicolumn{2}{c}{OLMo SFT (few-shot)} & \multicolumn{2}{c}{OLMo Instruct (few-shot)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Condition & EV & Gap & EV & Gap & EV & Gap \\
+\midrule
+Immediate, uninduced & 0.532 & $+0.626$ & 0.519 & $+0.241$ & 0.497 & $+0.346$ \\
+Immediate, induced   & 0.569 & $+0.401$ & 0.545 & $-0.008$ & 0.542 & $+0.003$ \\
+Reason, uninduced    & 0.829 & $-0.135$ & 0.681 & $+0.375$ & 0.740 & $+0.055$ \\
+Reason, induced      & 0.965 & $-0.145$ & 0.713 & $+0.358$ & 0.803 & $-0.024$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/phase3_reason.pdf}
+\caption{Panel A: agreement with expected value on clear cells, by elicitation regime and instruction.
+Reasoning moves every subject well above chance, and the instruction adds to it. Panel B: the frame gap
+without instruction. Reasoning reverses Qwen's response to loss wording and removes OLMo Instruct's,
+while OLMo SFT keeps a large gap.}
+\label{fig:reason}
+\end{figure}
+
+\textbf{The models can follow the rule when they can write the arithmetic down.} With reasoning allowed,
+induced expected-value agreement on clear cells rises from 0.569 to 0.965 for Qwen Instruct ($+0.395$,
+95\% CI $[+0.331, +0.456]$, bootstrapped over the 40 gamble clusters) and from 0.542 to 0.803 for OLMo
+Instruct ($+0.262$, CI $[+0.199, +0.325]$). Dominance compliance reaches 1.000 for Qwen and 0.975 for OLMo
+Instruct. The traces show the computation directly: ``$(0.60 \times \$234) + (0.40 \times \$0) =
+\$140.40$ \ldots\ $\$140.40 > \$139$.'' Reasoning moves the model toward expected value even without the
+instruction. Every uninstructed Qwen trace frames the choice as an expected-value comparison, and
+agreement rises from 0.532 to 0.829 ($+0.297$, CI $[+0.213, +0.379]$). The instruction-only failure of
+Section~\ref{sec:induced} was a limit of the immediate-answer format, and the structural parameters of Phases 1
+through 3 describe that regime: a fast, intuitive choice process, distinct from the deliberate one the
+same weights can also run.
+
+\textbf{Under reasoning, the framing effect becomes an accounting error.} Qwen's frame gap reverses from
+$+0.626$ to $-0.135$ (CI $[-0.221, -0.053]$), the direction Phase~2 found for Haiku ($-0.302$). The
+mechanism is visible in the traces. In the induced run, 21 of the 22 misses on clear cells fall in the
+mixed frame, and all 21 are cells where expected value favors the gamble: mixed-frame accuracy is 1.000
+when the sure amount is optimal and 0.767 when the gamble is. The model computes the gamble as a change
+from current wealth and compares it with the sure option as a level, as in ``$E_A = (0.47 \times 227) +
+(0.53 \times 0) - 98 = 8.69$ \ldots\ $E_B = 98$,'' or it nets the gain and loss correctly and then
+compares the net change with the sure amount. Either way the reference point shifts between the two
+options, and the shift always favors the safe choice. OLMo Instruct's gap falls to about zero
+($+0.055$, CI $[-0.075, +0.183]$). Its mixed-frame misses run in both directions and include plain
+comparison errors (``Since \$151.84 is less than \$117'') that Qwen does not make. Whether Haiku's
+anti-textbook Phase~2 response comes from the same mis-referenced computation is a hypothesis these data
+raise and do not test.
+
+\textbf{The staircase depends on the regime.} Under immediate answer the structural parameters were set
+at SFT and the later stages moved nothing detectable (Section~5.3). Under reasoning, the later stages
+matter. OLMo SFT keeps a large frame gap ($+0.375$, CI $[+0.286, +0.466]$), larger than its own
+immediate-answer gap, and by the final Instruct checkpoint it is nearly gone: the difference is $-0.320$
+(CI $[-0.449, -0.201]$). Induced expected-value agreement also rises from SFT to Instruct ($0.713$ to
+$0.803$, difference $+0.090$, CI $[+0.030, +0.160]$); the uninduced rise ($0.681$ to $0.740$) is not
+distinguishable from zero. Preference optimization and the final stage leave the immediate-answer
+parameters where SFT put them and change how the model reasons. The DPO checkpoint has not been run in
+this arm, so the change cannot yet be divided between DPO and the final stage.
+
+\subsection{Held-out validation}\label{sec:holdout}
 Phase 1 reported honestly that a probability-only logit essentially tied the structural model in sample
 and beat it on BIC. It does not survive out of sample. Fitting on 30 gambles and predicting cells from
 the 10 held-out gambles, over 10 random splits, the structural model wins on every split for all three
@@ -575,8 +682,10 @@ change in both model-free quantities, through a channel the structural model doe
 ordering is clear, and the division of labor is only partly clear. SFT sets the parameters and does
 most of the moving; preference optimization amplifies the model-free expression without relocating the
 estimates. This is one family with one set of instruments, and the base model's failed dominance
-control leaves open whether SFT is the origin or only the point of first visibility. Either way, the
-result points research attention at the least glamorous stage.
+control leaves open whether SFT is the origin or only the point of first visibility. The claim also
+holds only for the immediate-answer regime: when the model reasons first, the later stages remove most of
+the frame gap SFT leaves (Section~\ref{sec:reason}). Either way, the result points research attention at
+the least glamorous stage, and away from any single stage as the whole story.
 
 \textbf{The bias is a property of a recipe rather than of a technology.} Four systems, four responses to
 the same loss-wording manipulation, from strong suppression through strong amplification to near
@@ -590,12 +699,13 @@ economic subject and a near-total gambling refusal depending only on whether the
 chat message or a raw completion, and which format worked reversed between families. Any benchmark
 comparing models under one fixed format is running an uncontrolled interaction.
 
-\textbf{The elicitation has a ceiling, and the induced arm found it.} The models cannot follow an
-instructed arithmetic decision rule in this format while following the non-arithmetic part of the same
-instruction perfectly. That constrains the reading of every structural parameter in Phases 1 through 3.
-These are parameters of an immediate-answer choice process rather than of a deliberate optimization the
-model is capable of and chose to depart from. The restriction on the estimand is real, and more useful
-stated than assumed away. Phase 2's free-$\phi$ degeneracy also reappeared here, as Qwen's few-shot
+\textbf{The estimand is a regime.} In an immediate-answer format the models cannot follow an instructed
+arithmetic rule; allowed to reason, Qwen follows it on 96.5\% of clear cells. Every structural parameter
+in Phases 1 through 3 is therefore a parameter of an immediate-answer choice process. The same weights
+also run a deliberate process with different properties: it tracks expected value, it responds to loss
+wording in the opposite direction for Qwen and hardly at all for OLMo Instruct, and it is shaped by
+training stages the immediate-answer parameters do not register. Reporting a model's risk preferences
+without the elicitation regime omits half of the result. Phase 2's free-$\phi$ degeneracy also reappeared here, as Qwen's few-shot
 $\lambda$ running without limit toward the top of its range, the same direction on the same likelihood
 surface reached by a different route, which marks it as a property of the specification rather than of
 any one subject.
@@ -630,6 +740,12 @@ same insurance framing, the same triage prompt. A framing vulnerability document
 procurement officer nothing reliable about the model deployed, so the measurement must be repeated per
 model. That is the argument for cheap standardized instruments of the kind this project builds.
 
+\textbf{State the elicitation regime.} The same model reverses its response to loss wording depending on
+whether it answers immediately or reasons first. Agentic deployments increasingly let models reason
+before acting, while most behavioral evaluations still read an immediate answer. An evaluation that does
+not report which regime it measured cannot be compared with one that does, and a framing vulnerability
+found in one regime may be absent, or reversed, in the regime that is deployed.
+
 \textbf{Scope.} These are properties of specific open-weight checkpoints under a deterministic logit
 readout with unincentivized forced choice. They are not claimed as universal traits of language models,
 and the framing-heterogeneity result is precisely the reason such claims are unsafe.
@@ -662,10 +778,15 @@ the natural first check.
 phrasing. A compliance failure under one phrasing is weaker evidence than a failure under several, and
 the robustness check is unrun.
 
-\textbf{The immediate-answer format cannot separate inability from unwillingness.} This is the sharpest
-open question the phase raises about its own method. The reason-then-answer induced arm is the decisive
-test and belongs at the top of the follow-on list, next to the token-budget incentive-compatible design
-that would make the induced-value procedure complete rather than instruction-only.
+\textbf{The reasoning arm is partial.} It covers half the gambles, one instruction phrasing, greedy
+decoding (one trace per cell), and three subjects; the OLMo DPO checkpoint and Llama Instruct remain to be
+run, and the DPO run is needed to divide the SFT-to-Instruct change in the reasoning regime between DPO
+and the final stage. The few-shot reasoning exemplars demonstrate the expected-value arithmetic, which
+primes the uninduced OLMo runs toward it. The reference-point error is identified from traces read by
+hand and a rough text check; a systematic coding of which reference point each trace uses, and a test of
+whether one clarifying line (``compare final dollar amounts'') removes it, would make it a measured
+mechanism. The token-budget incentive-compatible design remains the step that would complete the
+induced-value procedure.
 
 \textbf{Hardware, quantization, and one staircase.} All runs use 4-bit quantization on free Colab T4
 hardware. The exercise compares checkpoints under identical conditions, so a small uniform quantization
@@ -678,7 +799,8 @@ is visible, shows that the measured profile is in place at supervised fine-tunin
 optimization begins, shows that base models
 lack the value-tracking that would make the word ``preference'' apply, documents that the framing response
 differs in sign across families, and answers the Phase 1 near-tie out of sample. It also found the ceiling
-of its own elicitation, which the next phase should raise before adding new instruments to it.
+of its own elicitation and, with the reasoning arm, raised it: the models can follow a stated rule when
+they may compute, and their framing response and training-stage profile both depend on whether they do.
 
 \vspace{1em}
 \hrule

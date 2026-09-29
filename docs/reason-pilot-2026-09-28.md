@@ -192,3 +192,23 @@ Caveats: one family; DPO checkpoint not yet run in the reasoning arm, so the
 SFT-to-Instruct change cannot yet be split between DPO and the final stage;
 fewshot reasoning exemplars show the EV arithmetic. Next: OLMo DPO with
 reasoning (same two runs), then Llama instruct (chat).
+
+## Bootstrap intervals (added with the Phase 3 writeup update)
+
+95% intervals, resampling the 40 gamble clusters (20 per instrument), 2,000 draws:
+
+| Contrast | Estimate | 95% CI |
+|---|---|---|
+| Qwen EV, reason induced minus immediate induced | +0.395 | [+0.331, +0.456] |
+| Qwen EV, reason uninduced minus immediate uninduced | +0.297 | [+0.213, +0.379] |
+| Qwen frame gap, reason uninduced | -0.135 | [-0.221, -0.053] |
+| OLMo Instruct EV, reason induced minus immediate induced | +0.262 | [+0.199, +0.325] |
+| OLMo SFT frame gap, reason uninduced | +0.375 | [+0.286, +0.466] |
+| OLMo Instruct frame gap, reason uninduced | +0.055 | [-0.075, +0.183] |
+| Instruct minus SFT, frame gap, reason uninduced | -0.320 | [-0.449, -0.201] |
+| Instruct minus SFT, EV, reason induced | +0.090 | [+0.030, +0.160] |
+| Instruct minus SFT, EV, reason uninduced | +0.060 | [-0.025, +0.148] |
+
+Correction to the SFT section above: the uninduced SFT-to-Instruct EV rise
+(0.68 to 0.74) is not distinguishable from zero; the induced rise and the
+frame-gap drop are.
