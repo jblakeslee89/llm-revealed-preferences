@@ -164,7 +164,8 @@ compliance from about 45 to 54 percent, close to indifference, while the same in
 followed almost perfectly on questions requiring no arithmetic. Allowed to work the arithmetic out
 in writing before answering, the same models follow the rule 71 to 96 percent of the time, and the
 framing effect changes with the answering mode: one model's reaction to loss wording reverses
-direction, through a bookkeeping error it makes over and over. We treat the interpretation of
+direction, through a bookkeeping error it makes over and over. One added sentence removes that
+error, and paying the model through training does not teach it the arithmetic. We treat the interpretation of
 the second result as a lesson in identification: the data cannot separate training that created
 these dispositions from training that made a latent disposition readable, and we show why the
 policy conclusion holds under either story.
@@ -795,7 +796,19 @@ bet, Qwen made no errors under loss wording at all.
 \end{workbox}
 
 Under reasoning, then, Qwen's framing effect is no longer a snap reaction. It is a specific
-arithmetic mistake with a fixed direction. The finished OLMo assistant's gap nearly vanishes when it
+arithmetic mistake with a fixed direction.
+
+If that reading is right, telling the model how to keep its books should fix it, and a genuine
+preference for safety would survive the correction. So we added one sentence to the question:
+``When you compare the options, compare the final dollar amounts you would end up with under each, not
+the changes from what you hold now.'' Together with the expected-value instruction, that sentence
+removed every one of the 21 errors. Accuracy on the loss-worded questions went from 87 to 100 percent,
+and the frame gap went to exactly zero. The sentence on its own, without the instruction, cut the
+errors roughly in half, and the ones that remained were the same bookkeeping slip; not one of them
+mentioned risk or safety. The loss-wording effect under reasoning is a habit of arithmetic that the
+model drops when told both what to compute and how to compare.
+
+The finished OLMo assistant's gap nearly vanishes when it
 reasons, falling to 5 points, and its errors under loss wording run both ways, including plain slips
 such as ``Since \$151.84 is less than \$117.''
 
@@ -812,10 +825,26 @@ deployed system, many AI agents now reason before they act, and a bias measured 
 absent, or point the other way, when the system deliberates. An evaluation should say which mode it
 measured.
 
+\subsection{Paying it instead of telling it}
+
+Smith's point was that instruction is not enough; you pay the subject. A model has no wallet, but it
+does have something it is trained to maximize. So in a follow-up we paid the model through training:
+each time it chose, the bet was played out, and the payoff became the reward that adjusted its weights.
+We trained on fresh bets in plain wording only, so the questions in this paper and their loss and gain
+wordings stayed unseen, and we asked for snap answers, one letter at a time.
+
+It did not learn the arithmetic. Across six versions of the training setup, the paid model ended up
+giving the same answer to every question: always the sure amount in the early versions, and always
+the gamble once the payments favored gambling, since most of our bets pay more on average when
+you take them. A fixed answer is the best a model can do if it cannot tell a good bet from a bad one,
+and that is exactly where the model settled. This fits the rest of the section. In a snap answer the
+model does not do the multiplication, whether it is told the rule or paid for it. The natural next
+experiment pays it when it may reason first, where it already can.
+
 % ============================================================
 \section{What this study cannot say}
 
-Six limits, stated plainly.
+Seven limits, stated plainly.
 
 \textbf{One family has published snapshots.} The stage-level attribution rests on OLMo-2, because
 it is the only family publishing intermediate checkpoints. A second staged family would turn the
@@ -840,12 +869,18 @@ compliance failure under one wording is weaker evidence than a failure under sev
 \textbf{The reasoning test is partial.} It covers half the questions, three models, and one wording
 of the instruction; the OLMo checkpoint after preference training and Llama remain to be run. OLMo's
 fill-in-the-blank examples show the expected-value arithmetic, which nudges its uninstructed
-reasoning toward it. And the bookkeeping error is identified by reading the written reasoning, not
-yet by coding every answer systematically.
+reasoning toward it. The bookkeeping error is identified by reading the written reasoning, not yet
+by coding every answer systematically, and the one-sentence fix was tested on Qwen only.
 
-\textbf{The stakes are hypothetical.} Nothing was at stake for any subject. By Smith's own
-argument, an unincentivized elicitation is a weaker instrument than an incentivized one, and the
-induced-value arm we ran is the instruction-only half of a procedure whose other half is payment.
+\textbf{The payment test is a pilot.} It used one model, a small trainable add-on to the model's
+weights, and at most 150 training steps per version, and it paid only for snap answers. It shows
+that payment of this kind does not teach the arithmetic in that mode; it does not show that no form
+of payment could.
+
+\textbf{The stakes are hypothetical.} Nothing was at stake for any subject in the main
+experiment. By Smith's own argument, an unincentivized elicitation is a weaker instrument than an
+incentivized one. Our induced-value arm is instruction only, and the payment pilot in Section~7 is
+the closest analogue we have so far.
 
 % ============================================================
 \section{Why this matters}
@@ -903,18 +938,16 @@ that the shared component exists and identifies where it comes from.
 % ============================================================
 \section{Where research goes next}
 
-\textbf{Finish the reasoning test.} Section~7's reasoning arm answered its main question and raised
-two new ones. Run the OLMo checkpoint after preference training, to see which of the two later
-stages removes the framing effect when the model reasons. And code every written answer for the
-reference point it uses, then test whether one clarifying line, ``compare final dollar amounts,''
-removes the bookkeeping error. If it does, the reasoning-mode framing effect is a fixable arithmetic
-habit.
+\textbf{Finish the reasoning test.} Run the OLMo checkpoint after preference training, to see which
+of the two later stages removes the framing effect when the model reasons. Code every written answer
+for the reference point it uses, and repeat the one-sentence fix on OLMo.
 
-\textbf{Make the stakes real.} Smith's procedure needs payment, and our models were paid nothing.
-The proposal is to denominate payoffs in a resource the model actually spends, namely computation
-time, with a risk-free alternative that costs calculation to earn. That is the closest available
-analogue to incentive compatibility for a machine subject, and it converts the induced-value arm
-from instruction-only into the real procedure.
+\textbf{Pay the model when it may reason.} Payment through training did not teach the arithmetic
+in snap answers, but the model already does the arithmetic when it reasons. Paying it in that mode
+asks two questions instructions could not settle: can payment install a specific risk-averse
+utility, where the square-root instruction collapsed to 12 percent compliance; and does paid reasoning
+carry over into snap answers? This needs the model to write its reasoning during training, roughly ten
+to twenty times the computing cost of the pilot.
 
 \textbf{Replicate the staircase on a second family.} The central claim rests on one lineage. Any
 laboratory that retains intermediate checkpoints can run this diagnostic, and a second family
@@ -966,6 +999,10 @@ match the real one.
   \item Qwen's reaction to loss wording reverses when it reasons before answering. If you were
   writing a benchmark for AI financial advisers, which answering mode would you measure, and why?
   What would you miss by measuring only the other?
+
+  \item One added sentence removed the loss-wording bias when the model reasoned. Does that make the
+  bias less important for a deployed system, or more? Think about who writes the prompts a deployed
+  system actually sees.
 \end{enumerate}
 
 % ============================================================
