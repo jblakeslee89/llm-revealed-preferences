@@ -116,6 +116,19 @@ which depends only on the prompt and so keeps the estimator unbiased. The next
 run also uses `--reward expected` first, to establish that the pipeline can
 induce value at all before returning to realized payment.
 
+### Third 7B run: stable but inert
+
+`--reward expected`, per-prompt baseline, explore 0.5, lr 5e-5, KL 0.1. No
+collapse: at step 50 held-out P(gamble) 0.38 gain / 0.69 mixed, P(A) 0.47.
+But no learning either: balanced accuracy stayed near its starting 0.52 to
+0.56 through step 150, and by step 150 the KL to the untrained model had
+fallen to 0.007 with the frame gap back to +0.42. Diagnosis: rewards are
+divided by the largest payoff, so a typical advantage is about 0.015, and the
+KL term (weight 0.1) pulled the policy back to the untrained model. Stopped at
+step 150. Fix: `--adv-scale auto` divides advantages by the mean
+|E u(gamble) - u(sure)| on the training gambles (typical advantage about 1);
+defaults now lr 1e-5, KL 0.02.
+
 ## Run plan
 
 1. Local pilot on a small Qwen that passes the dominance check, if one does

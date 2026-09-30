@@ -134,8 +134,10 @@ def main():
                          "expected: pay the action's expected utility (lower-variance ablation)")
     ap.add_argument("--steps", type=int, default=300)
     ap.add_argument("--batch", type=int, default=16)
-    ap.add_argument("--lr", type=float, default=5e-5)
-    ap.add_argument("--kl", type=float, default=0.1, help="KL penalty toward the untrained model")
+    ap.add_argument("--lr", type=float, default=1e-5)
+    ap.add_argument("--kl", type=float, default=0.02, help="KL penalty toward the untrained model")
+    ap.add_argument("--adv-scale", default="auto",
+                    help="divide advantages by this; auto = mean |E u(gamble) - u(sure)| / scale")
     ap.add_argument("--baseline", choices=["prompt", "running"], default="prompt",
                     help="prompt: u(sure) of the same gamble; running: average of past rewards")
     ap.add_argument("--explore", type=float, default=0.5,
@@ -196,6 +198,16 @@ def main():
         print(f"  step {step:4d} | " + " ".join(f"{k}={row[k]}" for k in fields[1:] if k in row))
 
     baseline = sum(u(g.sure) for g in train) / len(train) / scale
+    # rewards are divided by the largest payoff, so a typical advantage is about 0.015 and the
+    # KL term swamped it (the third 7B run drifted back to the untrained model). Rescale so a
+    # typical advantage, |E u(gamble) - u(sure)|, is about 1.
+    if args.sanity_letter:
+        adv_scale = 1.0
+    elif args.adv_scale == "auto":
+        adv_scale = sum(abs(g.p * u(g.hi) - u(g.sure)) for g in train) / len(train) / scale
+    else:
+        adv_scale = float(args.adv_scale)
+    print(f"advantage scale: {adv_scale:.4f}")
     t0 = time.time()
     log_eval(0, {"secs": 0})
     model.train()
@@ -236,7 +248,7 @@ def main():
             # single running baseline has (on small-stakes gambles both options pay below the
             # running mean, so whichever the model leans toward gets pushed down).
             b = u(g.sure) / scale if args.baseline == "prompt" else baseline
-            loss = (-(r - b) * (lg if take_gamble else ls) + args.kl * kl) / len(batch)
+            loss = (-(r - b) / adv_scale * (lg if take_gamble else ls) + args.kl * kl) / len(batch)
             loss.backward()
             opt_g = g.p * u(g.hi) > u(g.sure)
             records.append((r, float(kl.detach()), float((lg if opt_g else ls).detach().exp()),
