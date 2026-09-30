@@ -114,6 +114,14 @@ INDUCE = {
         "the option with the higher expected utility. Apply no other consideration."),
 }
 
+# Clarification check (Sep 30 2026). With reasoning, Qwen's remaining errors under loss wording
+# came from mixing reference points: the gamble valued as a change in money, the sure option as
+# a total. One line naming the right comparison tests whether that error is a fixable habit.
+CLARIFY = ("When you compare the options, compare the final dollar amounts you would end up "
+           "with under each, not the changes from what you hold now.")
+INDUCE["clarify"] = "Instruction: " + CLARIFY
+INDUCE["riskneutral_clarify"] = INDUCE["riskneutral"] + " " + CLARIFY
+
 
 def candidate_ids(tok, strings):
     ids = set()
@@ -252,7 +260,8 @@ def main():
     ap.add_argument("--grid", required=True, help="phase3_grid.csv exported by run_phase3.py")
     ap.add_argument("--out", required=True)
     ap.add_argument("--fmt", choices=["fewshot", "chat"], default="fewshot")
-    ap.add_argument("--induce", choices=["none", "riskneutral", "sqrt"], default="none",
+    ap.add_argument("--induce", choices=["none", "riskneutral", "sqrt", "clarify",
+                                         "riskneutral_clarify"], default="none",
                     help="prepend an induced-utility instruction (Armour arm); score "
                          "compliance afterwards with analysis/score_induced.py")
     ap.add_argument("--reason", action="store_true",
@@ -263,6 +272,8 @@ def main():
     ap.add_argument("--gambles", type=int, default=0,
                     help="keep this many gambles per instrument (0 = full grid); "
                          "reason mode is ~10-20x slower than immediate answer")
+    ap.add_argument("--frames", default=None,
+                    help="comma-separated frames to keep, e.g. gain,mixed (default: all)")
     ap.add_argument("--adapter", default=None,
                     help="LoRA adapter directory from colab/rl_induce.py (Phase 4 paid models)")
     ap.add_argument("--resume", action="store_true",
@@ -287,6 +298,9 @@ def main():
         rows = list(csv.DictReader(f))
     if args.gambles:
         rows = subset_gambles(rows, args.gambles)
+    if args.frames:
+        keep = set(args.frames.split(","))
+        rows = [r for r in rows if r["frame"] in keep]
     done = set()
     if args.resume and os.path.exists(args.out):
         with open(args.out) as f:
