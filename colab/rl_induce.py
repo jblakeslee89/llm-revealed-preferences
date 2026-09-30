@@ -139,7 +139,8 @@ def main():
     ap.add_argument("--adv-scale", default="auto",
                     help="divide advantages by this; auto = mean |E u(gamble) - u(sure)| / scale")
     ap.add_argument("--baseline", choices=["prompt", "running"], default="prompt",
-                    help="prompt: u(sure) of the same gamble; running: average of past rewards")
+                    help="prompt: midpoint of the gamble's two expected utilities; "
+                         "running: average of past rewards")
     ap.add_argument("--explore", type=float, default=0.5,
                     help="share of training choices drawn uniformly instead of from the model")
     ap.add_argument("--lora-r", type=int, default=16)
@@ -247,7 +248,13 @@ def main():
             # the prompt, so the estimator stays unbiased, and it removes the stakes effect a
             # single running baseline has (on small-stakes gambles both options pay below the
             # running mean, so whichever the model leans toward gets pushed down).
-            b = u(g.sure) / scale if args.baseline == "prompt" else baseline
+            # midpoint of the two options' expected utilities. With b = u(sure) alone, a safe
+            # choice always has zero advantage, so once the policy is sure of the gamble nothing
+            # moves it (the fourth 7B run stuck at always-gamble). With the midpoint both options
+            # push, and under uniform exploration the expected logit update is proportional to
+            # E u(gamble) - u(sure) however saturated the policy is.
+            b = ((g.p * u(g.hi) + u(g.sure)) / 2 / scale if args.baseline == "prompt"
+                 else baseline)
             loss = (-(r - b) / adv_scale * (lg if take_gamble else ls) + args.kl * kl) / len(batch)
             loss.backward()
             opt_g = g.p * u(g.hi) > u(g.sure)

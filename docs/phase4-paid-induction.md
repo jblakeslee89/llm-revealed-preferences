@@ -129,6 +129,23 @@ step 150. Fix: `--adv-scale auto` divides advantages by the mean
 |E u(gamble) - u(sure)| on the training gambles (typical advantage about 1);
 defaults now lr 1e-5, KL 0.02.
 
+### Fourth 7B run: stuck at always-gamble
+
+`--reward expected`, `--adv-scale auto` (0.0198), lr 1e-5, KL 0.02, baseline
+u(sure). By step 50 held-out P(gamble) was 0.98 (gain) and 0.998 (mixed),
+balanced accuracy 0.50, frame gap +0.02: the model learned the base rate
+(about 62% of gambles favor the risky option), a constant strategy. Unchanged
+at step 100. Diagnosis: with baseline u(sure), a safe choice always has zero
+advantage, so all learning comes from gamble choices, and those updates scale
+with 1 - P(gamble), which vanishes once the policy is sure. Fix: baseline at the
+midpoint of E u(gamble) and u(sure) (still prompt-only, so unbiased); both
+options then push, and under uniform exploration the expected logit update is
+proportional to E u(gamble) - u(sure) regardless of saturation.
+
+The fact that the unpaid model cannot discriminate EV in immediate answer
+(Phase 3) is consistent with every run so far settling on a constant strategy;
+whether payment can teach the discrimination at all is what the next run tests.
+
 ## Run plan
 
 1. Local pilot on a small Qwen that passes the dominance check, if one does
