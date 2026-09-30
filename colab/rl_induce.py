@@ -134,8 +134,10 @@ def main():
                          "expected: pay the action's expected utility (lower-variance ablation)")
     ap.add_argument("--steps", type=int, default=300)
     ap.add_argument("--batch", type=int, default=16)
-    ap.add_argument("--lr", type=float, default=1e-4)
-    ap.add_argument("--kl", type=float, default=0.05, help="KL penalty toward the untrained model")
+    ap.add_argument("--lr", type=float, default=5e-5)
+    ap.add_argument("--kl", type=float, default=0.1, help="KL penalty toward the untrained model")
+    ap.add_argument("--explore", type=float, default=0.5,
+                    help="share of training choices drawn uniformly instead of from the model")
     ap.add_argument("--lora-r", type=int, default=16)
     ap.add_argument("--n-train", type=int, default=400)
     ap.add_argument("--train-seed", type=int, default=7)
@@ -204,7 +206,15 @@ def main():
             prompt = phase1_prompt(g, random.randrange(5), sf)
             la, lb = ab_logprobs(tok, model, prompt, args.fmt, a_ids, b_ids)
             lg, ls = (lb, la) if sf else (la, lb)          # log P(gamble), log P(safe)
-            take_gamble = random.random() < float(lg.detach().exp())
+            # exploration: a confident policy never samples the option it disfavors, so plain
+            # REINFORCE on realized payoffs locks into whatever it tried first (the first 7B run
+            # collapsed to always-safe by step 50). With probability --explore the option is
+            # drawn uniformly; the update is left unweighted, which pushes toward the option with
+            # the higher expected payment however saturated the policy is.
+            if random.random() < args.explore:
+                take_gamble = random.random() < 0.5
+            else:
+                take_gamble = random.random() < float(lg.detach().exp())
             if args.sanity_letter:
                 chose_a = take_gamble != sf
                 r = float(chose_a == (args.sanity_letter == "A"))

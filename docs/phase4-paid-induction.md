@@ -79,6 +79,30 @@ baseline.
   further into answering by letter (held-out P(gamble) = 0.500 in every frame).
   The monitor now logs mean P(A) so a letter collapse is visible directly.
 
+### First 7B run (Sep 30 2026): collapse to always-safe
+
+Qwen2.5-7B-Instruct, chat, linear utility, realized reward, lr 1e-4, KL 0.05,
+no exploration, on a free Colab T4 (17.6 s per step at batch 16). The step-0
+monitor reproduces Phase 3 exactly (P(gamble) 0.26 gain vs 0.89 mixed, gap
++0.63). The first attempt ran out of GPU memory (16 graphs held for one
+backward); fixed with one backward per sample, a running-average baseline and
+gradient checkpointing. The second attempt trained, but the policy was
+deterministic from the first steps (batch P(optimal) in exact sixteenths) and
+by step 50 the held-out P(gamble) was 0.00 in every frame, with P(A) = 0.50:
+it learned "always take the sure amount," a constant strategy (balanced
+accuracy 0.50). Stopped at step 50.
+
+Diagnosis: exploration collapse, a property of plain REINFORCE on a confident
+policy. The chat model rarely samples the option it disfavors; the gamble pays
+$0 most of the time, so early gamble samples are punished and never retried.
+Fix: with probability `--explore` (default 0.5) the training choice is drawn
+uniformly, and the update is left unweighted, which pushes toward the option
+with the higher expected payment regardless of saturation (for two actions and
+a baseline between their payoffs, the expected logit update is proportional to
+the payoff difference). This is a deliberate bias in the estimator: the paid
+choices are a mix of the model's own and randomized ones. Defaults also
+changed to lr 5e-5 and KL 0.1.
+
 ## Run plan
 
 1. Local pilot on a small Qwen that passes the dominance check, if one does
