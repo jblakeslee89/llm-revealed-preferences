@@ -87,7 +87,12 @@ the model compares the gamble's expected change in wealth with the sure option's
 changes too. Under reasoning, OLMo SFT keeps a large frame gap ($+0.375$) that is nearly gone at the
 final Instruct checkpoint ($+0.055$), so the later training stages, invisible in the immediate-answer
 parameters, move behavior when the model deliberates. The attribution to supervised fine-tuning is a
-result about the immediate-answer regime.
+result about the immediate-answer regime. Two follow-ups sharpen the picture. One added sentence,
+telling the model to compare final dollar amounts, removes the reasoning-regime framing error entirely
+(mixed-frame accuracy 0.869 to 1.000), so that error is a bookkeeping habit, not a preference. And paying
+the model through training, the closest available analogue to Smith's payment, does not teach the
+computation in the immediate-answer regime: across six configurations the paid model settled on a
+fixed answer and never learned to tell better gambles from worse ones.
 
 \section{The Result in Plain Language}
 
@@ -141,6 +146,9 @@ Qwen then followed the rule 96\% of the time and OLMo 80\%. The obstacle was the
 With room to reason, the models' reaction to loss wording changed as well, and Qwen's reversed. Working
 through the arithmetic, it made the same bookkeeping mistake again and again, counting the gamble as a
 change in its money and the sure option as a total, and that mistake always favors the safe choice.
+Adding one sentence, ``compare the final dollar amounts,'' made the mistake disappear. We also tried
+paying the model for good choices by training it on the lottery payoffs. When it had to answer at once,
+payment did not teach it the arithmetic; it only learned to give the same answer every time.
 
 \section{Experimental Design}
 
@@ -629,6 +637,39 @@ comparison errors (``Since \$151.84 is less than \$117'') that Qwen does not mak
 anti-textbook Phase~2 response comes from the same mis-referenced computation is a hypothesis these data
 raise and do not test.
 
+\textbf{One line of instruction removes the error.} If the loss-frame response under reasoning is a
+bookkeeping habit, naming the right comparison should remove it; if it is a preference, it should survive
+the correction. We appended one sentence to the prompt (``When you compare the options, compare the final
+dollar amounts you would end up with under each, not the changes from what you hold now'') and re-ran
+Qwen Instruct with reasoning on the gain and mixed frames of the same 20 gambles (400 cells).
+Table~\ref{tab:clarify} reports the result.
+
+\begin{table}[h]
+\centering
+\small
+\caption{The clarification check, Qwen Instruct (chat), reasoning first, gain and mixed frames of the 20
+matched gambles (400 cells). Mixed EV is agreement with expected value on clear mixed-frame cells;
+the next column restricts to cells where the gamble is the better option.}
+\label{tab:clarify}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Prompt & Gain EV & Mixed EV & Mixed, gamble better & Frame gap \\
+\midrule
+No instruction & 0.938 & 0.787 & 0.622 & $-0.135$ \\
+Clarifying line only & 1.000 & 0.881 & 0.789 & $-0.105$ \\
+Expected-value rule only & 1.000 & 0.869 & 0.767 & $-0.145$ \\
+Rule and clarifying line & 1.000 & 1.000 & 1.000 & $\phantom{-}0.000$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+With both the expected-value rule and the clarifying line, all 21 mixed-frame errors disappear and the
+frame gap is exactly zero. The line alone cuts the errors where the gamble is better from 34 to 19, and the
+remaining 19 are the same bookkeeping error (``$\text{EV} = 60.48 - 52 = 8.48$ \ldots\ $\text{EV}_B = 52$'');
+none of those traces mentions risk, safety or certainty. Under reasoning, then, the framing response is an
+arithmetic habit, not a preference, and the model reliably drops the habit when it is told both what to
+compute and how to compare.
+
 \textbf{The staircase depends on the regime.} Under immediate answer the structural parameters were set
 at SFT and the later stages moved nothing detectable (Section~5.3). Under reasoning, the later stages
 matter. OLMo SFT keeps a large frame gap ($+0.375$, CI $[+0.286, +0.466]$), larger than its own
@@ -638,6 +679,31 @@ $0.803$, difference $+0.090$, CI $[+0.030, +0.160]$); the uninduced rise ($0.681
 distinguishable from zero. Preference optimization and the final stage leave the immediate-answer
 parameters where SFT put them and change how the model reasons. The DPO checkpoint has not been run in
 this arm, so the change cannot yet be divided between DPO and the final stage.
+
+\subsection{Paying for the rule: induced value through training}\label{sec:paid}
+Smith's induced-value procedure works because the subject is paid in a currency it wants. A language model
+has no wealth, but it has an objective its weights are trained on, so a follow-on pilot (Phase~4,
+\texttt{colab/rl\_induce.py}) pays the model through training. Each choice resolves as a lottery, and the
+payoff through the induced utility is the reward in a policy-gradient update of a LoRA adapter, with a
+penalty on drift from the untrained model. Training uses fresh gambles and only the neutral wording, so
+the evaluation gambles and the gain and loss framings are held out. The subject is Qwen Instruct in chat,
+answering immediately; before training, the held-out monitor reproduces its Phase~3 behavior exactly
+($P(\text{gamble})$ 0.26 under gain wording, 0.89 under loss wording).
+
+Across six configurations, varying the reward (realized or expected payoff), the baseline, exploration,
+the reward scale, the learning rate ($3\times10^{-6}$ to $10^{-4}$) and the balance of the training
+gambles, payment never taught the model to tell better gambles from worse ones. Held-out balanced accuracy,
+which is 0.50 for any fixed answer, stayed at about 0.50 in every run through at most 150 steps. What
+payment did produce was the best available fixed answer: always the sure amount in the first
+configurations, and always the gamble once the reward structure favored it, since about 62\% of gambles
+favor the risky option and even a count-balanced set leaves the stakes asymmetric. The paid model's
+framing gap disappears along with any sensitivity to the options.
+
+The result fits Section~\ref{sec:reason}. In a one-letter answer the model does not compute expected value,
+whether it is told the rule or paid for it, and payment then drives it to a constant policy. This is a
+pilot with one family, one adapter size and short training, and one fix (gambles balanced by stakes as
+well as by count) is untested. The more informative incentive experiment pays the model in the reasoning
+regime, where it already computes; Section~8 describes it.
 
 \subsection{Held-out validation}\label{sec:holdout}
 Phase 1 reported honestly that a probability-only logit essentially tied the structural model in sample
@@ -704,8 +770,9 @@ arithmetic rule; allowed to reason, Qwen follows it on 96.5\% of clear cells. Ev
 in Phases 1 through 3 is therefore a parameter of an immediate-answer choice process. The same weights
 also run a deliberate process with different properties: it tracks expected value, it responds to loss
 wording in the opposite direction for Qwen and hardly at all for OLMo Instruct, and it is shaped by
-training stages the immediate-answer parameters do not register. Reporting a model's risk preferences
-without the elicitation regime omits half of the result. Phase 2's free-$\phi$ degeneracy also reappeared here, as Qwen's few-shot
+training stages the immediate-answer parameters do not register. Its loss-frame response is an
+arithmetic habit that one sentence of instruction removes. Reporting a model's risk preferences without
+the elicitation regime omits half of the result. Phase 2's free-$\phi$ degeneracy also reappeared here, as Qwen's few-shot
 $\lambda$ running without limit toward the top of its range, the same direction on the same likelihood
 surface reached by a different route, which marks it as a property of the specification rather than of
 any one subject.
@@ -783,10 +850,17 @@ decoding (one trace per cell), and three subjects; the OLMo DPO checkpoint and L
 run, and the DPO run is needed to divide the SFT-to-Instruct change in the reasoning regime between DPO
 and the final stage. The few-shot reasoning exemplars demonstrate the expected-value arithmetic, which
 primes the uninduced OLMo runs toward it. The reference-point error is identified from traces read by
-hand and a rough text check; a systematic coding of which reference point each trace uses, and a test of
-whether one clarifying line (``compare final dollar amounts'') removes it, would make it a measured
-mechanism. The token-budget incentive-compatible design remains the step that would complete the
-induced-value procedure.
+hand and a rough text check, and the clarification test that removes it was run on Qwen only; a
+systematic coding of which reference point each trace uses, and the same test on OLMo, remain to be done.
+
+\textbf{No choice here is incentivized.} Every elicitation in Phases 1 through 3 is hypothetical, and
+the induced-value arm is instruction only. Paid training (Section~\ref{sec:paid}) is the closest
+available analogue to payment, and in the immediate-answer regime it failed to teach the computation. The
+next incentive experiment pays the model in the reasoning regime, where it already computes, and targets
+two questions instructions could not settle: whether payment can induce a specified risk-averse utility
+($u(x) = \sqrt{x}$, where instruction alone collapsed to 0.124 compliance), and whether paid reasoning
+carries over to immediate answers. It needs generation during training, roughly ten to twenty times the
+compute of the pilot.
 
 \textbf{Hardware, quantization, and one staircase.} All runs use 4-bit quantization on free Colab T4
 hardware. The exercise compares checkpoints under identical conditions, so a small uniform quantization
@@ -800,7 +874,8 @@ optimization begins, shows that base models
 lack the value-tracking that would make the word ``preference'' apply, documents that the framing response
 differs in sign across families, and answers the Phase 1 near-tie out of sample. It also found the ceiling
 of its own elicitation and, with the reasoning arm, raised it: the models can follow a stated rule when
-they may compute, and their framing response and training-stage profile both depend on whether they do.
+they may compute, their framing response and training-stage profile both depend on whether they do, and
+the framing response that remains under reasoning is a bookkeeping habit one sentence removes.
 
 \vspace{1em}
 \hrule
