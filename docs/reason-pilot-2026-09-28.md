@@ -212,3 +212,48 @@ reasoning (same two runs), then Llama instruct (chat).
 Correction to the SFT section above: the uninduced SFT-to-Instruct EV rise
 (0.68 to 0.74) is not distinguishable from zero; the induced rise and the
 frame-gap drop are.
+
+## Clarification check (Sep 30 2026): the loss-frame error is a fixable habit
+
+One line appended to the instruction: "When you compare the options, compare
+the final dollar amounts you would end up with under each, not the changes
+from what you hold now." (`--induce riskneutral_clarify` / `clarify`,
+`colab/phase3_elicit.py`.) Qwen2.5-7B-Instruct, chat, reasoning first, the same
+20 gambles, gain and mixed frames only (400 cells), matched against the
+earlier run on the same cells.
+
+| Reasoning first, told to maximize EV | Mixed-frame accuracy (clear) | when gamble optimal | Frame gap |
+|---|---|---|---|
+| without the line | 0.869 (21 errors) | 0.767 | -0.145 |
+| with the line | **1.000 (0 errors)** | **1.000** | **0.000** |
+
+Gain-frame accuracy is 1.000 in both. The residual framing effect under
+reasoning is removed completely by naming the right comparison, so it is a
+bookkeeping habit, not a preference that survives correction. Consequence for
+Phase 4: paying the model in the reasoning regime to remove this error would
+buy, expensively, what one line of instruction already buys. The paid-reasoning
+budget should target the sqrt (risk-averse) utility and transfer to snap
+answers instead.
+
+### Clarification without the EV instruction: partial
+
+The same line without the expected-value instruction (`--induce clarify`), same
+400 cells:
+
+| Reasoning first | Gain EV agreement | Mixed EV agreement | when gamble optimal | Frame gap |
+|---|---|---|---|---|
+| uninduced | 0.938 | 0.787 | 0.622 | -0.135 |
+| clarify only | 1.000 | 0.881 | 0.789 | -0.105 |
+| induced (EV rule) | 1.000 | 0.869 | 0.767 | -0.145 |
+| induced + clarify | 1.000 | 1.000 | 1.000 | 0.000 |
+
+On its own the clarification cuts the mixed-frame misses where the gamble is
+better from 34 to 19 and barely moves the frame gap. The remaining 19 are the
+same bookkeeping error (e.g. "EV = 60.48 - 52 = 8.48 ... EV_B = 52"), and none of
+the 19 traces mentions risk, safety or certainty, so they are not risk-averse
+choices. The error disappears only when the instruction states both the
+decision rule and the comparison. Reading: the loss-frame effect under
+reasoning is an arithmetic habit, not a preference, and the model heeds a
+correction to that habit reliably only when it is also told what to compute.
+Every trace in the clarify-only run frames the choice in expected-value terms
+(100%).
