@@ -165,6 +165,29 @@ expected value in the immediate-answer regime at this scale. That is
 consistent with Phase 3 (the unpaid model cannot compute EV in one letter) and
 would move the paid experiment to the reasoning regime.
 
+### Sixth 7B run and the decision
+
+Balanced training gambles (558), lr 3e-6, midpoint baseline, expected reward.
+Gentler start (KL 0.10 at step 10), but held-out P(gamble) reached 0.84 (gain) /
+0.996 (mixed) by step 50 and 1.00 in every frame by steps 100 and 150, with
+balanced accuracy 0.50. Balancing counts did not remove the constant attractor
+because stakes stay asymmetric: gamble-favoring gambles beat the sure amount by
+up to 70%, safe-favoring ones fall short by at most 25%, so "gamble more" still
+pays on average. Stopped at step 150 under the pre-set decision rule.
+
+**Conclusion for the immediate-answer regime.** Across six 7B runs and five
+estimator fixes, paid training moved the model to the best available constant
+strategy (always safe or always gamble, whichever the reward structure
+favored) and never taught it to discriminate gambles by expected value
+(held-out balanced accuracy 0.50 throughout). This matches Phase 3: in a
+one-letter answer the model does not compute expected value, whether told the
+rule or paid for it. Scope: one family (Qwen2.5-7B-Instruct, chat), LoRA r16,
+at most 150 steps per configuration, lr 3e-6 to 1e-4. A run with stakes-balanced
+gambles (symmetric log EV ratios) is the one untested fix; the more informative
+next step is paying in the reasoning regime, where the unpaid model already
+computes expected value (see the Sep 30 cost estimate: roughly $20-60 on
+rented A100s for three experiments with debugging).
+
 ## Run plan
 
 1. Local pilot on a small Qwen that passes the dominance check, if one does
