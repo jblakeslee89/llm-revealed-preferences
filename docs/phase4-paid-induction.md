@@ -103,6 +103,19 @@ the payoff difference). This is a deliberate bias in the estimator: the paid
 choices are a mix of the model's own and randomized ones. Defaults also
 changed to lr 5e-5 and KL 0.1.
 
+### Second 7B run: exploration alone does not fix it
+
+Same model, `--explore 0.5`, lr 5e-5, KL 0.1, running baseline. By step 50
+held-out P(gamble) was 0.0003 (gain) and 0.033 (mixed): the same drift to
+always-safe, more slowly. Diagnosis: the single running baseline. Stakes vary
+across gambles; on small-stakes gambles both options pay below the running
+mean, so whichever option the model leans toward is pushed down, and once the
+policy leans, that push no longer tracks which option pays more. Fix:
+`--baseline prompt` (default), the utility of the same gamble's sure amount,
+which depends only on the prompt and so keeps the estimator unbiased. The next
+run also uses `--reward expected` first, to establish that the pipeline can
+induce value at all before returning to realized payment.
+
 ## Run plan
 
 1. Local pilot on a small Qwen that passes the dominance check, if one does

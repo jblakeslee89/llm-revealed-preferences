@@ -136,6 +136,8 @@ def main():
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--lr", type=float, default=5e-5)
     ap.add_argument("--kl", type=float, default=0.1, help="KL penalty toward the untrained model")
+    ap.add_argument("--baseline", choices=["prompt", "running"], default="prompt",
+                    help="prompt: u(sure) of the same gamble; running: average of past rewards")
     ap.add_argument("--explore", type=float, default=0.5,
                     help="share of training choices drawn uniformly instead of from the model")
     ap.add_argument("--lora-r", type=int, default=16)
@@ -229,7 +231,12 @@ def main():
             kl = (p_now * (torch.stack([la, lb]) - torch.stack([ra, rb]))).sum()
             # one backward per sample keeps a single graph in memory (7B on a T4);
             # the baseline is a running average of past rewards, so no batch-wide pass is needed
-            loss = (-(r - baseline) * (lg if take_gamble else ls) + args.kl * kl) / len(batch)
+            # per-prompt baseline: the utility of this prompt's sure amount. It depends only on
+            # the prompt, so the estimator stays unbiased, and it removes the stakes effect a
+            # single running baseline has (on small-stakes gambles both options pay below the
+            # running mean, so whichever the model leans toward gets pushed down).
+            b = u(g.sure) / scale if args.baseline == "prompt" else baseline
+            loss = (-(r - b) * (lg if take_gamble else ls) + args.kl * kl) / len(batch)
             loss.backward()
             opt_g = g.p * u(g.hi) > u(g.sure)
             records.append((r, float(kl.detach()), float((lg if opt_g else ls).detach().exp()),
