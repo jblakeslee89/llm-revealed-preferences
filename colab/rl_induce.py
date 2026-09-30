@@ -159,7 +159,7 @@ def main():
     tok, model = load_model(args.model, load_4bit=not args.no_4bit)
     if not args.no_4bit and torch.cuda.is_available():
         from peft import prepare_model_for_kbit_training
-        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False)
+        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
     model = get_peft_model(model, LoraConfig(r=args.lora_r, lora_alpha=2 * args.lora_r,
                                              lora_dropout=0.0, target_modules="all-linear",
                                              task_type="CAUSAL_LM"))
@@ -191,12 +191,14 @@ def main():
         logf.flush()
         print(f"  step {step:4d} | " + " ".join(f"{k}={row[k]}" for k in fields[1:] if k in row))
 
+    baseline = sum(u(g.sure) for g in train) / len(train) / scale
     t0 = time.time()
     log_eval(0, {"secs": 0})
     model.train()
     for step in range(1, args.steps + 1):
         batch = [random.choice(train) for _ in range(args.batch)]
         records = []
+        opt.zero_grad()
         for g in batch:
             sf = random.random() < 0.5
             prompt = phase1_prompt(g, random.randrange(5), sf)
@@ -215,21 +217,23 @@ def main():
                 ra, rb = ab_logprobs(tok, model, prompt, args.fmt, a_ids, b_ids)
             p_now = torch.stack([la, lb]).exp()
             kl = (p_now * (torch.stack([la, lb]) - torch.stack([ra, rb]))).sum()
+            # one backward per sample keeps a single graph in memory (7B on a T4);
+            # the baseline is a running average of past rewards, so no batch-wide pass is needed
+            loss = (-(r - baseline) * (lg if take_gamble else ls) + args.kl * kl) / len(batch)
+            loss.backward()
             opt_g = g.p * u(g.hi) > u(g.sure)
-            records.append((lg if take_gamble else ls, r, kl,
-                            float((lg if opt_g else ls).detach().exp()), la.detach().exp()))
-        rewards = torch.tensor([x[1] for x in records])
-        base = rewards.mean()
-        loss = sum(-(x[1] - base) * x[0] + args.kl * x[2] for x in records) / len(records)
-        opt.zero_grad()
-        loss.backward()
+            records.append((r, float(kl.detach()), float((lg if opt_g else ls).detach().exp()),
+                            float(la.detach().exp())))
+            del la, lb, lg, ls, loss, kl, p_now
         opt.step()
+        batch_mean = sum(x[0] for x in records) / len(records)
+        baseline = 0.9 * baseline + 0.1 * batch_mean
         if args.sanity_letter:
             print(f"  step {step:3d} | mean P(A) on batch = "
-                  f"{sum(float(x[4]) for x in records) / len(records):.3f}")
-        extra = {"reward": round(float(base), 4),
-                 "p_opt": round(sum(x[3] for x in records) / len(records), 4),
-                 "kl": round(float(sum(x[2] for x in records)) / len(records), 5),
+                  f"{sum(x[3] for x in records) / len(records):.3f}")
+        extra = {"reward": round(batch_mean, 4),
+                 "p_opt": round(sum(x[2] for x in records) / len(records), 4),
+                 "kl": round(sum(x[1] for x in records) / len(records), 5),
                  "secs": round(time.time() - t0)}
         if step % args.eval_every == 0 or step == args.steps:
             log_eval(step, extra)
