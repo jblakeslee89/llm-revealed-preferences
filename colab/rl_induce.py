@@ -134,7 +134,7 @@ def main():
                          "expected: pay the action's expected utility (lower-variance ablation)")
     ap.add_argument("--steps", type=int, default=300)
     ap.add_argument("--batch", type=int, default=16)
-    ap.add_argument("--lr", type=float, default=1e-5)
+    ap.add_argument("--lr", type=float, default=3e-6)
     ap.add_argument("--kl", type=float, default=0.02, help="KL penalty toward the untrained model")
     ap.add_argument("--adv-scale", default="auto",
                     help="divide advantages by this; auto = mean |E u(gamble) - u(sure)| / scale")
@@ -144,7 +144,9 @@ def main():
     ap.add_argument("--explore", type=float, default=0.5,
                     help="share of training choices drawn uniformly instead of from the model")
     ap.add_argument("--lora-r", type=int, default=16)
-    ap.add_argument("--n-train", type=int, default=400)
+    ap.add_argument("--n-train", type=int, default=800)
+    ap.add_argument("--balance", action=argparse.BooleanOptionalAction, default=True,
+                    help="equal numbers of gamble-favoring and safe-favoring training gambles")
     ap.add_argument("--train-seed", type=int, default=7)
     ap.add_argument("--n-monitor", type=int, default=16)
     ap.add_argument("--eval-every", type=int, default=50)
@@ -176,6 +178,15 @@ def main():
 
     eval_gambles = generate_gambles(n=40, seed=EVAL_SEED)
     train = train_gambles(args.n_train, args.train_seed, eval_gambles)
+    if args.balance:
+        # half the training gambles favor each option under the induced utility, so no constant
+        # strategy earns anything and the only way to raise the payment is to tell gambles apart.
+        # (With the generator's natural mix, about 62% favor the gamble, and every 7B run so far
+        # settled on a constant strategy.)
+        fav = [g for g in train if g.p * u(g.hi) > u(g.sure)]
+        unfav = [g for g in train if g.p * u(g.hi) <= u(g.sure)]
+        k = min(len(fav), len(unfav))
+        train = fav[:k] + unfav[:k]
     monitor = monitor_set(train_gambles(args.n_monitor, args.train_seed + 1, eval_gambles + train))
     scale = u(max(g.hi for g in train))  # rewards in [0, 1]
     print(f"{len(train)} training gambles, {len(monitor)} monitor prompts, utility={args.utility}, "

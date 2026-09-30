@@ -146,6 +146,25 @@ The fact that the unpaid model cannot discriminate EV in immediate answer
 (Phase 3) is consistent with every run so far settling on a constant strategy;
 whether payment can teach the discrimination at all is what the next run tests.
 
+### Fifth 7B run: the same attractor, from the other side
+
+Midpoint baseline, otherwise as the fourth run. Identical trajectory (same
+seed, same batches): P(gamble) = 1.00 on every held-out prompt by step 50.
+Across four configurations every run settled on a constant strategy (always
+safe, back to the untrained model, or always gamble). Diagnosis: with about 62%
+of training gambles favoring the risky option, the shared "gamble more"
+direction improves most prompts at once and dominates the updates before any
+prompt-specific discrimination can form. Fix: `--balance` (default on) draws
+equal numbers of gamble-favoring and safe-favoring training gambles under the
+induced utility (558 of 800 for linear; only 114 for sqrt, which will need a
+larger pool), so no constant strategy earns anything; lr 3e-6.
+
+Decision rule for this run: if held-out balanced accuracy is still about 0.50
+by step 150, conclude that payment does not teach this model to discriminate
+expected value in the immediate-answer regime at this scale. That is
+consistent with Phase 3 (the unpaid model cannot compute EV in one letter) and
+would move the paid experiment to the reasoning regime.
+
 ## Run plan
 
 1. Local pilot on a small Qwen that passes the dominance check, if one does
