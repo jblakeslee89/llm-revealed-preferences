@@ -233,6 +233,8 @@ def main():
                  "secs": round(time.time() - t0)}
         if step % args.eval_every == 0 or step == args.steps:
             log_eval(step, extra)
+            model.save_pretrained(out)  # latest adapter, so a dropped session keeps its progress
+            (out / "last_step.txt").write_text(str(step))
         elif step % 10 == 0:
             print(f"  step {step:4d} | reward={extra['reward']} p_opt={extra['p_opt']} "
                   f"kl={extra['kl']} secs={extra['secs']}")
