@@ -1,0 +1,1962 @@
+instrument,trial_id,gamble_id,frame,sure,hi,p,safe_first,gamble_letter,condition,generated_word,p_less_group,p_more_group,p_less,top_token,context
+p1,283,28,risk,132,181,0.76,False,A,since,higher,0.00139,0.98769,0.00140,higher,"A has an expected value of $137.96.
+- Offer B provides a certain $132.
+
+Since the expected value of Offer A ($137.96) is"
+p1,267,26,risk,59,151,0.36,False,A,since,less,0.64546,0.33053,0.66134,less,"e EV = ($151 * 36%) + ($0 * 64%) = $151 * 0.36 + $0 * 0.64 = $54.36.
+
+The expected value of Payout A is $54.36, which is"
+p1,80,8,risk,62,263,0.33,True,B,since,higher,0.01459,0.97078,0.01481,greater,"plifies to $86.79
+
+Comparing this to Option A, which offers a guaranteed $62, the expected value of Option B ($86.79) is"
+p1,265,26,risk,59,151,0.36,False,A,since,less,0.76280,0.23110,0.76749,less," Value} = (0.36 \times \$151) + (0.64 \times \$0) = \$54.36 \]
+
+The expected value of Alternative A is \$54.36, which is"
+p1,259,25,risk,124,207,0.76,False,A,since,higher,0.00193,0.99460,0.00194,greater,"B:
+- Deal A has an expected value of $157.32.
+- Deal B guarantees $124.
+
+Since the expected value of Deal A ($157.32) is"
+p1,87,8,risk,62,263,0.33,False,A,since,greater,0.53715,0.42164,0.56024,less,"B.
+
+- Expected Value of Payout A: $86.79
+- Certain Amount from Payout B: $62
+
+The expected value of Payout A ($86.79) is"
+p1,287,28,risk,132,181,0.76,False,A,since,higher,0.00297,0.98508,0.00300,higher,"
+- Expected Value of Payout A: $137.96
+- Certain Amount from Payout B: $132
+
+The expected value of Payout A ($137.96) is"
+p1,367,36,risk,98,227,0.47,False,A,since,higher,0.22942,0.75461,0.23314,greater,"
+- Expected Value of Payout A: $106.69
+- Guaranteed Amount of Payout B: $98
+
+The expected value of Payout A ($106.69) is"
+p1,36,3,risk,46,158,0.33,True,B,since,less,0.00114,0.98482,0.00116,higher," Lost)
+EV = (0.33 * $158) + (0.67 * $0)
+EV = $52.14 + $0
+EV = $52.14
+
+The expected value of Payout B is $52.14, which is"
+p1,312,31,risk,51,151,0.29,True,B,since,less,0.92191,0.00451,0.99513,less," \]
+
+Comparing this to Offer A, which provides $51 with certainty, we see that the expected value of Offer B ($43.79) is"
+p1,280,28,risk,132,181,0.76,True,B,since,higher,0.00001,0.98904,0.00001,higher,"Option A offers a guaranteed $132.
+- Option B has an expected value of $137.96.
+
+Since the expected value of Option B is"
+p1,332,33,risk,142,446,0.53,True,B,since,higher,0.25798,0.71328,0.26561,greater,"g the two offers:
+- Offer A: $142
+- Offer B: Expected Value of $235.38
+
+Since the expected value of Offer B ($235.38) is"
+p1,81,8,risk,62,263,0.33,False,A,since,less,0.14552,0.84428,0.14702,greater,")
+- This simplifies to $263 * 0.33 + $0 * 0.67
+- Which equals $86.79
+
+The expected value of Option A is $86.79, which is"
+p1,337,33,risk,142,446,0.53,False,A,since,higher,0.32839,0.59434,0.35589,greater,"cted value of Payout A is $235.38.
+- Payout B is $142 with certainty.
+
+Since the expected value of Payout A ($235.38) is"
+p1,354,35,risk,91,133,0.68,True,B,since,less,0.74785,0.12560,0.85620,less,"s:
+  \[ EV = (0.68 \times 133) + (0.32 \times 0) = 89.64 + 0 = 89.64 \]
+
+The expected value of Alternative B ($89.64) is"
+p1,60,6,risk,94,101,0.71,True,B,since,greater,0.06574,0.38701,0.14521,slightly,"Comparing the two options:
+- Option A offers a guaranteed $94.
+- Option B has an expected value of $71.71.
+
+Since $94 is"
+p1,64,6,risk,94,101,0.71,True,B,since,less,0.53638,0.15275,0.77834,less," Value} = (0.71 \times \$101) + (0.29 \times \$0) = \$71.71 \]
+
+The expected value of Alternative B is \$71.71, which is"
+p1,37,3,risk,46,158,0.33,False,A,since,higher,0.38541,0.56268,0.40651,greater,"ected value of Payout A ($52.14) to the guaranteed amount of Payout B ($46).
+
+The expected value of Payout A ($52.14) is"
+p1,360,36,risk,98,227,0.47,True,B,since,less,0.00001,0.99951,0.00001,greater,"st)
+EV = (0.47 * $227) + (0.53 * $0)
+EV = $106.69 + $0
+EV = $106.69
+
+The expected value of Option B is $106.69, which is"
+p1,254,25,risk,124,207,0.76,True,B,since,less,0.00457,0.99521,0.00458,greater,"+ (0.24 \times \$0) \]
+\[ \text{Expected Value} = \$156.92 \]
+
+The expected value of Alternative B is \$156.92, which is"
+p1,281,28,risk,132,181,0.76,False,A,since,less,0.00165,0.98400,0.00167,higher,"- This simplifies to $181 * 0.76 + $0 * 0.24
+- Which equals $137.56
+
+The expected value of Option A is $137.56, which is"
+p1,264,26,risk,59,151,0.36,True,B,since,less,0.93010,0.00426,0.99545,less," Value} = (0.36 \times \$151) + (0.64 \times \$0) = \$54.36 \]
+
+The expected value of Alternative B is \$54.36, which is"
+p1,286,28,risk,132,181,0.76,True,B,since,higher,0.00018,0.95764,0.00018,higher,"Losing * Amount Lost)
+EV = (0.76 * $181) + (0.24 * $0)
+EV = $137.44
+
+The expected value of Payout B is $137.44, which is"
+p1,252,25,risk,124,207,0.76,True,B,since,higher,0.00282,0.99647,0.00282,greater,"g the two offers:
+- Offer A: $124
+- Offer B: Expected Value of $158.16
+
+Since the expected value of Offer B ($158.16) is"
+p1,330,33,risk,142,446,0.53,True,B,since,less,0.00730,0.97223,0.00745,greater,"Losing * Amount Lost)
+EV = (0.53 * $446) + (0.47 * $0)
+EV = $237.38
+
+The expected value of Option B is $237.38, which is"
+p1,308,30,risk,149,447,0.26,True,B,since,greater,0.42985,0.50372,0.46044,less,"6.22 \]
+
+Comparing the two:
+- Deal A offers a guaranteed $149.
+- Deal B has an expected value of $116.22.
+
+Since $149 is"
+p1,194,19,risk,64,122,0.49,True,B,since,less,0.99527,0.00029,0.99971,less," Value} = (0.49 \times \$122) + (0.51 \times \$0) = \$60.78 \]
+
+The expected value of Alternative B is \$60.78, which is"
+p1,250,25,risk,124,207,0.76,True,B,since,higher,0.00002,0.99959,0.00002,greater,"ffers a guaranteed $124.
+- Option B has an expected value of $157.92.
+
+Since the expected value of Option B ($157.92) is"
+p1,90,9,risk,49,153,0.26,True,B,since,less,0.69769,0.12498,0.84808,less,")
+- This simplifies to $153 * 0.26 + $0 * 0.74
+- Which equals $39.78
+
+The expected value of Option B is $39.78, which is"
+p1,48,4,risk,29,71,0.55,True,B,since,higher,0.00018,0.99617,0.00018,higher,"s \(39.05 + 0 = 39.05\).
+
+Comparing this to Deal A, which offers a certain $29, the expected value of Deal B ($39.05) is"
+p1,251,25,risk,124,207,0.76,False,A,since,less,0.00288,0.99186,0.00289,greater,"xpected Value} = 158.92 + 0 \]
+\[ \text{Expected Value} = 158.92 \]
+
+The expected value of Option A is $158.92, which is"
+p1,323,32,risk,131,236,0.57,False,A,since,higher,0.06029,0.93508,0.06057,greater,"the two:
+- Expected value of Offer A: $134.12
+- Value of Offer B: $131
+
+Since the expected value of Offer A ($134.12) is"
+p1,284,28,risk,132,181,0.76,True,B,since,higher,0.00009,0.98998,0.00009,higher,"+ (0.24 \times \$0) \]
+\[ \text{Expected Value} = \$137.44 \]
+
+The expected value of Alternative B is \$137.44, which is"
+p1,196,19,risk,64,122,0.49,True,B,since,less,0.95595,0.03376,0.96589,less,"f Losing * Amount Lost)
+EV = (0.49 * $122) + (0.51 * $0)
+EV = $60.78
+
+The expected value of Payout B is $60.78, which is"
+p1,27,2,risk,162,661,0.26,False,A,since,less,0.11625,0.86202,0.11884,greater,"xpected Value} = 171.86 + 0 \]
+\[ \text{Expected Value} = 171.86 \]
+
+The expected value of Payout A is $171.86, which is"
+p1,114,11,risk,54,68,0.81,True,B,since,less,0.00221,0.97564,0.00226,higher,"d Value} = (0.81 \times \$68) + (0.19 \times \$0) = \$55.08 \]
+
+The expected value of Alternative B is \$55.08, which is"
+p1,336,33,risk,142,446,0.53,True,B,since,less,0.00548,0.95390,0.00571,higher,"Losing * Amount Lost)
+EV = (0.53 * $446) + (0.47 * $0)
+EV = $236.38
+
+The expected value of Payout B is $236.38, which is"
+p1,115,11,risk,54,68,0.81,False,A,since,less,0.02239,0.89166,0.02450,greater,"d Value} = (0.81 \times \$68) + (0.19 \times \$0) = \$55.48 \]
+
+The expected value of Alternative A is \$55.48, which is"
+p1,26,2,risk,162,661,0.26,True,B,since,less,0.00517,0.96676,0.00532,greater,"61 * 0.26) + ($0 * 0.74)
+- This simplifies to $661 * 0.26 = $171.86
+
+The expected value of Payout B is $171.86, which is"
+p1,21,2,risk,162,661,0.26,False,A,since,higher,0.02859,0.96530,0.02877,greater," \$171.86 \]
+
+Comparing this to Option B, which guarantees $162, we see that the expected value of Option A ($171.86) is"
+p1,334,33,risk,142,446,0.53,True,B,since,less,0.89853,0.03814,0.95928,less," + (0.47 \times \$0) \]
+\[ \text{Expected Value} = \$235.38 \]
+
+The expected value of Alternative B is $235.38, which is"
+p1,169,16,risk,139,234,0.6,False,A,since,higher,0.00419,0.98792,0.00423,greater,"alues:
+- Deal A has an expected value of $140.40.
+- Deal B offers a certain $139.
+
+Since the expected value of Deal A is"
+p1,339,33,risk,142,446,0.53,False,A,since,greater,0.07021,0.91487,0.07127,greater," has an expected value of $235.78.
+- Deal B offers $142 with certainty.
+
+Since the expected value of Deal A ($235.78) is"
+p1,94,9,risk,49,153,0.26,True,B,since,less,0.63854,0.00075,0.99883,less,"6 \times \$153) + (0.74 \times \$0) = \$39.78 \]
+
+The expected value of Alternative B is \$39.78, which is significantly"
+p1,333,33,risk,142,446,0.53,False,A,since,higher,0.11987,0.86617,0.12157,greater,"the two:
+- Expected value of Offer A: $235.38
+- Value of Offer B: $142
+
+Since the expected value of Offer A ($235.38) is"
+p1,316,31,risk,51,151,0.29,True,B,since,less,0.69628,0.11186,0.86158,less,".29 * $151) + (0.71 * $0)
+EV = $43.79 + $0
+EV = $43.79
+
+The expected value of Payout B is $43.79, which is significantly"
+p1,322,32,risk,131,236,0.57,True,B,since,higher,0.28988,0.70083,0.29260,greater,"o Offer A, which guarantees $131, Offer B has an expected value of $135.52.
+
+Given that the expected value of Offer B is"
+p1,62,6,risk,94,101,0.71,True,B,since,greater,0.30983,0.36328,0.46030,slightly," = $71.71 + $0
+- EV = $71.71
+
+Comparing the two offers:
+- Offer A: $94
+- Offer B: Expected Value of $71.71
+
+Since $94 is"
+p1,160,16,risk,139,234,0.6,True,B,since,higher,0.00000,0.99981,0.00000,higher,"ffers a guaranteed $139.
+- Option B has an expected value of $140.40.
+
+Since the expected value of Option B ($140.40) is"
+p1,112,11,risk,54,68,0.81,True,B,since,less,0.00909,0.98415,0.00916,higher,"es 68) + (0.19 \times 0) \]
+  \[ EV = 55.08 + 0 \]
+  \[ EV = 55.08 \]
+
+The expected value of Offer B is $55.08, which is"
+p1,38,3,risk,46,158,0.33,True,B,since,higher,0.00214,0.97735,0.00218,greater,"2.14 + \$0 = \$52.14 \).
+
+Comparing this to Deal A, which offers a certain $46, the expected value of Deal B ($52.14) is"
+p1,318,31,risk,51,151,0.29,True,B,since,greater,0.82621,0.07495,0.91683,less,"
+Comparing the two deals:
+- Deal A offers $51 with certainty.
+- Deal B offers an expected value of $43.79.
+
+Since $51 is"
+p1,96,9,risk,49,153,0.26,True,B,since,less,0.61075,0.18946,0.76324,less,"$153 * 0.26) + ($0 * 0.74)
+- This simplifies to $153 * 0.26 = $40.78
+
+The expected value of Payout B is $40.78, which is"
+p1,28,2,risk,162,661,0.26,True,B,since,higher,0.01377,0.94285,0.01440,greater," A offers a guaranteed $162.
+- Deal B has an expected value of $171.86.
+
+Since the expected value of Deal B ($171.86) is"
+p1,95,9,risk,49,153,0.26,False,A,since,less,0.83046,0.15772,0.84039,less," Value} = (0.26 \times \$153) + (0.74 \times \$0) = \$39.78 \]
+
+The expected value of Alternative A is \$39.78, which is"
+p1,33,3,risk,46,158,0.33,False,A,since,higher,0.11087,0.88366,0.11148,greater,"ng the two:
+- Expected value of Offer A: $52.14
+- Value of Offer B: $46
+
+Since the expected value of Offer A ($52.14) is"
+p1,321,32,risk,131,236,0.57,False,A,since,less,0.08071,0.91004,0.08146,greater," Value} = \$134.52 + \$0 \]
+\[ \text{Expected Value} = \$134.52 \]
+
+The expected value of Option A is \$134.52, which is"
+p1,91,9,risk,49,153,0.26,False,A,since,less,0.54229,0.44064,0.55171,less,"t{Expected Value} = 39.78 + 0 \]
+\[ \text{Expected Value} = 39.78 \]
+
+The expected value of Option A is $39.78, which is"
+p1,86,8,risk,62,263,0.33,True,B,since,less,0.02845,0.93292,0.02959,greater,"f Losing * Amount Lost)
+EV = (0.33 * $263) + (0.67 * $0)
+EV = $87.19
+
+The expected value of Payout B is $87.19, which is"
+p1,25,2,risk,162,661,0.26,False,A,since,less,0.34498,0.64897,0.34708,greater,"alue} = (0.26 \times \$661) + (0.74 \times \$0) = \$171.86 \]
+
+The expected value of Alternative A is \$171.86, which is"
+p1,253,25,risk,124,207,0.76,False,A,since,higher,0.00583,0.99075,0.00585,greater,"the two:
+- Expected value of Offer A: $157.32
+- Value of Offer B: $124
+
+Since the expected value of Offer A ($157.32) is"
+p1,84,8,risk,62,263,0.33,True,B,since,less,0.92600,0.04242,0.95620,less,"33 \times \$263) + (0.67 \times \$0) = \$86.79 \]
+
+The expected value of Alternative B is approximately $86.79, which is"
+p1,365,36,risk,98,227,0.47,False,A,since,less,0.32958,0.66605,0.33103,greater,"alue} = (0.47 \times \$227) + (0.53 \times \$0) = \$106.69 \]
+
+The expected value of Alternative A is \$106.69, which is"
+p1,369,36,risk,98,227,0.47,False,A,since,higher,0.01471,0.97980,0.01479,greater," B:
+- Deal A has an expected value of $106.69.
+- Deal B guarantees $98.
+
+Since the expected value of Deal A ($106.69) is"
+p1,113,11,risk,54,68,0.81,False,A,since,higher,0.02203,0.93091,0.02312,greater,"ng the two:
+- Expected value of Offer A: $55.08
+- Value of Offer B: $54
+
+Since the expected value of Offer A ($55.08) is"
+p1,186,18,risk,41,61,0.58,True,B,since,less,0.29026,0.70699,0.29106,greater,"t Lost)
+EV = (0.58 * $61) + (0.42 * $0)
+EV = $35.38 + $0
+EV = $35.38
+
+The expected value of Payout B is $35.38, which is"
+p1,244,24,risk,168,214,0.76,True,B,since,less,0.77617,0.09968,0.88619,less,"+ (0.24 \times \$0) \]
+\[ \text{Expected Value} = \$163.44 \]
+
+The expected value of Alternative B is \$163.44, which is"
+p1,165,16,risk,139,234,0.6,False,A,since,higher,0.01216,0.98043,0.01225,greater,"0.40.
+
+Comparing this to Alternative B, which guarantees $139, the expected value of Alternative A ($140.40) is slightly"
+p1,361,36,risk,98,227,0.47,False,A,since,less,0.15101,0.84198,0.15207,greater,"- This simplifies to $227 * 0.47 + $0 * 0.53
+- Which equals $106.69
+
+The expected value of Option A is $106.69, which is"
+p1,30,3,risk,46,158,0.33,True,B,since,less,0.00014,0.99285,0.00014,greater,")
+- This simplifies to $158 * 0.33 + $0 * 0.67
+- Which equals $52.14
+
+The expected value of Option B is $52.14, which is"
+p1,119,11,risk,54,68,0.81,False,A,since,higher,0.00616,0.90633,0.00675,greater,"eal A has an expected value of $55.08.
+- Deal B guarantees $54.
+
+Since the expected value of Deal A ($55.08) is slightly"
+p1,257,25,risk,124,207,0.76,False,A,since,greater,0.01818,0.96820,0.01843,greater,"
+- Expected Value of Payout A: $157.32
+- Certain Amount from Payout B: $124
+
+The expected value of Payout A ($157.32) is"
+p1,255,25,risk,124,207,0.76,False,A,since,less,0.00823,0.99008,0.00825,greater,"alue} = (0.76 \times \$207) + (0.24 \times \$0) = \$158.92 \]
+
+The expected value of Alternative A is \$158.92, which is"
+p1,310,31,risk,51,151,0.29,True,B,since,less,0.79539,0.02667,0.96756,less," a guaranteed $51.
+   - Option B has an expected value of $43.79.
+
+Given that the expected value of Option B ($43.79) is"
+p1,43,4,risk,29,71,0.55,False,A,since,higher,0.02784,0.96822,0.02795,greater,"ng the two:
+- Expected value of Offer A: $39.05
+- Value of Offer B: $29
+
+Since the expected value of Offer A ($39.05) is"
+p1,83,8,risk,62,263,0.33,False,A,since,higher,0.34911,0.64093,0.35262,greater,"ng the two:
+- Expected value of Offer A: $86.79
+- Value of Offer B: $62
+
+Since the expected value of Offer A ($86.79) is"
+p1,307,30,risk,149,447,0.26,False,A,since,less,0.62992,0.30998,0.67020,less,"compare the expected value of Payout A to the certain amount from Payout B.
+
+The expected value of Payout A ($116.22) is"
+p1,325,32,risk,131,236,0.57,False,A,since,less,0.14189,0.83608,0.14509,greater,"alue} = (0.57 \times \$236) + (0.43 \times \$0) = \$133.88 \]
+
+The expected value of Alternative A is \$133.88, which is"
+p1,306,30,risk,149,447,0.26,True,B,since,less,0.30570,0.51513,0.37243,greater," * $447) + (0.74 * $0)
+EV = $116.22 + $0
+EV = $116.22
+
+The expected value of Payout B is $116.22, which is significantly"
+p1,89,8,risk,62,263,0.33,False,A,since,higher,0.08500,0.90507,0.08585,greater,"al B:
+- Deal A has an expected value of $86.79.
+- Deal B guarantees $62.
+
+Since the expected value of Deal A ($86.79) is"
+p1,362,36,risk,98,227,0.47,True,B,since,higher,0.00620,0.99263,0.00621,greater,"- EV = $106.69
+
+Comparing this to Offer A, which provides $98 with certainty, the expected value of Offer B ($106.69) is"
+p1,22,2,risk,162,661,0.26,True,B,since,higher,0.28290,0.68461,0.29240,greater," EV = $171.86
+
+Comparing this to Offer A, which provides $162 with certainty, the expected value of Offer B ($171.86) is"
+p1,324,32,risk,131,236,0.57,True,B,since,higher,0.01630,0.97490,0.01644,greater,"+ (0.43 \times \$0) \]
+\[ \text{Expected Value} = \$133.32 \]
+
+The expected value of Alternative B is \$133.32, which is"
+p1,187,18,risk,41,61,0.58,False,A,since,less,0.32984,0.62317,0.34610,greater,"the EV = ($61 * 58%) + ($0 * 42%) = $61 * 0.58 + $0 * 0.42 = $35.38.
+
+The expected value of Payout A is $35.38, which is"
+p1,285,28,risk,132,181,0.76,False,A,since,higher,0.00116,0.98463,0.00118,greater,"alue} = (0.76 \times \$181) + (0.24 \times \$0) = \$137.56 \]
+
+The expected value of Alternative A is \$137.56, which is"
+p1,110,11,risk,54,68,0.81,True,B,since,higher,0.00002,0.99129,0.00002,higher,"a guaranteed $54.
+- Option B has an expected value of $54.92.
+
+Since the expected value of Option B ($54.92) is slightly"
+p1,24,2,risk,162,661,0.26,True,B,since,less,0.56249,0.39623,0.58671,less,"alue} = (0.26 \times \$661) + (0.74 \times \$0) = \$171.86 \]
+
+The expected value of Alternative B is \$171.86, which is"
+p1,45,4,risk,29,71,0.55,False,A,since,less,0.04049,0.95872,0.04052,greater,"ed Value} = (0.55 \times \$71) + (0.45 \times \$0) = \$39.05 \]
+
+The expected value of Alternative A is $39.05, which is"
+p1,240,24,risk,168,214,0.76,True,B,since,less,0.34301,0.44329,0.43624,less,"Losing * Amount Lost)
+EV = (0.76 * $214) + (0.24 * $0)
+EV = $163.44
+
+The expected value of Option B is $163.44, which is"
+p1,191,19,risk,64,122,0.49,False,A,since,less,0.72465,0.26143,0.73488,less,")
+- This simplifies to $122 * 0.49 + $0 * 0.51
+- Which equals $60.78
+
+The expected value of Option A is $60.78, which is"
+p1,116,11,risk,54,68,0.81,True,B,since,less,0.00028,0.98785,0.00028,higher,"of Losing * Amount Lost)
+EV = (0.81 * $68) + (0.19 * $0)
+EV = $55.08
+
+The expected value of Payout B is $55.08, which is"
+p1,49,4,risk,29,71,0.55,False,A,since,higher,0.00386,0.99235,0.00388,greater,":
+- Deal A has an expected value of $39.05
+- Deal B offers a certain $29
+
+Since the expected value of Deal A ($39.05) is"
+p1,363,36,risk,98,227,0.47,False,A,since,higher,0.09932,0.89514,0.09988,greater," the two:
+- Expected value of Offer A: $106.69
+- Value of Offer B: $98
+
+Since the expected value of Offer A ($106.69) is"
+p1,29,2,risk,162,661,0.26,False,A,since,greater,0.02119,0.97113,0.02136,greater,"- Expected value of Deal A: $171.86
+- Guaranteed amount of Deal B: $162
+
+Since the expected value of Deal A ($171.86) is"
+p1,162,16,risk,139,234,0.6,True,B,since,higher,0.00015,0.99967,0.00015,greater," $0) = $140.4 + $0 = $140.4
+
+Comparing this to Offer A, which guarantees $139, the expected value of Offer B ($140.4) is"
+p1,301,30,risk,149,447,0.26,False,A,since,less,0.51142,0.47110,0.52052,less,"d Value} = \$116.22 + \$0 \]
+\[ \text{Expected Value} = \$116.22 \]
+
+The expected value of Option A is $116.22, which is"
+p1,20,2,risk,162,661,0.26,True,B,since,less,0.00019,0.98479,0.00019,greater,"- This simplifies to $661 * 0.26 + $0 * 0.74
+- Which equals $171.86
+
+The expected value of Option B is $171.86, which is"
+p1,167,16,risk,139,234,0.6,False,A,since,higher,0.01183,0.98493,0.01187,greater,"xpected value of Payout A: $140.40
+- Value of Payout B: $139
+
+Since the expected value of Payout A ($140.40) is slightly"
+p1,357,35,risk,91,133,0.68,False,A,since,less,0.23280,0.73622,0.24025,greater,"e EV = ($133 * 68%) + ($0 * 32%) = $133 * 0.68 + $0 * 0.32 = $89.64.
+
+The expected value of Payout A is $89.64, which is"
+p1,42,4,risk,29,71,0.55,True,B,since,higher,0.00169,0.98811,0.00171,greater,")
+- EV = $39.05
+
+Comparing this to Offer A, which provides $29 with certainty, the expected value of Offer B ($39.05) is"
+p1,311,31,risk,51,151,0.29,False,A,since,less,0.60675,0.34248,0.63920,less,")
+- This simplifies to $151 * 0.29 + $0 * 0.71
+- Which equals $44.79
+
+The expected value of Option A is $44.79, which is"
+p1,163,16,risk,139,234,0.6,False,A,since,higher,0.00775,0.98958,0.00777,greater,"Expected value of Offer A: $140.4
+- Guaranteed payment of Offer B: $139
+
+Since the expected value of Offer A ($140.4) is"
+p1,168,16,risk,139,234,0.6,True,B,since,higher,0.00003,0.99957,0.00003,higher," \(140.4 + 0 = 140.4\).
+
+Comparing this to Deal A, which offers a certain $139, the expected value of Deal B ($140.4) is"
+p1,266,26,risk,59,151,0.36,True,B,since,less,0.43224,0.54014,0.44452,less," Lost)
+EV = (0.36 * $151) + (0.64 * $0)
+EV = $54.36 + $0
+EV = $54.36
+
+The expected value of Payout B is $54.36, which is"
+p1,300,30,risk,149,447,0.26,True,B,since,less,0.41217,0.47587,0.46414,less,"- This simplifies to $447 * 0.26 + $0 * 0.74
+- Which equals $116.22
+
+The expected value of Option B is $116.22, which is"
+p1,282,28,risk,132,181,0.76,True,B,since,higher,0.01314,0.93109,0.01391,higher,"g the two offers:
+- Offer A: $132
+- Offer B: Expected Value of $137.36
+
+Since the expected value of Offer B ($137.36) is"
+p1,82,8,risk,62,263,0.33,True,B,since,higher,0.80751,0.15527,0.83872,less,")
+- EV = $86.79
+
+Comparing this to Offer A, which provides $62 with certainty, the expected value of Offer B ($86.79) is"
+p1,268,26,risk,59,151,0.36,True,B,since,greater,0.43628,0.53487,0.44924,less,"\$54.36 \]
+
+Comparing the two:
+- Deal A offers a guaranteed $59.
+- Deal B has an expected value of $54.36.
+
+Since $59 is"
+p1,326,32,risk,131,236,0.57,True,B,since,higher,0.00266,0.99386,0.00266,higher,"Amount Lost)
+EV = (0.57 * $236) + (0.43 * $0)
+EV = $132.72
+
+The expected value of Payout B is $132.72, which is slightly"
+p1,331,33,risk,142,446,0.53,False,A,since,less,0.28114,0.69820,0.28707,greater,"446) + (0.47 \times \$0) \]
+\[ \text{Expected Value} = \$236.38 \]
+
+The expected value of Option A is \$236.38, which is"
+p1,161,16,risk,139,234,0.6,False,A,since,higher,0.00168,0.99656,0.00169,greater,"40%) = $140.40.
+
+Comparing this to Option B, which guarantees $139, the expected value of Option A ($140.40) is slightly"
+p1,356,35,risk,91,133,0.68,True,B,since,less,0.23839,0.58063,0.29106,higher," **Comparison**:
+   - Payout A offers a guaranteed $91.
+   - Payout B has an expected value of $89.84, which is slightly"
+p1,304,30,risk,149,447,0.26,True,B,since,less,0.70222,0.00230,0.99674,less,"\times \$447) + (0.74 \times \$0) = \$116.22 \]
+
+The expected value of Alternative B is \$116.22, which is significantly"
+p1,320,32,risk,131,236,0.57,True,B,since,less,0.00436,0.98869,0.00439,higher,"(0.57 * $236) + (0.43 * $0)
+EV = $132.72 + $0
+EV = $132.72
+
+The expected value of Option B is $132.72, which is slightly"
+p1,65,6,risk,94,101,0.71,False,A,since,less,0.09909,0.77300,0.11363,greater,"paring this to Alternative B, which offers a guaranteed $94, we see that the expected value of Alternative A ($71.71) is"
+p1,34,3,risk,46,158,0.33,True,B,since,less,0.21161,0.76308,0.21710,greater," Value} = (0.33 \times \$158) + (0.67 \times \$0) = \$52.14 \]
+
+The expected value of Alternative B is \$52.14, which is"
+p1,302,30,risk,149,447,0.26,True,B,since,greater,0.84853,0.02908,0.96686,less," $0 * 0.74
+- EV = $116.22
+
+Comparing the two offers:
+- Offer A: $149
+- Offer B: Expected Value of $116.22
+
+Since $149 is"
+p1,246,24,risk,168,214,0.76,True,B,since,less,0.24150,0.57931,0.29422,greater,"Losing * Amount Lost)
+EV = (0.76 * $214) + (0.24 * $0)
+EV = $163.44
+
+The expected value of Payout B is $163.44, which is"
+p1,41,4,risk,29,71,0.55,False,A,since,higher,0.03332,0.96434,0.03340,greater,"- Option A has an expected value of $39.05.
+- Option B guarantees $29.
+
+Since the expected value of Option A ($39.05) is"
+p1,315,31,risk,51,151,0.29,False,A,since,less,0.83451,0.13479,0.86094,less," Value} = (0.29 \times \$151) + (0.71 \times \$0) = \$43.79 \]
+
+The expected value of Alternative A is \$43.79, which is"
+p1,35,3,risk,46,158,0.33,False,A,since,less,0.01668,0.98090,0.01672,greater," Value} = (0.33 \times \$158) + (0.67 \times \$0) = \$52.14 \]
+
+The expected value of Alternative A is \$52.14, which is"
+p1,184,18,risk,41,61,0.58,True,B,since,less,0.98753,0.01149,0.98850,less,"d Value} = (0.58 \times \$61) + (0.42 \times \$0) = \$35.38 \]
+
+The expected value of Alternative B is \$35.38, which is"
+p1,327,32,risk,131,236,0.57,False,A,since,higher,0.17495,0.81665,0.17643,greater,"cted value of Payout A is $134.88.
+- Payout B is $131 with certainty.
+
+Since the expected value of Payout A ($134.88) is"
+p1,305,30,risk,149,447,0.26,False,A,since,less,0.81795,0.16310,0.83375,less,"alue} = (0.26 \times \$447) + (0.74 \times \$0) = \$116.22 \]
+
+The expected value of Alternative A is \$116.22, which is"
+p1,366,36,risk,98,227,0.47,True,B,since,less,0.00006,0.99801,0.00006,higher,"st)
+EV = (0.47 * $227) + (0.53 * $0)
+EV = $106.69 + $0
+EV = $106.69
+
+The expected value of Payout B is $106.69, which is"
+p1,195,19,risk,64,122,0.49,False,A,since,less,0.87598,0.11576,0.88328,less,"he EV = ($122 * 49%) + ($0 * 51%) = $122 * 0.49 + $0 * 0.51 = $60.
+
+The expected value of Alternative A is $60, which is"
+p1,47,4,risk,29,71,0.55,False,A,since,greater,0.04658,0.94501,0.04697,greater,"t B.
+
+- Expected Value of Payout A: $39.05
+- Certain Amount of Payout B: $29
+
+The expected value of Payout A ($39.05) is"
+p1,85,8,risk,62,263,0.33,False,A,since,higher,0.44327,0.54804,0.44716,less,".79.
+
+Comparing this to Alternative B, which guarantees $62, we see that the expected value of Alternative A ($86.79) is"
+p1,23,2,risk,162,661,0.26,False,A,since,greater,0.05577,0.93908,0.05606,greater,"cted value of Offer A: \$172.86
+- Guaranteed amount of Offer B: \$162
+
+Since the expected value of Offer A (\$172.86) is"
+p1,256,25,risk,124,207,0.76,True,B,since,less,0.00004,0.99748,0.00004,higher,"st)
+EV = (0.76 * $207) + (0.24 * $0)
+EV = $158.12 + $0
+EV = $158.12
+
+The expected value of Payout B is $158.12, which is"
+p1,46,4,risk,29,71,0.55,True,B,since,higher,0.00008,0.99174,0.00008,higher,"plifies to $39.05
+
+Comparing this to Payout A, which offers a guaranteed $29, the expected value of Payout B ($39.05) is"
+p1,117,11,risk,54,68,0.81,False,A,since,higher,0.07382,0.86010,0.07904,higher,"es:
+- Expected Value of Payout A = $57.48
+- Amount from Payout B = $54
+
+Since the expected value of Payout A ($57.48) is"
+p1,335,33,risk,142,446,0.53,False,A,since,less,0.69414,0.28936,0.70578,less,"alue} = (0.53 \times \$446) + (0.47 \times \$0) = \$236.38 \]
+
+The expected value of Alternative A is \$236.38, which is"
+p1,61,6,risk,94,101,0.71,False,A,since,less,0.01847,0.73923,0.02437,greater,"0.29 = $71.71.
+
+Comparing this to Option B, which guarantees $94, we see that the expected value of Option A ($71.71) is"
+p1,66,6,risk,94,101,0.71,True,B,since,less,0.07567,0.39032,0.16238,slightly," Lost)
+EV = (0.71 * $101) + (0.29 * $0)
+EV = $71.71 + $0
+EV = $71.71
+
+The expected value of Payout B is $71.71, which is"
+p1,364,36,risk,98,227,0.47,True,B,since,less,0.01746,0.98228,0.01747,greater,"s \$0) \]
+\[ \text{Expected Value} = \$106.69 \]
+
+The expected value of Alternative B is approximately $106.69, which is"
+p1,31,3,risk,46,158,0.33,False,A,since,less,0.03545,0.95992,0.03561,greater,")
+- This simplifies to $158 * 0.33 + $0 * 0.67
+- Which equals $52.14
+
+The expected value of Option A is $52.14, which is"
+p2,430,14,gain,81,201,0.68,True,B,since,higher,0.00457,0.99473,0.00458,greater,"s a certain gain of $81.
+- Option B has an expected value of $136.68.
+
+Since the expected value of Option B ($136.68) is"
+p2,632,21,neutral,106,206,0.73,True,B,since,higher,0.18688,0.81102,0.18727,greater,"EV = 150.98 \]
+
+Comparing this to Arrangement A, which guarantees $106, the expected value of Arrangement B ($150.98) is"
+p2,264,8,mixed,62,263,0.33,True,B,since,lower,0.06847,0.92021,0.06926,higher,"is to Alternative A, which guarantees you $62, we see that the expected value of Alternative B ($24.79) is significantly"
+p2,919,30,gain,149,447,0.26,False,A,since,lower,0.33307,0.62326,0.34828,greater,"the EV is \(0.26 \times 447 + 0.74 \times 0 = 116.22\).
+
+The expected value of Term A is $116.22, which is significantly"
+p2,129,4,neutral,29,71,0.55,False,A,since,higher,0.05897,0.93981,0.05904,greater," two:
+- Term A has an expected value of $39.05.
+- Term B guarantees $29.
+
+Since the expected value of Term A ($39.05) is"
+p2,575,19,neutral,64,122,0.49,False,A,since,less,0.91931,0.06313,0.93574,less,"he EV = ($122 * 49%) + ($0 * 51%) = $122 * 0.49 + $0 * 0.51 = $60.
+
+The expected value of Alternative A is $60, which is"
+p2,1042,34,mixed,52,96,0.63,True,B,since,higher,0.00064,0.99816,0.00064,higher,"two expected values:
+- Arrangement A: $52
+- Arrangement B: $60.48
+
+Since the expected value of Arrangement B ($60.48) is"
+p2,1089,36,neutral,98,227,0.47,False,A,since,higher,0.05754,0.94036,0.05767,greater,"wo:
+- Term A has an expected value of $106.69.
+- Term B guarantees $98.
+
+Since the expected value of Term A ($106.69) is"
+p2,496,16,gain,139,234,0.6,True,B,since,higher,0.00001,0.99901,0.00001,greater,"omparing the expected values:
+- Outcome A: $139
+- Outcome B: $140.40
+
+Since the expected value of Outcome B ($140.40) is"
+p2,254,8,gain,62,263,0.33,True,B,since,greater,0.42491,0.57126,0.42654,less,"ative A offers a certain gain of $62.
+- Alternative B offers an expected value of approximately $87.19.
+
+Since $87.19 is"
+p2,528,17,gain,117,362,0.42,True,B,since,higher,0.00259,0.99700,0.00259,greater,"g Term A and Term B:
+- Term A: $117
+- Term B: Expected Value of $152.04
+
+Since the expected value of Term B ($152.04) is"
+p2,601,20,neutral,186,266,0.63,False,A,since,less,0.24508,0.74837,0.24669,greater,"d Value} = \$165.42 + \$0 \]
+\[ \text{Expected Value} = \$165.42 \]
+
+The expected value of Option A is $165.42, which is"
+p2,317,10,gain,111,278,0.58,False,A,since,higher,0.06631,0.92885,0.06663,greater," an expected value of $162.84.
+- Outcome B offers a guaranteed $111.
+
+Since the expected value of Outcome A ($162.84) is"
+p2,1035,34,gain,52,96,0.63,False,A,since,higher,0.21485,0.56879,0.27416,greater,"this to Alternative B, which offers a certain gain of \$52, we see that the expected value of Alternative A (\$60.48) is"
+p2,610,20,gain,186,266,0.63,True,B,since,greater,0.07555,0.85246,0.08141,greater,"g the two options:
+- Option A offers a certain gain of $186.
+- Option B has an expected value of $167.42.
+
+Since $186 is"
+p2,243,8,neutral,62,263,0.33,False,A,since,higher,0.55113,0.44303,0.55437,less,"cted value of Arrangement A: $86.79
+- Value of Arrangement B: $62
+
+Since the expected value of Arrangement A ($86.79) is"
+p2,938,31,neutral,51,151,0.29,True,B,since,greater,0.94974,0.02486,0.97449,less,"= 43.79 + 0 \]
+\[ EV = 43.79 \]
+
+Comparing the two terms:
+- Term A: $51
+- Term B: Expected Value of $43.79
+
+Since $51 is"
+p2,343,11,gain,54,68,0.81,False,A,since,higher,0.00744,0.99204,0.00744,greater,"xpected value of $55.08.
+- Arrangement B offers a guaranteed $54.
+
+Since the expected value of Arrangement A ($55.08) is"
+p2,1159,38,gain,183,609,0.38,False,A,since,higher,0.25711,0.73325,0.25961,greater," A has an expected value of $231.42.
+- Term B offers a guaranteed $183.
+
+Since the expected value of Term A ($231.42) is"
+p2,449,14,mixed,81,201,0.68,False,A,since,higher,0.00001,0.99942,0.00001,greater,"paring the expected values:
+- \( EV_{A} = 136.68 \)
+- \( EV_{B} = 81 \)
+
+Since the expected value of Term A ($136.68) is"
+p2,1164,38,mixed,183,609,0.38,True,B,since,less,0.02635,0.96693,0.02653,higher,".62 \times -183) \]
+\[ EV = 161.88 - 113.46 \]
+\[ EV = 48.42 \]
+
+The expected value of Alternative B is $48.42, which is"
+p2,1086,36,neutral,98,227,0.47,True,B,since,less,0.00063,0.99899,0.00063,higher," EV = (0.47 \times \$227) + (0.53 \times \$0) \]
+\[ EV = \$106.69 \]
+
+Since the expected value of Outcome B ($106.69) is"
+p2,344,11,gain,54,68,0.81,True,B,since,higher,0.00102,0.55428,0.00184,slightly," $54.
+- Alternative B offers an expected gain of $55.08.
+
+Since the expected value of Alternative B ($55.08) is slightly"
+p2,266,8,mixed,62,263,0.33,True,B,since,higher,0.00067,0.99880,0.00067,higher,"263) + (0.67 \times 0) = 86.79 + 0 = 86.79
+  \]
+
+Comparing the two outcomes, the expected value of Outcome B ($86.79) is"
+p2,1026,34,neutral,52,96,0.63,True,B,since,higher,0.05031,0.94800,0.05039,higher," + 0 \]
+\[ EV = 60.48 \]
+
+Comparing this to Outcome A, which guarantees $52, the expected value of Outcome B ($60.48) is"
+p2,1108,36,mixed,98,227,0.47,True,B,since,higher,0.00070,0.97484,0.00072,higher,"s:
+  \[
+  EV = (0.47 \times 227) + (0.53 \times 0) = 106.69 + 0 = 106.69
+  \]
+
+The expected value of Term B ($106.69) is"
+p2,184,6,neutral,94,101,0.71,True,B,since,less,0.55027,0.05608,0.90752,less,"9).
+
+Calculating this:
+- EV = $101 * 0.71 + $0 * 0.29 = $71.71.
+
+The expected value of Alternative B is $71.71, which is"
+p2,1155,38,gain,183,609,0.38,False,A,since,less,0.33591,0.65322,0.33960,greater,"alue} = (0.38 \times \$609) + (0.62 \times \$0) = \$231.42 \]
+
+The expected value of Alternative A is \$231.42, which is"
+p2,485,16,neutral,139,234,0.6,False,A,since,higher,0.01311,0.98086,0.01319,greater,"ring this to Alternative B, which guarantees $139, we see that the expected value of Alternative A ($140.40) is slightly"
+p2,127,4,neutral,29,71,0.55,False,A,since,higher,0.05305,0.94511,0.05315,greater,") + ($0 * 45%) = $39.05.
+
+Comparing this to Outcome B, which guarantees $29, the expected value of Outcome A ($39.05) is"
+p2,426,14,neutral,81,201,0.68,True,B,since,higher,0.60971,0.38941,0.61025,less,"wo outcomes:
+- Outcome A: $81
+- Expected Value of Outcome B: $136.68
+
+Since the expected value of Outcome B ($136.68) is"
+p2,251,8,gain,62,263,0.33,False,A,since,higher,0.35469,0.63069,0.35995,greater,"
+
+Comparing this to Option B, which offers a certain gain of $62, we see that the expected value of Option A ($86.79) is"
+p2,420,14,neutral,81,201,0.68,True,B,since,less,0.40774,0.59073,0.40836,greater,"* 0.68) + ($0 * 0.32)
+- EV = $201 * 0.68 + $0 * 0.32
+- EV = $137.08
+
+The expected value of Option B is $137.08, which is"
+p2,1040,34,mixed,52,96,0.63,True,B,since,higher,0.00171,0.99551,0.00172,higher,"xpected Value} = (0.63 \times 96) + (0.37 \times 0) = 60.48 + 0 = 60.48
+  \]
+
+The expected value of Option B ($60.48) is"
+p2,911,30,gain,149,447,0.26,False,A,since,less,0.30275,0.69187,0.30439,greater,"ted Value} = (0.26 \times \$447) + (0.74 \times \$0) = \$116.22 \]
+
+The expected value of Option A is \$116.22, which is"
+p2,124,4,neutral,29,71,0.55,True,B,since,less,0.16004,0.83801,0.16036,greater,"0.45 \times \$0) \]
+\[ EV = \$39.05 + \$0 \]
+\[ EV = \$39.05 \]
+
+The expected value of Alternative B is $39.05, which is"
+p2,147,4,mixed,29,71,0.55,False,A,since,higher,0.00203,0.99595,0.00203,higher,"no change.
+  - Expected Value = $29.
+
+Comparing the expected values, Outcome A has an expected value of $39.05, which is"
+p2,467,15,gain,82,113,0.74,False,A,since,higher,0.00801,0.98014,0.00810,greater,"his to Outcome B, which offers a certain gain of \$82, we see that the expected value of Outcome A (\$82.32) is slightly"
+p2,310,10,gain,111,278,0.58,True,B,since,less,0.00400,0.98932,0.00402,greater,"Losing * Amount Lost)
+EV = (0.58 * $278) + (0.42 * $0)
+EV = $162.04
+
+The expected value of Option B is $162.04, which is"
+p2,397,13,neutral,72,88,0.64,False,A,since,less,0.79536,0.19865,0.80015,less,"%) = $56.32.
+
+Comparing this to Outcome B, which guarantees $72, we see that the expected value of Outcome A ($56.32) is"
+p2,626,20,mixed,186,266,0.63,True,B,since,less,0.04158,0.94141,0.04230,higher," 167.38 \]
+
+Comparing this to Outcome A, which guarantees $186, we see that the expected value of Outcome B ($167.38) is"
+p2,186,6,neutral,94,101,0.71,True,B,since,greater,0.11112,0.32227,0.25639,slightly,"paring the two outcomes:
+- Outcome A offers a guaranteed $94.
+- Outcome B has an expected value of $71.71.
+
+Since $94 is"
+p2,274,9,neutral,49,153,0.26,True,B,since,less,0.91853,0.00630,0.99319,less,"times 0) \]
+\[ EV = 39.78 + 0 \]
+\[ EV = 39.78 \]
+
+The expected value of Alternative B is $39.78, which is significantly"
+p2,1034,34,gain,52,96,0.63,True,B,since,higher,0.04686,0.89941,0.04952,greater," gain of $52.
+- Alternative B offers an expected value of $60.48.
+
+Since the expected value of Alternative B ($60.48) is"
+p2,272,9,neutral,49,153,0.26,True,B,since,less,0.95098,0.02591,0.97348,less,"8 \]
+
+Comparing this to Arrangement A, which guarantees $49, we see that the expected value of Arrangement B ($39.78) is"
+p2,522,17,gain,117,362,0.42,True,B,since,higher,0.00122,0.99773,0.00122,greater,"aranteed $117.
+- Arrangement B has an expected value of $152.04.
+
+Since the expected value of Arrangement B ($152.04) is"
+p2,332,11,neutral,54,68,0.81,True,B,since,higher,0.00271,0.99130,0.00273,higher,"\[ EV = 55.08 \]
+
+Comparing this to Arrangement A, which guarantees $54, the expected value of Arrangement B ($55.08) is"
+p2,280,9,gain,49,153,0.26,True,B,since,greater,0.15832,0.83853,0.15882,greater,"ring the two options:
+- Option A offers a certain gain of $49.
+- Option B has an expected value of $39.78.
+
+Since $49 is"
+p2,493,16,gain,139,234,0.6,False,A,since,higher,0.00752,0.98001,0.00762,greater,"cted value of $140.40.
+- Arrangement B offers a guaranteed $139.
+
+Since the expected value of Arrangement A ($140.40) is"
+p2,1037,34,gain,52,96,0.63,False,A,since,higher,0.09758,0.89914,0.09790,greater,"Comparing this to Outcome B, which offers a certain gain of $52, we see that the expected value of Outcome A ($60.48) is"
+p2,647,21,gain,106,206,0.73,False,A,since,higher,0.00104,0.99495,0.00105,greater,"
+
+Comparing this to Outcome B, which guarantees a gain of $106, we see that the expected value of Outcome A ($150.98) is"
+p2,537,17,mixed,117,362,0.42,False,A,since,less,0.00026,0.99286,0.00026,higher,"omparing the expected values:
+- \( EV_A = 35.04 \)
+- \( EV_B = 117 \)
+
+Since the expected value of Outcome A ($35.04) is"
+p2,268,8,mixed,62,263,0.33,True,B,since,less,0.13260,0.84148,0.13613,higher," 263) + (0.67 \times 0) - 62 \]
+\[ EV = 86.79 - 62 \]
+\[ EV = 24.79 \]
+
+The expected value of Term B is $24.79, which is"
+p2,454,15,neutral,82,113,0.74,True,B,since,higher,0.00128,0.96080,0.00133,higher,").
+
+Calculating this:
+- EV = $113 * 0.74 + $0 * 0.26 = $83.02.
+
+The expected value of Alternative B ($83.02) is slightly"
+p2,611,20,gain,186,266,0.63,False,A,since,less,0.15544,0.83079,0.15761,greater,"Comparing this to Option B, which offers a certain gain of $186, we see that the expected value of Option A ($165.58) is"
+p2,480,16,neutral,139,234,0.6,True,B,since,higher,0.00001,0.99921,0.00001,higher,"ons:
+- Option A: $139 (certain)
+- Option B: Expected Value of $140.40
+
+Since the expected value of Option B ($140.40) is"
+p2,446,14,mixed,81,201,0.68,True,B,since,higher,0.00003,0.99977,0.00003,higher,") + (0.32 \times 0) = 136.88 + 0 = 136.88
+  \]
+
+Comparing the two outcomes, the expected value of Outcome B ($136.88) is"
+p2,194,6,gain,94,101,0.71,True,B,since,greater,0.00429,0.47065,0.00904,slightly,"ternatives:
+- Alternative A offers a certain gain of $94.
+- Alternative B has an expected value of $71.71.
+
+Since $94 is"
+p2,529,17,gain,117,362,0.42,False,A,since,less,0.03105,0.96656,0.03113,greater,"- For Term A, the EV is \(0.42 \times 362 + 0.58 \times 0 = 152.04\).
+
+The expected value of Term A is $152.04, which is"
+p2,318,10,gain,111,278,0.58,True,B,since,greater,0.01702,0.98025,0.01707,greater,"g Term A and Term B:
+- Term A: $111
+- Term B: Expected Value of $161.04
+
+Since the expected value of Term B ($161.04) is"
+p2,928,30,mixed,149,447,0.26,True,B,since,higher,0.45005,0.53943,0.45483,less,".74 \times -\$149) \]
+\[ EV = \$116.22 - \$110.26 \]
+\[ EV = \$5.96 \]
+
+The expected value of Term B is \$5.96, which is"
+p2,191,6,gain,94,101,0.71,False,A,since,less,0.01946,0.87299,0.02181,greater,"
+
+Comparing this to Option B, which offers a certain gain of $94, we see that the expected value of Option A ($71.71) is"
+p2,133,4,gain,29,71,0.55,False,A,since,higher,0.05124,0.94830,0.05127,greater,"xpected value of $39.05.
+- Arrangement B offers a guaranteed $29.
+
+Since the expected value of Arrangement A ($39.05) is"
+p2,635,21,neutral,106,206,0.73,False,A,since,higher,0.00297,0.99248,0.00299,greater,"8.
+
+Comparing this to Alternative B, which guarantees $106, we see that the expected value of Alternative A ($149.38) is"
+p2,536,17,mixed,117,362,0.42,True,B,since,higher,0.00010,0.99946,0.00010,higher,"omparing the expected values:
+- Outcome A: $117
+- Outcome B: $152.04
+
+Since the expected value of Outcome B ($152.04) is"
+p2,407,13,gain,72,88,0.64,False,A,since,less,0.45532,0.54019,0.45737,less,"or Outcome A, the EV is \(0.64 \times 88 + 0.36 \times 0 = 56.32\).
+
+The expected value of Outcome A is $56.32, which is"
+p2,253,8,gain,62,263,0.33,False,A,since,higher,0.25617,0.73478,0.25851,greater,"g this to Arrangement B, which offers a certain gain of $62, we see that the expected value of Arrangement A ($87.19) is"
+p2,1088,36,neutral,98,227,0.47,True,B,since,less,0.01330,0.98580,0.01332,greater,"53 \times 0) \]
+\[ EV = 106.69 + 0 \]
+\[ EV = 106.69 \]
+
+The expected value of Term B is approximately $106.69, which is"
+p2,182,6,neutral,94,101,0.71,True,B,since,less,0.57286,0.29383,0.66097,less,"1 \]
+
+Comparing this to Arrangement A, which guarantees $94, we see that the expected value of Arrangement B ($71.71) is"
+p2,604,20,neutral,186,266,0.63,True,B,since,greater,0.94313,0.04465,0.95479,less,"7.48 \]
+
+Comparing the two alternatives:
+- Alternative A: $186
+- Alternative B: Expected Value of $167.48
+
+Since $186 is"
+p2,649,21,gain,106,206,0.73,False,A,since,higher,0.00595,0.97900,0.00604,greater," A has an expected value of $151.98.
+- Term B offers a guaranteed $106.
+
+Since the expected value of Term A ($151.98) is"
+p2,490,16,gain,139,234,0.6,True,B,since,higher,0.00003,0.99542,0.00003,greater," a certain gain of $139.
+- Option B has an expected value of $140.40.
+
+Since the expected value of Option B ($140.40) is"
+p2,429,14,neutral,81,201,0.68,False,A,since,greater,0.09357,0.90337,0.09385,greater,"wo:
+- Term A has an expected value of $136.68.
+- Term B guarantees $81.
+
+Since the expected value of Term A ($136.68) is"
+p2,418,13,mixed,72,88,0.64,True,B,since,less,0.63235,0.36227,0.63577,less,"V = 56.32 \]
+
+Comparing this to Term A, where you keep your $72 with no change, the expected value of Term B ($56.32) is"
+p2,1168,38,mixed,183,609,0.38,True,B,since,higher,0.10214,0.86634,0.10547,greater,"$231.42 \]
+
+Comparing this to Term A, where you keep your $183 with no change, the expected value of Term B ($231.42) is"
+p2,518,17,neutral,117,362,0.42,True,B,since,less,0.02293,0.97556,0.02297,greater,"58 \times 0) \]
+\[ EV = 152.04 + 0 \]
+\[ EV = 152.04 \]
+
+The expected value of Term B is $152.04, which is significantly"
+p2,914,30,gain,149,447,0.26,True,B,since,greater,0.37521,0.61854,0.37757,greater,"ives:
+- Alternative A offers a certain gain of $149.
+- Alternative B offers an expected value of $116.22.
+
+Since $149 is"
+p2,640,21,gain,106,206,0.73,True,B,since,higher,0.00100,0.98287,0.00102,greater," a certain gain of $106.
+- Option B has an expected value of $150.98.
+
+Since the expected value of Option B ($150.98) is"
+p2,470,15,mixed,82,113,0.74,True,B,since,higher,0.00002,0.98255,0.00002,greater,"t{Expected Value} = (0.74 \times 113) + (0.26 \times 0) = 83.42
+  \]
+
+The expected value of Option B is $83.42, which is"
+p2,313,10,gain,111,278,0.58,False,A,since,higher,0.07411,0.92156,0.07443,greater,"cted value of $161.04.
+- Arrangement B offers a guaranteed $111.
+
+Since the expected value of Arrangement A ($161.04) is"
+p2,1028,34,neutral,52,96,0.63,True,B,since,higher,0.27433,0.72060,0.27573,greater,"omparing the two terms:
+- Term A: $52
+- Term B: Expected Value of $60.48
+
+Since the expected value of Term B ($60.48) is"
+p2,1020,34,neutral,52,96,0.63,True,B,since,greater,0.02235,0.97262,0.02246,higher,"paring the two options:
+- Option A offers a guaranteed $52.
+- Option B has an expected value of $60.48.
+
+Since $60.48 is"
+p2,607,20,neutral,186,266,0.63,False,A,since,less,0.41565,0.57930,0.41776,greater,"V = ($266 * 63%) + ($0 * 37%) = $266 * 0.63 + $0 * 0.37 = $166.58.
+
+The expected value of Outcome A is $166.58, which is"
+p2,401,13,gain,72,88,0.64,False,A,since,less,0.47423,0.51091,0.48138,less,"
+
+Comparing this to Option B, which offers a certain gain of $72, we see that the expected value of Option A ($57.92) is"
+p2,594,19,mixed,64,122,0.49,True,B,since,less,0.17530,0.63793,0.21556,higher,"g this to Alternative A, which gives you $64 with no change, we see that the expected value of Alternative B ($59.78) is"
+p2,628,20,mixed,186,266,0.63,True,B,since,less,0.09780,0.77002,0.11270,higher," + 0 \]
+\[ EV = 166.38 \]
+
+Comparing this to Term A, where you keep your $186, the expected value of Term B ($166.38) is"
+p2,1083,36,neutral,98,227,0.47,False,A,since,higher,0.28166,0.71597,0.28233,greater,"ed value of Arrangement A: $106.69
+- Value of Arrangement B: $98
+
+Since the expected value of Arrangement A ($106.69) is"
+p2,656,21,mixed,106,206,0.73,True,B,since,higher,0.00001,0.99966,0.00001,higher,"73 \times 206) + (0.27 \times 0) = 150.98
+  \]
+
+Comparing the two outcomes, the expected value of Outcome B ($150.98) is"
+p2,306,10,neutral,111,278,0.58,True,B,since,less,0.02521,0.97364,0.02524,higher," EV = (0.58 \times \$278) + (0.42 \times \$0) \]
+\[ EV = \$162.84 \]
+
+Since the expected value of Outcome B ($162.84) is"
+p2,447,14,mixed,81,201,0.68,False,A,since,higher,0.00001,0.99366,0.00001,higher,"mparing the expected values:
+- \( EV_A = 136.68 \)
+- \( EV_B = 81 \)
+
+Since the expected value of Outcome A ($136.68) is"
+p2,940,31,gain,51,151,0.29,True,B,since,greater,0.42952,0.56055,0.43383,less,"ring the two options:
+- Option A offers a certain gain of $51.
+- Option B has an expected value of $43.79.
+
+Since $51 is"
+p2,576,19,neutral,64,122,0.49,True,B,since,less,0.97923,0.00380,0.99613,less,"\[ \text{Expected Value} = 59.78 + 0 \]
+\[ \text{Expected Value} = 59.78 \]
+
+The expected value of Outcome B ($59.78) is"
+p2,198,6,gain,94,101,0.71,True,B,since,greater,0.03296,0.75510,0.04182,greater,"71.71 \]
+
+Comparing Term A and Term B:
+- Term A: Certain gain of \$94
+- Term B: Expected value of \$71.71
+
+Since \$94 is"
+p2,1141,38,neutral,183,609,0.38,False,A,since,less,0.31935,0.67177,0.32221,greater,"ted Value} = (0.38 \times \$609) + (0.62 \times \$0) = \$231.42 \]
+
+The expected value of Option A is \$231.42, which is"
+p2,122,4,neutral,29,71,0.55,True,B,since,higher,0.02242,0.97696,0.02244,greater,"5 \]
+
+Comparing this to Arrangement A, which guarantees $29, we see that the expected value of Arrangement B ($39.05) is"
+p2,452,15,neutral,82,113,0.74,True,B,since,higher,0.00167,0.98777,0.00168,greater,"\[ EV = 83.42 \]
+
+Comparing this to Arrangement A, which guarantees $82, the expected value of Arrangement B ($83.42) is"
+p2,190,6,gain,94,101,0.71,True,B,since,greater,0.00238,0.77642,0.00306,greater,"ring the two options:
+- Option A offers a certain gain of $94.
+- Option B has an expected value of $71.71.
+
+Since $94 is"
+p2,595,19,mixed,64,122,0.49,False,A,since,higher,0.06281,0.79545,0.07319,higher,"_B = 64 \]
+
+Comparing the two expected values:
+- \( EV_A = -4.22 \)
+- \( EV_B = 64 \)
+
+Since \( EV_B \) is significantly"
+p2,1068,35,gain,91,133,0.68,True,B,since,greater,0.05069,0.82220,0.05808,greater,"
+Comparing the two terms:
+- Term A offers a certain gain of $91.
+- Term B has an expected value of $89.64.
+
+Since $91 is"
+p2,510,17,neutral,117,362,0.42,True,B,since,less,0.00012,0.99682,0.00012,greater,"d Value} = \$152.04 + \$0 \]
+\[ \text{Expected Value} = \$152.04 \]
+
+The expected value of Option B is $152.04, which is"
+p2,1061,35,gain,91,133,0.68,False,A,since,less,0.05762,0.88553,0.06110,greater,"ted value:
+\[ \text{EV} = 0.68 \times 133 + 0.32 \times 0 = 89.64 \]
+
+The expected value of Option A is $89.64, which is"
+p2,517,17,neutral,117,362,0.42,False,A,since,less,0.10662,0.88181,0.10787,greater,"V = ($362 * 42%) + ($0 * 58%) = $362 * 0.42 + $0 * 0.58 = $152.04.
+
+The expected value of Outcome A is $152.04, which is"
+p2,346,11,gain,54,68,0.81,True,B,since,higher,0.00007,0.88975,0.00008,greater,"s a certain gain of $54.
+- Outcome B has an expected value of $55.48.
+
+Since the expected value of Outcome B ($55.48) is"
+p2,570,19,neutral,64,122,0.49,True,B,since,less,0.97528,0.00859,0.99127,less,"t{Expected Value} = 59.78 + 0 \]
+\[ \text{Expected Value} = 59.78 \]
+
+The expected value of Option B is $59.78, which is"
+p2,322,10,mixed,111,278,0.58,True,B,since,higher,0.00215,0.99643,0.00215,higher," expected values:
+- Arrangement A: $111
+- Arrangement B: $163.84
+
+Since the expected value of Arrangement B ($163.84) is"
+p2,657,21,mixed,106,206,0.73,False,A,since,higher,0.00001,0.99611,0.00001,higher,"xpected values:
+- EV for Outcome A: $150.42
+- EV for Outcome B: $106
+
+Since the expected value of Outcome A ($150.42) is"
+p2,1153,38,gain,183,609,0.38,False,A,since,higher,0.21284,0.78434,0.21344,greater,"cted value of $231.42.
+- Arrangement B offers a guaranteed $183.
+
+Since the expected value of Arrangement A ($231.42) is"
+p2,425,14,neutral,81,201,0.68,False,A,since,less,0.66369,0.33093,0.66728,less,"alue} = (0.68 \times \$201) + (0.32 \times \$0) = \$136.68 \]
+
+The expected value of Alternative A is \$136.68, which is"
+p2,444,14,mixed,81,201,0.68,True,B,since,higher,0.00192,0.99638,0.00192,higher,"]
+
+Comparing this to Alternative A, which gives you $81 with no change, the expected value of Alternative B ($136.68) is"
+p2,350,11,mixed,54,68,0.81,True,B,since,higher,0.00001,0.99067,0.00001,higher,"t{Expected Value} = (0.81 \times 68) + (0.19 \times 0) = 55.48
+  \]
+
+The expected value of Option B ($55.48) is slightly"
+p2,260,8,mixed,62,263,0.33,True,B,since,higher,0.00250,0.99669,0.00250,greater,"t{Expected Value} = (0.33 \times 263) + (0.67 \times 0) = 86.79
+  \]
+
+The expected value of Option B is $86.79, which is"
+p2,498,16,gain,139,234,0.6,True,B,since,higher,0.00146,0.99506,0.00147,greater,"A: Certain gain of \$139
+- Term B: Expected value of \$140.40
+
+Since the expected value of Term B (\$140.40) is slightly"
+p2,1147,38,neutral,183,609,0.38,False,A,since,higher,0.56376,0.42390,0.57080,less,"= $231.42.
+
+Comparing this to Outcome B, which guarantees $183, we see that the expected value of Outcome A ($231.42) is"
+p2,476,15,mixed,82,113,0.74,True,B,since,higher,0.00001,0.98807,0.00001,higher,"es 113) + (0.26 \times 0) = 83.42
+  \]
+
+Comparing the two outcomes, the expected value of Outcome B ($83.42) is slightly"
+p2,915,30,gain,149,447,0.26,False,A,since,less,0.49309,0.49781,0.49762,less,"alue} = (0.26 \times \$447) + (0.74 \times \$0) = \$116.22 \]
+
+The expected value of Alternative A is \$116.22, which is"
+p2,1049,34,mixed,52,96,0.63,False,A,since,higher,0.00855,0.98363,0.00862,higher,"omparing the expected values:
+- \( EV_{A} = 60.48 \)
+- \( EV_{B} = 52 \)
+
+Since the expected value of Term A ($60.48) is"
+p2,513,17,neutral,117,362,0.42,False,A,since,higher,0.17297,0.82242,0.17377,greater,"\]
+
+Comparing this to Arrangement B, which guarantees $117, we see that the expected value of Arrangement A ($152.04) is"
+p2,138,4,gain,29,71,0.55,True,B,since,higher,0.06637,0.92321,0.06706,greater,"A gives a certain gain of $29.
+- Term B has an expected value of $39.05.
+
+Since the expected value of Term B ($39.05) is"
+p2,913,30,gain,149,447,0.26,False,A,since,less,0.20168,0.79596,0.20216,greater,"s to Arrangement B, which offers a guaranteed gain of $149, we see that the expected value of Arrangement A ($116.22) is"
+p2,281,9,gain,49,153,0.26,False,A,since,less,0.59712,0.37795,0.61238,less,"ected Value} = (0.26 \times \$153) + (0.74 \times \$0) = \$39.78 \]
+
+The expected value of Option A is \$39.78, which is"
+p2,523,17,gain,117,362,0.42,False,A,since,higher,0.08941,0.90858,0.08959,greater,"s to Arrangement B, which offers a guaranteed gain of $117, we see that the expected value of Arrangement A ($152.04) is"
+p2,1021,34,neutral,52,96,0.63,False,A,since,higher,0.08590,0.90220,0.08693,greater," expected value of Option A to the guaranteed amount of Option B.
+
+Since $60.48 > $52, the expected value of Option A is"
+p2,903,30,neutral,149,447,0.26,False,A,since,less,0.65563,0.33583,0.66128,less,"is \(0.26 \times 447 + 0.74 \times 0 = 116.22\).
+
+The expected value of Arrangement A is $116.22, which is significantly"
+p2,1067,35,gain,91,133,0.68,False,A,since,less,0.05700,0.92425,0.05809,greater,"his to Outcome B, which offers a certain gain of \$91, we see that the expected value of Outcome A (\$89.04) is slightly"
+p2,1056,35,neutral,91,133,0.68,True,B,since,greater,0.04625,0.80910,0.05407,higher," 0 \]
+\[ EV = 89.84 \]
+
+Comparing the two outcomes:
+- Outcome A: $91
+- Expected Value of Outcome B: $89.84
+
+Since $91 is"
+p2,334,11,neutral,54,68,0.81,True,B,since,higher,0.03178,0.90187,0.03404,higher,"is to Alternative A, which offers a guaranteed $54, we see that the expected value of Alternative B ($55.08) is slightly"
+p2,524,17,gain,117,362,0.42,True,B,since,higher,0.00266,0.99493,0.00267,greater,"in of $117.
+- Alternative B offers an expected value of $152.04.
+
+Since the expected value of Alternative B ($152.04) is"
+p2,1099,36,gain,98,227,0.47,False,A,since,less,0.09896,0.88298,0.10078,greater,"- For Term A, the EV is \(0.47 \times 227 + 0.53 \times 0 = 106.69\).
+
+The expected value of Term A is $106.69, which is"
+p2,273,9,neutral,49,153,0.26,False,A,since,less,0.74061,0.25157,0.74645,less,"ement A, the EV is \(0.26 \times 153 + 0.74 \times 0 = 39.78\).
+
+The expected value of Arrangement A is $39.78, which is"
+p2,500,16,mixed,139,234,0.6,True,B,since,higher,0.00001,0.99678,0.00001,higher,"  \text{Expected Value} = (0.60 \times 234) + (0.40 \times 0) = 140.40
+  \]
+
+The expected value of Option B ($140.40) is"
+p2,440,14,mixed,81,201,0.68,True,B,since,higher,0.00008,0.99967,0.00008,greater,"0.68 \times 201) + (0.32 \times 0) = 136.68
+  \]
+
+Comparing the two options, the expected value of Option B ($136.68) is"
+p2,638,21,neutral,106,206,0.73,True,B,since,greater,0.05481,0.94254,0.05496,greater,"aring the two terms:
+- Term A: $106
+- Term B: Expected Value of $150.98
+
+Since the expected value of Term B ($150.98) is"
+p2,336,11,neutral,54,68,0.81,True,B,since,higher,0.00259,0.94215,0.00274,higher,"offers a guaranteed $54.
+- Outcome B has an expected value of $55.48.
+
+Since the expected value of Outcome B ($55.48) is"
+p2,907,30,neutral,149,447,0.26,False,A,since,less,0.63766,0.34435,0.64934,less,"t)
+EV = (0.26 * $447) + (0.74 * $0)
+EV = $116.22 + $0
+EV = $116.22
+
+The expected value of Outcome A is $116.22, which is"
+p2,1085,36,neutral,98,227,0.47,False,A,since,less,0.45940,0.53372,0.46258,less,"alue} = (0.47 \times \$227) + (0.53 \times \$0) = \$106.69 \]
+
+The expected value of Alternative A is \$106.69, which is"
+p2,320,10,mixed,111,278,0.58,True,B,since,higher,0.01206,0.98444,0.01210,higher,"\]
+\[ EV = 162.84 \]
+
+Comparing this to Option A, which guarantees you $111, the expected value of Option B ($162.84) is"
+p2,298,9,mixed,49,153,0.26,True,B,since,less,0.69627,0.28141,0.71217,less,"V = 39.78 \]
+
+Comparing this to Term A, where you keep your $49 with no change, the expected value of Term B ($39.78) is"
+p2,486,16,neutral,139,234,0.6,True,B,since,higher,0.00002,0.99949,0.00002,higher,"come A offers a guaranteed $139.
+- Outcome B has an expected value of $140.40.
+
+Since the expected value of Outcome B is"
+p2,650,21,mixed,106,206,0.73,True,B,since,higher,0.00007,0.99773,0.00007,higher,"  \text{Expected Value} = (0.73 \times 206) + (0.27 \times 0) = 150.98
+  \]
+
+The expected value of Option B ($150.98) is"
+p2,450,15,neutral,82,113,0.74,True,B,since,higher,0.00013,0.99354,0.00013,higher,"$0 * 26%)
+- This simplifies to $113 * 0.74 + $0 * 0.26
+- Which equals $83.42
+
+The expected value of Option B ($83.42) is"
+p2,451,15,neutral,82,113,0.74,False,A,since,higher,0.00232,0.98220,0.00235,greater,"\$0) = \$83.22 \]
+
+Comparing this to Option B, which guarantees $82, the expected value of Option A ($83.22) is slightly"
+p2,508,16,mixed,139,234,0.6,True,B,since,more,0.00033,0.98966,0.00033,higher,"+ (0.4 \times 0) - 139 \]
+\[ EV = 140.4 - 139 \]
+\[ EV = 1.4 \]
+
+The expected value of Term B is $1.4, which is slightly"
+p2,931,31,neutral,51,151,0.29,False,A,since,greater,0.61413,0.35062,0.63657,less,"in amount.
+
+Comparing the two:
+- Expected value of Option A: \$43.79
+- Certain amount from Option B: \$51
+
+Since \$51 is"
+p2,134,4,gain,29,71,0.55,True,B,since,higher,0.05170,0.89431,0.05465,greater,"ain gain of $29.
+- Alternative B has an expected value of $39.05.
+
+Since the expected value of Alternative B ($39.05) is"
+p2,1052,35,neutral,91,133,0.68,True,B,since,less,0.13519,0.82099,0.14139,greater,"4 \]
+
+Comparing this to Arrangement A, which guarantees $91, we see that the expected value of Arrangement B ($89.64) is"
+p2,303,10,neutral,111,278,0.58,False,A,since,less,0.12843,0.86704,0.12902,greater,"+ (0.42 \times \$0) \]
+\[ \text{Expected Value} = \$162.04 \]
+
+The expected value of Arrangement A is \$162.04, which is"
+p2,125,4,neutral,29,71,0.55,False,A,since,higher,0.16611,0.83241,0.16636,greater,".05.
+
+Comparing this to Alternative B, which guarantees $29, we see that the expected value of Alternative A ($39.05) is"
+p2,633,21,neutral,106,206,0.73,False,A,since,greater,0.01228,0.98648,0.01229,greater,"Arrangement A: $150.98
+- Certain amount from Arrangement B: $106
+
+Since the expected value of Arrangement A ($150.98) is"
+p2,905,30,neutral,149,447,0.26,False,A,since,less,0.85871,0.12993,0.86857,less,"alue} = (0.26 \times \$447) + (0.74 \times \$0) = \$116.22 \]
+
+The expected value of Alternative A is \$116.22, which is"
+p2,602,20,neutral,186,266,0.63,True,B,since,less,0.58283,0.40900,0.58764,less,"\]
+
+Comparing this to Arrangement A, which guarantees $186, we see that the expected value of Arrangement B ($166.48) is"
+p2,242,8,neutral,62,263,0.33,True,B,since,higher,0.84780,0.14575,0.85330,less,"9 \]
+
+Comparing this to Arrangement A, which guarantees $62, we see that the expected value of Arrangement B ($87.19) is"
+p2,504,16,mixed,139,234,0.6,True,B,since,more,0.00023,0.98721,0.00023,higher,"\times 0) - 139 \]
+\[ EV = 140.4 - 139 \]
+\[ EV = 1.4 \]
+
+The expected value of Alternative B is $1.4, which is slightly"
+p2,606,20,neutral,186,266,0.63,True,B,since,greater,0.47261,0.48542,0.49332,less,"V = 167.48 \]
+
+Comparing the outcomes:
+- Outcome A: $186 (certain)
+- Outcome B: Expected value of $167.48
+
+Since $186 is"
+p2,1029,34,neutral,52,96,0.63,False,A,since,higher,0.10230,0.84540,0.10795,greater," two:
+- Term A has an expected value of $60.48.
+- Term B guarantees $52.
+
+Since the expected value of Term A ($60.48) is"
+p2,461,15,gain,82,113,0.74,False,A,since,less,0.00341,0.94600,0.00359,greater,"unt Lost)
+For Option A:
+EV = (0.74 * $113) + (0.26 * $0)
+EV = $83.22
+
+The expected value of Option A is $83.22, which is"
+p2,614,20,gain,186,266,0.63,True,B,since,greater,0.12002,0.75504,0.13716,greater,"natives:
+- Alternative A offers a certain gain of $186.
+- Alternative B has an expected value of $166.38.
+
+Since $186 is"
+p2,439,14,gain,81,201,0.68,False,A,since,higher,0.02739,0.97146,0.02743,greater,"m A has an expected value of $136.88.
+- Term B offers a guaranteed $81.
+
+Since the expected value of Term A ($136.88) is"
+p2,358,11,mixed,54,68,0.81,True,B,since,higher,0.00018,0.92656,0.00019,higher,"\[ \text{Expected Value} = (0.81 \times \$68) + (0.19 \times \$0) = \$55.48 \]
+
+The expected value of Term B is slightly"
+p2,1142,38,neutral,183,609,0.38,True,B,since,higher,0.68223,0.31548,0.68380,less,"\]
+
+Comparing this to Arrangement A, which guarantees $183, we see that the expected value of Arrangement B ($231.42) is"
+p2,188,6,neutral,94,101,0.71,True,B,since,greater,0.31529,0.34775,0.47553,slightly,"= 71.71 + 0 \]
+\[ EV = 71.71 \]
+
+Comparing the two terms:
+- Term A: $94
+- Term B: Expected Value of $71.71
+
+Since $94 is"
+p2,327,10,mixed,111,278,0.58,False,A,since,higher,0.00016,0.97725,0.00016,higher,"xpected value of $162.84.
+- Outcome B has an expected value of $111.
+
+Since the expected value of Outcome A ($162.84) is"
+p2,185,6,neutral,94,101,0.71,False,A,since,less,0.09191,0.62690,0.12786,greater,".71.
+
+Comparing this to Alternative B, which guarantees $94, we see that the expected value of Alternative A ($71.71) is"
+p2,1090,36,gain,98,227,0.47,True,B,since,higher,0.00079,0.98856,0.00080,greater,"s a certain gain of $98.
+- Option B has an expected value of $106.69.
+
+Since the expected value of Option B ($106.69) is"
+p2,424,14,neutral,81,201,0.68,True,B,since,less,0.98942,0.01027,0.98973,less,") + (0.32 \times 0) \]
+\[ EV = 136.68 + 0 \]
+\[ EV = 136.68 \]
+
+The expected value of Alternative B is $136.68, which is"
+p2,1033,34,gain,52,96,0.63,False,A,since,higher,0.09015,0.90624,0.09048,greater,"xpected value of $60.48.
+- Arrangement B offers a guaranteed $52.
+
+Since the expected value of Arrangement A ($60.48) is"
+p2,1084,36,neutral,98,227,0.47,True,B,since,less,0.00713,0.99190,0.00714,higher,"+ (0.53 \times \$0) \]
+\[ \text{Expected Value} = \$106.69 \]
+
+The expected value of Alternative B is \$106.69, which is"
+p2,512,17,neutral,117,362,0.42,True,B,since,higher,0.01884,0.98058,0.01885,greater,"\]
+
+Comparing this to Arrangement A, which guarantees $117, we see that the expected value of Arrangement B ($152.04) is"
+p2,910,30,gain,149,447,0.26,True,B,since,greater,0.10825,0.88891,0.10856,greater,"g the two options:
+- Option A offers a certain gain of $149.
+- Option B has an expected value of $116.22.
+
+Since $149 is"
+p2,527,17,gain,117,362,0.42,False,A,since,higher,0.08229,0.91588,0.08245,greater," an expected value of $152.04.
+- Outcome B offers a guaranteed $117.
+
+Since the expected value of Outcome A ($152.04) is"
+p2,285,9,gain,49,153,0.26,False,A,since,less,0.80864,0.18583,0.81313,less," Value} = (0.26 \times \$153) + (0.74 \times \$0) = \$39.78 \]
+
+The expected value of Alternative A is \$39.78, which is"
+p2,245,8,neutral,62,263,0.33,False,A,since,higher,0.68712,0.30068,0.69560,less,".79.
+
+Comparing this to Alternative B, which guarantees $62, we see that the expected value of Alternative A ($86.79) is"
+p2,130,4,gain,29,71,0.55,True,B,since,higher,0.00420,0.98740,0.00424,greater,"s a certain gain of $29.
+- Option B offers an expected gain of $39.05.
+
+Since the expected value of Option B ($39.05) is"
+p2,630,21,neutral,106,206,0.73,True,B,since,higher,0.00238,0.99522,0.00238,higher,"times \$206) + (0.27 \times \$0) \]
+
+\[ \text{Expected Value} = \$150.98 \]
+
+The expected value of Option B ($150.98) is"
+p2,146,4,mixed,29,71,0.55,True,B,since,higher,0.03371,0.96104,0.03388,higher," 71) + (0.45 \times 0) = 39.05 + 0 = 39.05
+  \]
+
+Comparing the two outcomes, the expected value of Outcome B ($39.05) is"
+p2,433,14,gain,81,201,0.68,False,A,since,higher,0.05481,0.94402,0.05487,greater,"ected value of $136.68.
+- Arrangement B offers a guaranteed $81.
+
+Since the expected value of Arrangement A ($136.68) is"
+p2,1100,36,mixed,98,227,0.47,True,B,since,higher,0.00018,0.99474,0.00018,higher,"0.47 \times 227) + (0.53 \times 0) = 106.69
+  \]
+
+Comparing the two options, the expected value of Option B ($106.69) is"
+p2,197,6,gain,94,101,0.71,False,A,since,less,0.01377,0.96437,0.01408,greater,"\]
+
+Comparing this to Outcome B, which guarantees a gain of $94, we see that the expected value of Outcome A ($71.71) is"
+p2,572,19,neutral,64,122,0.49,True,B,since,less,0.99421,0.00440,0.99559,less,"8 \]
+
+Comparing this to Arrangement A, which guarantees $64, we see that the expected value of Arrangement B ($59.78) is"
+p2,337,11,neutral,54,68,0.81,False,A,since,higher,0.04117,0.89492,0.04398,greater,"nvolved.
+
+Comparing the expected values:
+- EV_A = $55.48
+- EV_B = $54
+
+Since the expected value of Outcome A ($55.48) is"
+p2,1055,35,neutral,91,133,0.68,False,A,since,less,0.23087,0.70282,0.24727,greater," Value} = (0.68 \times \$133) + (0.32 \times \$0) = \$89.84 \]
+
+The expected value of Alternative A is \$89.84, which is"
+p2,1106,36,mixed,98,227,0.47,True,B,since,higher,0.00006,0.99779,0.00006,higher,"3 \times 0) = 106.69 + 0 = 106.69
+  \]
+
+Comparing the two outcomes, Outcome B has an expected value of $106.69, which is"
+p2,936,31,neutral,51,151,0.29,True,B,since,less,0.92132,0.04667,0.95179,less,"e} = 43.79 + 0 \]
+\[ \text{Expected Value} = 43.79 \]
+
+The expected value of Outcome B is $43.79, which is significantly"
+p2,1152,38,gain,183,609,0.38,True,B,since,higher,0.00338,0.99616,0.00338,greater,"aranteed $183.
+- Arrangement B has an expected value of $231.42.
+
+Since the expected value of Arrangement B ($231.42) is"
+p2,354,11,mixed,54,68,0.81,True,B,since,higher,0.00009,0.96478,0.00009,higher," \]
+
+Comparing this to Alternative A, which guarantees you $54, the expected value of Alternative B ($55.48) is slightly"
+p2,1144,38,neutral,183,609,0.38,True,B,since,greater,0.94289,0.04318,0.95621,less,"ing the two alternatives:
+- Alternative A: $183 for certain
+- Alternative B: Expected value of $231.42
+
+Since $231.42 is"
+p2,1143,38,neutral,183,609,0.38,False,A,since,less,0.66691,0.32558,0.67195,less,"alue} = (0.38 \times \$609) + (0.62 \times \$0) = \$231.42 \]
+
+The expected value of Arrangement A is \$231.42, which is"
+p2,1048,34,mixed,52,96,0.63,True,B,since,higher,0.00364,0.97923,0.00371,higher,"mes 96) + (0.37 \times 0) \]
+  \[ EV = 60.48 + 0 \]
+  \[ EV = 60.48 \]
+
+The expected value of Term B is $60.48, which is"
+p2,538,17,mixed,117,362,0.42,True,B,since,higher,0.03094,0.90820,0.03294,greater,"ted as follows:
+  \[
+  EV = (0.42 \times 362) + (0.58 \times 0) = 152.04
+  \]
+
+The expected value of Term B ($152.04) is"
+p2,495,16,gain,139,234,0.6,False,A,since,higher,0.00408,0.85324,0.00476,greater,"lternative B, which offers a certain gain of $139, we see that the expected value of Alternative A ($140.40) is slightly"
+p2,497,16,gain,139,234,0.6,False,A,since,higher,0.00822,0.98502,0.00827,greater,"ing this to Outcome B, which guarantees a gain of $139, we see that the expected value of Outcome A ($140.4) is slightly"
+p2,405,13,gain,72,88,0.64,False,A,since,less,0.51064,0.44697,0.53325,less,"native A, the EV is \(0.64 \times 88 + 0.36 \times 0 = 56.32\).
+
+The expected value of Alternative A is $56.32, which is"
+p2,259,8,gain,62,263,0.33,False,A,since,higher,0.24123,0.72440,0.24981,greater,"erm A has an expected value of $87.19.
+- Term B offers a guaranteed $62.
+
+Since the expected value of Term A ($87.19) is"
+p2,598,19,mixed,64,122,0.49,True,B,since,less,0.05953,0.78064,0.07086,higher,"8 \]
+
+Comparing this to Term A, where you keep your $64 with no change, the expected value of Term B is $59.78, which is"
+p2,1093,36,gain,98,227,0.47,False,A,since,higher,0.14898,0.84478,0.14991,greater,"is to Arrangement B, which offers a guaranteed gain of $98, we see that the expected value of Arrangement A ($106.69) is"
+p2,341,11,gain,54,68,0.81,False,A,since,higher,0.01203,0.97516,0.01219,greater,"ng this to Option B, which offers a certain gain of $54, we see that the expected value of Option A ($55.48) is slightly"
+p2,1140,38,neutral,183,609,0.38,True,B,since,less,0.01874,0.97368,0.01888,greater," = 231.42 + 0 \]
+\[ \text{Expected Value} = 231.42 \]
+
+The expected value of Option B is $231.42, which is significantly"
+p2,1162,38,mixed,183,609,0.38,True,B,since,higher,0.00088,0.99864,0.00088,greater," expected values:
+- Arrangement A: $183
+- Arrangement B: $231.42
+
+Since the expected value of Arrangement B ($231.42) is"
+p2,469,15,gain,82,113,0.74,False,A,since,higher,0.00542,0.96685,0.00557,greater,"erm A has an expected value of $83.42.
+- Term B offers a guaranteed $82.
+
+Since the expected value of Term A ($83.42) is"
+p2,347,11,gain,54,68,0.81,False,A,since,higher,0.00716,0.99126,0.00717,greater,"his to Outcome B, which offers a certain gain of \$54, we see that the expected value of Outcome A (\$55.08) is slightly"
+p2,335,11,neutral,54,68,0.81,False,A,since,less,0.02791,0.83190,0.03246,greater,"V = ($68 * 81%) + ($0 * 19%) = $68 * 0.81 + $0 * 0.19 = $55.08.
+
+The expected value of Alternative A is $55.08, which is"
+p2,398,13,neutral,72,88,0.64,True,B,since,greater,0.98263,0.01666,0.98333,less,"= 56.32 + 0 \]
+\[ EV = 56.32 \]
+
+Comparing the two terms:
+- Term A: $72
+- Term B: Expected Value of $56.32
+
+Since $72 is"
+p2,442,14,mixed,81,201,0.68,True,B,since,higher,0.00003,0.99968,0.00003,higher,"o expected values:
+- Arrangement A: $81
+- Arrangement B: $136.68
+
+Since the expected value of Arrangement B ($136.68) is"
+p2,275,9,neutral,49,153,0.26,False,A,since,less,0.91777,0.07308,0.92624,less," Value} = (0.26 \times \$153) + (0.74 \times \$0) = \$39.78 \]
+
+The expected value of Alternative A is \$39.78, which is"
+p2,954,31,mixed,51,151,0.29,True,B,since,less,0.95055,0.04406,0.95570,less,"- (0.71 \times 51) \]
+
+\[ EV = 43.79 - 36.21 \]
+
+\[ EV = 7.58 \]
+
+The expected value of Alternative B is $7.58, which is"
+p2,284,9,gain,49,153,0.26,True,B,since,greater,0.81109,0.18317,0.81577,less,"ternatives:
+- Alternative A offers a certain gain of $49.
+- Alternative B has an expected value of $39.78.
+
+Since $49 is"
+p2,135,4,gain,29,71,0.55,False,A,since,higher,0.14706,0.84524,0.14820,greater,"g this to Alternative B, which offers a certain gain of $29, we see that the expected value of Alternative A ($39.05) is"
+p2,1038,34,gain,52,96,0.63,True,B,since,greater,0.03094,0.96562,0.03105,greater,"m B:
+- Term A: Certain gain of \$52
+- Term B: Expected value of \$60.48
+
+Since the expected value of Term B (\$60.48) is"
+p2,351,11,mixed,54,68,0.81,False,A,since,higher,0.00074,0.99685,0.00074,greater,"alue (EV) for Option B is simply $54.
+
+Comparing the expected values, Option A has an expected value of $55.48, which is"
+p2,315,10,gain,111,278,0.58,False,A,since,less,0.06464,0.87918,0.06849,greater,"alue} = (0.58 \times \$278) + (0.42 \times \$0) = \$162.84 \]
+
+The expected value of Alternative A is \$162.84, which is"
+p2,652,21,mixed,106,206,0.73,True,B,since,higher,0.00011,0.99930,0.00011,higher," expected values:
+- Arrangement A: $106
+- Arrangement B: $150.98
+
+Since the expected value of Arrangement B ($150.98) is"
+p2,644,21,gain,106,206,0.73,True,B,since,greater,0.00248,0.96329,0.00257,higher,"ed value, it also carries risk since there is a 27% chance of gaining nothing. However, the expected value of $150.98 is"
+p2,1150,38,gain,183,609,0.38,True,B,since,higher,0.00257,0.99659,0.00257,greater," a certain gain of $183.
+- Option B has an expected value of $231.42.
+
+Since the expected value of Option B ($231.42) is"
+p2,271,9,neutral,49,153,0.26,False,A,since,less,0.61145,0.37595,0.61925,less,"t{Expected Value} = 39.78 + 0 \]
+\[ \text{Expected Value} = 39.78 \]
+
+The expected value of Option A is $39.78, which is"
+p2,641,21,gain,106,206,0.73,False,A,since,higher,0.00414,0.98987,0.00417,greater,"as an expected value of $151.98.
+- Option B offers a guaranteed $106.
+
+Since the expected value of Option A ($151.98) is"
+p2,302,10,neutral,111,278,0.58,True,B,since,higher,0.32541,0.67349,0.32577,greater,"\]
+
+Comparing this to Arrangement A, which guarantees $111, we see that the expected value of Arrangement B ($162.04) is"
+p2,531,17,mixed,117,362,0.42,False,A,since,higher,0.00312,0.99211,0.00314,higher,"o change.
+  - Expected Value = $117.
+
+Comparing the expected values, Option A has an expected value of $152.04, which is"
+p2,643,21,gain,106,206,0.73,False,A,since,higher,0.01106,0.98782,0.01108,greater," Arrangement A: \$150.98
+- Certain gain of Arrangement B: \$106
+
+Since the expected value of Arrangement A (\$150.98) is"
+p2,468,15,gain,82,113,0.74,True,B,since,greater,0.00434,0.94227,0.00458,greater,"Term B:
+- Term A: Certain gain of $82
+- Term B: Expected value of $83.42
+
+Since the expected value of Term B ($83.42) is"
+p2,624,20,mixed,186,266,0.63,True,B,since,less,0.38537,0.56078,0.40730,higher,"\]
+
+Comparing this to Alternative A, which guarantees $186, we see that the expected value of Alternative B ($167.38) is"
+p2,465,15,gain,82,113,0.74,False,A,since,less,0.00361,0.86717,0.00415,greater," Value} = (0.74 \times \$113) + (0.26 \times \$0) = \$83.22 \]
+
+The expected value of Alternative A is \$83.22, which is"
+p2,511,17,neutral,117,362,0.42,False,A,since,less,0.03495,0.95981,0.03513,greater,"ted Value} = (0.42 \times \$362) + (0.58 \times \$0) = \$152.04 \]
+
+The expected value of Option A is \$152.04, which is"
+p2,488,16,neutral,139,234,0.6,True,B,since,higher,0.00049,0.99900,0.00049,greater,"mparing the two terms:
+- Term A: $139
+- Term B: Expected Value of $140.4
+
+Since the expected value of Term B ($140.4) is"
+p2,453,15,neutral,82,113,0.74,False,A,since,higher,0.00165,0.99651,0.00165,greater,"ement A: $83.02
+- Certain amount from Arrangement B: $82
+
+Since the expected value of Arrangement A ($83.02) is slightly"
+p2,244,8,neutral,62,263,0.33,True,B,since,higher,0.94918,0.04013,0.95943,less,"s:
+- Alternative A: $62
+- Alternative B: Expected Value of $87.19
+
+Since the expected value of Alternative B ($87.19) is"
+p2,491,16,gain,139,234,0.6,False,A,since,higher,0.00537,0.98266,0.00544,greater," this to Option B, which offers a certain gain of $139, we see that the expected value of Option A ($140.40) is slightly"
+p2,1022,34,neutral,52,96,0.63,True,B,since,higher,0.21645,0.78188,0.21681,greater,"8 \]
+
+Comparing this to Arrangement A, which guarantees $52, we see that the expected value of Arrangement B ($60.48) is"
+p2,484,16,neutral,139,234,0.6,True,B,since,higher,0.00012,0.99838,0.00012,greater,"ive A: $139 for certain
+- Alternative B: Expected value of $140.4
+
+Since the expected value of Alternative B ($140.4) is"
+p2,263,8,mixed,62,263,0.33,False,A,since,higher,0.07099,0.92481,0.07129,higher,"two expected values:
+- Arrangement A: $86.79
+- Arrangement B: $62
+
+Since the expected value of Arrangement A ($86.79) is"
+p2,435,14,gain,81,201,0.68,False,A,since,higher,0.07543,0.92321,0.07554,greater,"his to Alternative B, which offers a certain gain of \$81, we see that the expected value of Alternative A (\$137.18) is"
+p2,506,16,mixed,139,234,0.6,True,B,since,higher,0.00001,0.99916,0.00001,higher,"60 \times 234) + (0.40 \times 0) = 140.40
+  \]
+
+Comparing the two outcomes, the expected value of Outcome B ($140.40) is"
+p2,120,4,neutral,29,71,0.55,True,B,since,higher,0.00042,0.99729,0.00042,greater,"ers a guaranteed $29.
+- Option B has an expected value of $39.05.
+
+Given that the expected value of Option B ($39.05) is"
+p2,521,17,gain,117,362,0.42,False,A,since,less,0.05903,0.93749,0.05924,greater,"ted Value} = (0.42 \times \$362) + (0.58 \times \$0) = \$152.04 \]
+
+The expected value of Option A is \$152.04, which is"
+p2,345,11,gain,54,68,0.81,False,A,since,higher,0.01163,0.96417,0.01192,greater,"lternative B, which offers a certain gain of \$54, we see that the expected value of Alternative A (\$55.08) is slightly"
+p2,525,17,gain,117,362,0.42,False,A,since,less,0.12099,0.87617,0.12133,greater,"alue} = (0.42 \times \$362) + (0.58 \times \$0) = \$152.04 \]
+
+The expected value of Alternative A is \$152.04, which is"
+p2,356,11,mixed,54,68,0.81,True,B,since,higher,0.00000,0.99563,0.00000,higher,"alue} = (0.81 \times 68) + (0.19 \times 0) = 55.48 + 0 = 55.48
+  \]
+
+The expected value of Outcome B is $55.48, which is"
+p2,539,17,mixed,117,362,0.42,False,A,since,higher,0.00322,0.99391,0.00323,greater,"s an expected value of $152.04.
+- Term B has an expected value of $117.
+
+Since the expected value of Term A ($152.04) is"
+p2,269,8,mixed,62,263,0.33,False,A,since,higher,0.17458,0.81964,0.17560,greater,"]
+
+Comparing the expected values:
+- \( EV_A = 86.79 \)
+- \( EV_B = 62 \)
+
+Since the expected value of Term A ($86.79) is"
+p2,255,8,gain,62,263,0.33,False,A,since,higher,0.43466,0.50164,0.46423,less,"g this to Alternative B, which offers a certain gain of $62, we see that the expected value of Alternative A ($87.19) is"
+p2,1166,38,mixed,183,609,0.38,True,B,since,less,0.00593,0.99181,0.00595,higher,"come B.
+
+Comparing this to Outcome A, which guarantees you $183, we see that the expected value of Outcome B ($48.42) is"
+p2,195,6,gain,94,101,0.71,False,A,since,less,0.04629,0.75361,0.05787,greater,"this to Alternative B, which offers a certain gain of \$94, we see that the expected value of Alternative A (\$71.71) is"
+p2,319,10,gain,111,278,0.58,False,A,since,higher,0.05133,0.90336,0.05377,greater," A has an expected value of $162.88.
+- Term B offers a guaranteed $111.
+
+Since the expected value of Term A ($162.88) is"
+p2,487,16,neutral,139,234,0.6,False,A,since,higher,0.00846,0.98852,0.00849,greater,"%) = $140.40.
+
+Comparing this to Outcome B, which guarantees $139, the expected value of Outcome A ($140.40) is slightly"
+p2,1097,36,gain,98,227,0.47,False,A,since,higher,0.25688,0.72797,0.26083,greater,"mparing the expected values:
+- \( EV_A = 106.69 \)
+- \( EV_B = 98 \)
+
+Since the expected value of Outcome A ($106.69) is"
+p2,516,17,neutral,117,362,0.42,True,B,since,higher,0.00060,0.99683,0.00060,higher,"0 \]
+\[ EV = 152.04 \]
+
+Comparing this to Outcome A, which guarantees $117, the expected value of Outcome B ($152.04) is"
+p2,432,14,gain,81,201,0.68,True,B,since,higher,0.00075,0.99882,0.00075,greater,"uaranteed $81.
+- Arrangement B has an expected value of $136.68.
+
+Since the expected value of Arrangement B ($136.68) is"
+p2,305,10,neutral,111,278,0.58,False,A,since,less,0.23721,0.75257,0.23966,greater,"alue} = (0.58 \times \$278) + (0.42 \times \$0) = \$162.84 \]
+
+The expected value of Alternative A is \$162.84, which is"
+p2,636,21,neutral,106,206,0.73,True,B,since,higher,0.00157,0.99681,0.00158,higher,"\]
+\[ EV = \$150.98 \]
+
+Comparing this to Outcome A, which guarantees $106, the expected value of Outcome B ($150.98) is"
+p2,1102,36,mixed,98,227,0.47,True,B,since,higher,0.00004,0.99957,0.00004,higher,"o expected values:
+- Arrangement A: $98
+- Arrangement B: $106.69
+
+Since the expected value of Arrangement B ($106.69) is"
+p2,1095,36,gain,98,227,0.47,False,A,since,less,0.09654,0.86937,0.09995,greater,"ive A, the EV is \(0.47 \times 227 + 0.53 \times 0 = 106.69\).
+
+The expected value of Alternative A is $106.69, which is"
+p2,137,4,gain,29,71,0.55,False,A,since,higher,0.05823,0.94086,0.05828,greater,"\]
+
+Comparing this to Outcome B, which guarantees a gain of $29, we see that the expected value of Outcome A ($39.05) is"
+p2,126,4,neutral,29,71,0.55,True,B,since,higher,0.00664,0.99254,0.00665,higher," + 0 \]
+\[ EV = 39.05 \]
+
+Comparing this to Outcome A, which guarantees $29, the expected value of Outcome B ($39.05) is"
+p2,1145,38,neutral,183,609,0.38,False,A,since,less,0.79170,0.19769,0.80019,less,"alue} = (0.38 \times \$609) + (0.62 \times \$0) = \$231.42 \]
+
+The expected value of Alternative A is \$231.42, which is"
+p2,427,14,neutral,81,201,0.68,False,A,since,higher,0.21685,0.77389,0.21888,greater,"xpected values:
+- EV of Outcome A: $136.68
+- Value of Outcome B: $81
+
+Since the expected value of Outcome A ($136.68) is"
+p2,301,10,neutral,111,278,0.58,False,A,since,less,0.10357,0.88717,0.10453,greater,"278) + (0.42 \times \$0) \]
+\[ \text{Expected Value} = \$162.04 \]
+
+The expected value of Option A is \$162.04, which is"
+p2,1030,34,gain,52,96,0.63,True,B,since,higher,0.00480,0.99081,0.00482,greater,"ers a certain gain of $52.
+- Option B has an expected value of $60.48.
+
+Since the expected value of Option B ($60.48) is"
+p2,615,20,gain,186,266,0.63,False,A,since,less,0.14289,0.83328,0.14637,greater,"ive A, the EV is \(0.63 \times 266 + 0.37 \times 0 = 166.58\).
+
+The expected value of Alternative A is $166.58, which is"
+p2,526,17,gain,117,362,0.42,True,B,since,higher,0.00014,0.99921,0.00014,greater,"o outcomes:
+- Outcome A: $117
+- Expected Value of Outcome B: $152.04
+
+Since the expected value of Outcome B ($152.04) is"
+p2,307,10,neutral,111,278,0.58,False,A,since,higher,0.11023,0.87170,0.11226,greater,"cted Value of Outcome A: $162.84
+- Expected Value of Outcome B: $111
+
+Since the expected value of Outcome A ($162.84) is"
+p2,1027,34,neutral,52,96,0.63,False,A,since,less,0.08135,0.91388,0.08174,greater,"he EV = ($96 * 63%) + ($0 * 37%) = $96 * 0.63 + $0 * 0.37 = $60.48.
+
+The expected value of Outcome A is $60.48, which is"
+p2,645,21,gain,106,206,0.73,False,A,since,higher,0.00742,0.98088,0.00751,greater,"is to Alternative B, which offers a certain gain of \$106, we see that the expected value of Alternative A (\$150.98) is"
+p2,258,8,gain,62,263,0.33,True,B,since,higher,0.50043,0.49692,0.50176,less," offers a certain gain of $62.
+- Term B has an expected value of $87.19.
+
+Since the expected value of Term B ($87.19) is"
+p2,339,11,neutral,54,68,0.81,False,A,since,higher,0.05187,0.85166,0.05741,greater," two:
+- Term A has an expected value of $55.08.
+- Term B guarantees $54.
+
+Since the expected value of Term A ($55.08) is"
+p2,901,30,neutral,149,447,0.26,False,A,since,less,0.54041,0.44849,0.54647,less," \$116.22 \]
+
+Comparing this to Option B, which guarantees $149, we see that the expected value of Option A ($116.22) is"
+p2,617,20,gain,186,266,0.63,False,A,since,greater,0.09204,0.90460,0.09235,greater," a gain of $186, we see that:
+- Expected Value of Outcome A: $166.58
+- Guaranteed Gain of Outcome B: $186
+
+Since $186 is"
+p2,1031,34,gain,52,96,0.63,False,A,since,higher,0.11686,0.86019,0.11960,greater,"
+
+Comparing this to Option B, which offers a certain gain of $52, we see that the expected value of Option A ($60.48) is"
+p2,1065,35,gain,91,133,0.68,False,A,since,less,0.10616,0.72471,0.12776,greater,"ative A, the EV is \(0.68 \times 133 + 0.32 \times 0 = 89.64\).
+
+The expected value of Alternative A is $89.64, which is"
+p2,326,10,mixed,111,278,0.58,True,B,since,higher,0.00045,0.99821,0.00045,higher,"omparing the expected values:
+- Outcome A: $111
+- Outcome B: $163.84
+
+Since the expected value of Outcome B ($163.84) is"
+p2,457,15,neutral,82,113,0.74,False,A,since,higher,0.00204,0.99207,0.00205,greater,"nvolved.
+
+Comparing the expected values:
+- EV_A = $83.62
+- EV_B = $82
+
+Since the expected value of Outcome A ($83.62) is"
+p2,585,19,gain,64,122,0.49,False,A,since,less,0.71644,0.23115,0.75607,less,"ative A, the EV is \(0.49 \times 122 + 0.51 \times 0 = 59.78\).
+
+The expected value of Alternative A is $59.78, which is"
+p2,1149,38,neutral,183,609,0.38,False,A,since,greater,0.58095,0.41187,0.58515,less,"o:
+- Term A has an expected value of $231.42.
+- Term B guarantees $183.
+
+Since the expected value of Term A ($231.42) is"
+p2,1154,38,gain,183,609,0.38,True,B,since,higher,0.02205,0.97613,0.02209,greater,"in of $183.
+- Alternative B offers an expected value of $231.42.
+
+Since the expected value of Alternative B ($231.42) is"
+p2,483,16,neutral,139,234,0.6,False,A,since,higher,0.01832,0.97924,0.01837,greater,"nt A: $140.40
+- Certain amount from Arrangement B: $139
+
+Since the expected value of Arrangement A ($140.40) is slightly"
+p2,471,15,mixed,82,113,0.74,False,A,since,higher,0.00016,0.99585,0.00016,greater," no change.
+  - Expected Value = $82.
+
+Comparing the expected values, Option A has an expected value of $83.62, which is"
+p2,1046,34,mixed,52,96,0.63,True,B,since,higher,0.00040,0.99885,0.00040,higher,"0.37 \times 0) = 60.48 + 0 = 60.48
+  \]
+
+Comparing the two outcomes, Outcome B has an expected value of $60.48, which is"
+p2,1151,38,gain,183,609,0.38,False,A,since,less,0.21624,0.77847,0.21739,greater,"ted Value} = (0.38 \times \$609) + (0.62 \times \$0) = \$231.42 \]
+
+The expected value of Option A is \$231.42, which is"
+p2,1081,36,neutral,98,227,0.47,False,A,since,less,0.14357,0.85042,0.14444,greater,"227) + (0.53 \times \$0) \]
+\[ \text{Expected Value} = \$106.69 \]
+
+The expected value of Option A is \$106.69, which is"
+p2,404,13,gain,72,88,0.64,True,B,since,greater,0.70359,0.20066,0.77809,less,"ternatives:
+- Alternative A offers a certain gain of $72.
+- Alternative B has an expected value of $56.32.
+
+Since $72 is"
+p2,481,16,neutral,139,234,0.6,False,A,since,higher,0.00203,0.99644,0.00204,greater,"cted Value = ($234 * 0.60) + ($0 * 0.40)
+- Expected Value = $140.40
+
+The expected value of Option A is $140.40, which is"
+p2,149,4,mixed,29,71,0.55,False,A,since,higher,0.01257,0.98501,0.01260,greater,"omparing the expected values:
+- \( EV_{A} = 39.05 \)
+- \( EV_{B} = 29 \)
+
+Since the expected value of Term A ($39.05) is"
+p2,250,8,gain,62,263,0.33,True,B,since,higher,0.07632,0.92077,0.07655,greater,"gain of $62.
+- Option B has an expected value of approximately $87.19.
+
+Since the expected value of Option B ($87.19) is"
+p2,1104,36,mixed,98,227,0.47,True,B,since,less,0.00123,0.96784,0.00127,higher," + (0.53 \times -98) \]
+\[ EV = 60.63 - 51.94 \]
+\[ EV = 8.69 \]
+
+The expected value of Alternative B is $8.69, which is"
+p2,958,31,mixed,51,151,0.29,True,B,since,less,0.88276,0.09402,0.90375,less,"9 \]
+
+Comparing this to Term A, where you keep your $51 with no change, the expected value of Term B is $43.79, which is"
+p2,1054,35,neutral,91,133,0.68,True,B,since,less,0.43475,0.37788,0.53499,less,"2).
+
+Calculating this:
+- EV = $133 * 0.68 + $0 * 0.32 = $90.04.
+
+The expected value of Alternative B is $90.04, which is"
+p2,1024,34,neutral,52,96,0.63,True,B,since,higher,0.58011,0.41634,0.58218,less,"s:
+- Alternative A: $52
+- Alternative B: Expected Value of $60.48
+
+Since the expected value of Alternative B ($60.48) is"
+p2,1109,36,mixed,98,227,0.47,False,A,since,higher,0.00036,0.99902,0.00036,greater,"- Term A has an expected value of $106.69.
+- Term B has a value of $98.
+
+Since the expected value of Term A ($106.69) is"
+p2,530,17,mixed,117,362,0.42,True,B,since,higher,0.00164,0.99732,0.00164,greater," 152.04 \]
+
+Comparing this to Option A, which gives you $117 with no change, the expected value of Option B ($152.04) is"
+p2,1091,36,gain,98,227,0.47,False,A,since,higher,0.10453,0.86771,0.10751,greater,"
+Comparing this to Option B, which offers a certain gain of $98, we see that the expected value of Option A ($106.69) is"
+p2,414,13,mixed,72,88,0.64,True,B,since,less,0.97122,0.02721,0.97275,less,"mparing this to Alternative A, which keeps the original $72, we see that the expected value of Alternative B ($56.32) is"
+p2,311,10,gain,111,278,0.58,False,A,since,less,0.04653,0.93992,0.04717,greater,"ted Value} = (0.58 \times \$278) + (0.42 \times \$0) = \$162.04 \]
+
+The expected value of Option A is \$162.04, which is"
+p2,359,11,mixed,54,68,0.81,False,A,since,higher,0.00107,0.99707,0.00108,greater," has an expected value of $55.48.
+- Term B has an expected value of $54.
+
+Since the expected value of Term A ($55.48) is"
+p2,1096,36,gain,98,227,0.47,True,B,since,higher,0.00022,0.99369,0.00022,greater,"paring the two outcomes:
+- Outcome A gives a certain gain of $98.
+- Outcome B has an expected value of $106.69, which is"
+p2,422,14,neutral,81,201,0.68,True,B,since,higher,0.97665,0.02310,0.97690,less," \]
+
+Comparing this to Arrangement A, which guarantees $81, we see that the expected value of Arrangement B ($136.68) is"
+p2,648,21,gain,106,206,0.73,True,B,since,higher,0.00505,0.98691,0.00509,greater,"ives a certain gain of $106.
+- Term B has an expected value of $150.98.
+
+Since the expected value of Term B ($150.98) is"
+p2,494,16,gain,139,234,0.6,True,B,since,higher,0.00022,0.98630,0.00022,higher,"9.
+- Alternative B offers an expected value of $140.40.
+
+Since the expected value of Alternative B ($140.40) is slightly"
+p2,935,31,neutral,51,151,0.29,False,A,since,less,0.90855,0.07128,0.92725,less," Value} = (0.29 \times \$151) + (0.71 \times \$0) = \$43.79 \]
+
+The expected value of Alternative A is \$43.79, which is"
+p2,456,15,neutral,82,113,0.74,True,B,since,higher,0.00038,0.97435,0.00039,higher," two outcomes:
+- Outcome A: $82
+- Expected Value of Outcome B: $83.62
+
+Since the expected value of Outcome B ($83.62) is"
+p2,128,4,neutral,29,71,0.55,True,B,since,greater,0.01746,0.98106,0.01749,greater,"erm A offers a guaranteed $29.
+- Term B has an expected value of $39.05.
+
+Since the expected value of Term B ($39.05) is"
+p2,515,17,neutral,117,362,0.42,False,A,since,less,0.18677,0.80869,0.18762,greater,"alue} = (0.42 \times \$362) + (0.58 \times \$0) = \$152.04 \]
+
+The expected value of Alternative A is \$152.04, which is"
+p2,240,8,neutral,62,263,0.33,True,B,since,higher,0.01535,0.96800,0.01561,greater,"67)
+- EV = $86.79
+
+Comparing this to Option A, which offers a guaranteed $62, the expected value of Option B ($86.79) is"
+p2,1039,34,gain,52,96,0.63,False,A,since,higher,0.10027,0.69652,0.12584,greater,"erm A has an expected value of $60.48.
+- Term B offers a guaranteed $52.
+
+Since the expected value of Term A ($60.48) is"
+p2,930,31,neutral,51,151,0.29,True,B,since,less,0.85905,0.11430,0.88257,less,"ue} = 43.79 + 0 \]
+\[ \text{Expected Value} = 43.79 \]
+
+The expected value of Option B is $43.79, which is significantly"
+p2,428,14,neutral,81,201,0.68,True,B,since,greater,0.82417,0.17430,0.82543,less,"paring the two terms:
+- Term A: $81
+- Term B: Expected Value of $136.68
+
+Since the expected value of Term B ($136.68) is"
+p2,455,15,neutral,82,113,0.74,False,A,since,higher,0.00093,0.96470,0.00096,greater," (0.74 \times \$113) + (0.26 \times \$0) = \$82.62 \]
+
+The expected value of Alternative A is \$82.62, which is slightly"
+p2,1080,36,neutral,98,227,0.47,True,B,since,higher,0.00002,0.99972,0.00002,higher,"e} = \$106.69 \]
+
+Comparing this to Option A, which offers a guaranteed $98, the expected value of Option B ($106.69) is"
+p2,616,20,gain,186,266,0.63,True,B,since,greater,0.01585,0.93636,0.01664,greater,"]
+\[ EV = 166.38 \]
+
+Comparing the two outcomes:
+- Outcome A: $186
+- Expected Value of Outcome B: $166.38
+
+Since $186 is"
+p2,637,21,neutral,106,206,0.73,False,A,since,higher,0.00184,0.99191,0.00185,greater,"lved.
+
+Comparing the expected values:
+- EV_A = $150.98
+- EV_B = $106
+
+Since the expected value of Outcome A ($150.98) is"
+p2,934,31,neutral,51,151,0.29,True,B,since,less,0.97730,0.00366,0.99627,less,"times 0) \]
+\[ EV = 43.79 + 0 \]
+\[ EV = 43.79 \]
+
+The expected value of Alternative B is $43.79, which is significantly"
+p2,340,11,gain,54,68,0.81,True,B,since,higher,0.00014,0.93647,0.00015,higher,"ers a certain gain of $54.
+- Option B has an expected value of $55.48.
+
+Since the expected value of Option B ($55.48) is"
+p2,142,4,mixed,29,71,0.55,True,B,since,higher,0.00286,0.99613,0.00286,higher,"two expected values:
+- Arrangement A: $29
+- Arrangement B: $39.05
+
+Since the expected value of Arrangement B ($39.05) is"
+p2,421,14,neutral,81,201,0.68,False,A,since,less,0.28751,0.70173,0.29064,greater," Value} = \$136.68 + \$0 \]
+\[ \text{Expected Value} = \$136.68 \]
+
+The expected value of Option A is \$136.68, which is"
+p2,532,17,mixed,117,362,0.42,True,B,since,higher,0.00075,0.99875,0.00075,higher," expected values:
+- Arrangement A: $117
+- Arrangement B: $152.04
+
+Since the expected value of Arrangement B ($152.04) is"
+p2,947,31,gain,51,151,0.29,False,A,since,less,0.39685,0.58011,0.40621,greater,"mparing this to Outcome B, which offers a certain gain of \$51, we see that the expected value of Outcome A (\$43.79) is"
+p2,324,10,mixed,111,278,0.58,True,B,since,less,0.03610,0.95784,0.03632,higher,"times 278) - 111 \]
+\[ EV = 162.04 - 111 \]
+\[ EV = \$51.04 \]
+
+The expected value of Alternative B is \$51.04, which is"
+p2,448,14,mixed,81,201,0.68,True,B,since,higher,0.00019,0.99897,0.00019,greater,"= 136.68 \]
+
+Comparing this to Term A, where you keep your $81 with no change, the expected value of Term B ($136.68) is"
+p2,520,17,gain,117,362,0.42,True,B,since,higher,0.00019,0.99873,0.00019,greater," a certain gain of $117.
+- Option B has an expected value of $152.04.
+
+Since the expected value of Option B ($152.04) is"
+p2,123,4,neutral,29,71,0.55,False,A,since,higher,0.08509,0.91362,0.08520,greater,"cted value of Arrangement A: $39.05
+- Value of Arrangement B: $29
+
+Since the expected value of Arrangement A ($39.05) is"
+p2,316,10,gain,111,278,0.58,True,B,since,greater,0.00130,0.99673,0.00130,greater,"o outcomes:
+- Outcome A: $111
+- Outcome B: Expected Value of $162.84
+
+Since the expected value of Outcome B ($162.84) is"
+p2,1146,38,neutral,183,609,0.38,True,B,since,higher,0.16796,0.82779,0.16868,greater,"0 \]
+\[ EV = 231.42 \]
+
+Comparing this to Outcome A, which guarantees $183, the expected value of Outcome B ($231.42) is"
+p2,534,17,mixed,117,362,0.42,True,B,since,less,0.01298,0.97760,0.01311,higher,"(0.58 \times -117) \]
+\[ EV = 102.9 - 68.06 \]
+\[ EV = 34.84 \]
+
+The expected value of Alternative B is $34.84, which is"
+p2,437,14,gain,81,201,0.68,False,A,since,higher,0.01705,0.98208,0.01707,greater,"omparing this to Outcome B, which offers a certain gain of $81, we see that the expected value of Outcome A ($136.68) is"
+p2,304,10,neutral,111,278,0.58,True,B,since,less,0.50086,0.49672,0.50207,less,"+ (0.42 \times \$0) \]
+\[ \text{Expected Value} = \$161.84 \]
+
+The expected value of Alternative B is \$161.84, which is"
+p2,423,14,neutral,81,201,0.68,False,A,since,higher,0.17559,0.82153,0.17610,greater," \]
+
+Comparing this to Arrangement B, which guarantees $81, we see that the expected value of Arrangement A ($136.68) is"
+p2,519,17,neutral,117,362,0.42,False,A,since,higher,0.06626,0.93116,0.06643,greater,"- Term A has an expected value of \$152.04.
+- Term B guarantees \$117.
+
+Since the expected value of Term A (\$152.04) is"
+p2,287,9,gain,49,153,0.26,False,A,since,less,0.61006,0.36997,0.62249,less,"Comparing this to Outcome B, which offers a certain gain of $49, we see that the expected value of Outcome A ($39.78) is"
+p2,139,4,gain,29,71,0.55,False,A,since,higher,0.06246,0.93517,0.06260,greater,"erm A has an expected value of $39.05.
+- Term B offers a guaranteed $29.
+
+Since the expected value of Term A ($39.05) is"
+p2,482,16,neutral,139,234,0.6,True,B,since,higher,0.00029,0.99958,0.00029,greater," \]
+
+Comparing this to Arrangement A, which guarantees $139, we see that the expected value of Arrangement B ($140.4) is"
+p2,394,13,neutral,72,88,0.64,True,B,since,greater,0.99608,0.00364,0.99636,less,"= 56.32 \]
+
+Comparing the two alternatives:
+- Alternative A: $72
+- Alternative B: Expected Value of $56.32
+
+Since $72 is"
+p2,902,30,neutral,149,447,0.26,True,B,since,less,0.92568,0.05462,0.94428,less,"\]
+
+Comparing this to Arrangement A, which guarantees $149, we see that the expected value of Arrangement B ($116.22) is"
+p2,330,11,neutral,54,68,0.81,True,B,since,higher,0.00134,0.97511,0.00138,higher,"his equals $54.96
+
+Comparing this to Option A, which guarantees $54, the expected value of Option B ($54.96) is slightly"
+p2,1156,38,gain,183,609,0.38,True,B,since,greater,0.00161,0.99800,0.00161,greater,"o outcomes:
+- Outcome A: $183
+- Outcome B: Expected Value of $231.42
+
+Since the expected value of Outcome B ($231.42) is"
+p2,262,8,mixed,62,263,0.33,True,B,since,higher,0.00165,0.99755,0.00165,higher,"86.79 \]
+
+Comparing this to Arrangement A, which keeps the original $62, the expected value of Arrangement B ($86.79) is"
+p2,390,13,neutral,72,88,0.64,True,B,since,greater,0.94746,0.05102,0.94890,less,"2 + 0 \]
+\[ EV = 56.32 \]
+
+Comparing the two options:
+- Option A: $72
+- Option B: Expected Value of $56.32
+
+Since $72 is"
+p2,1023,34,neutral,52,96,0.63,False,A,since,higher,0.11930,0.87433,0.12006,greater,"of Arrangement A: $60.48
+- Certain amount from Arrangement B: $52
+
+Since the expected value of Arrangement A ($60.48) is"
+p2,257,8,gain,62,263,0.33,False,A,since,higher,0.38364,0.60559,0.38782,greater,"utcome A has an expected value of $86.79.
+- Outcome B guarantees $62.
+
+Since the expected value of Outcome A ($86.79) is"
+p2,241,8,neutral,62,263,0.33,False,A,since,greater,0.23219,0.75664,0.23481,greater," B:
+- Option A has an expected value of $86.79.
+- Option B guarantees $62.
+
+Since $86.79 (expected value of Option A) is"
+p2,1025,34,neutral,52,96,0.63,False,A,since,less,0.25755,0.70684,0.26706,greater,"d Value} = (0.63 \times \$96) + (0.37 \times \$0) = \$60.48 \]
+
+The expected value of Alternative A is \$60.48, which is"
+p2,634,21,neutral,106,206,0.73,True,B,since,less,0.12785,0.86239,0.12911,higher,"alculating this:
+- EV = ($206 * 0.73) + ($0 * 0.27) = $150.38.
+
+The expected value of Alternative B is $150.38, which is"
+p2,328,10,mixed,111,278,0.58,True,B,since,higher,0.01588,0.96992,0.01611,higher,"278) + (0.42 \times 0) \]
+  \[ EV = 162.84 + 0 \]
+  \[ EV = 162.84 \]
+
+The expected value of Term B is $162.84, which is"
+p2,338,11,neutral,54,68,0.81,True,B,since,higher,0.05233,0.88714,0.05570,greater,"omparing the two terms:
+- Term A: $54
+- Term B: Expected Value of $55.08
+
+Since the expected value of Term B ($55.08) is"
+p2,945,31,gain,51,151,0.29,False,A,since,less,0.69332,0.29730,0.69988,less,"ative A, the EV is \(0.29 \times 151 + 0.71 \times 0 = 43.79\).
+
+The expected value of Alternative A is $43.79, which is"
+p2,1082,36,neutral,98,227,0.47,True,B,since,higher,0.05214,0.94742,0.05217,greater," \]
+
+Comparing this to Arrangement A, which guarantees $98, we see that the expected value of Arrangement B ($106.69) is"
+p2,514,17,neutral,117,362,0.42,True,B,since,higher,0.07210,0.92605,0.07223,greater,"e A: $117 for certain
+- Alternative B: Expected value of $152.04
+
+Since the expected value of Alternative B ($152.04) is"
+p2,148,4,mixed,29,71,0.55,True,B,since,less,0.04005,0.90185,0.04252,higher,"ed as follows:
+  \[ EV = (0.55 \times 71) + (0.45 \times 0) = 39.05 \]
+
+The expected value of Term B is $39.05, which is"
+p2,1074,35,mixed,91,133,0.68,True,B,since,less,0.15823,0.71498,0.18121,higher,"133) + (0.32 \times 0) \]
+\[ EV = 89.84 + 0 \]
+\[ EV = 89.84 \]
+
+The expected value of Alternative B is $89.84, which is"
+p2,605,20,neutral,186,266,0.63,False,A,since,less,0.58252,0.41160,0.58596,less,"ected Value} = (0.63 \times 266) + (0.37 \times 0) = 166.58 \]
+
+The expected value of Alternative A is $166.58, which is"
+p2,489,16,neutral,139,234,0.6,False,A,since,higher,0.01567,0.97447,0.01583,greater,":
+- Expected value of Term A: $140.4
+- Guaranteed amount of Term B: $139
+
+Since the expected value of Term A ($140.4) is"
+p2,252,8,gain,62,263,0.33,True,B,since,higher,0.06375,0.93414,0.06389,greater," guaranteed $62.
+- Arrangement B has an expected value of $86.79.
+
+Since the expected value of Arrangement B ($86.79) is"
+p2,400,13,gain,72,88,0.64,True,B,since,greater,0.37455,0.60496,0.38239,greater,"ring the two options:
+- Option A offers a certain gain of $72.
+- Option B has an expected value of $56.32.
+
+Since $72 is"
+p2,247,8,neutral,62,263,0.33,False,A,since,higher,0.31556,0.66556,0.32163,greater,"the expected values:
+- EV of Outcome A: $86.79
+- EV of Outcome B: $62
+
+Since the expected value of Outcome A ($86.79) is"
+p2,1094,36,gain,98,227,0.47,True,B,since,higher,0.00227,0.96597,0.00235,greater,"n gain of $98.
+- Alternative B has an expected value of $106.69.
+
+Since the expected value of Alternative B ($106.69) is"
+p2,349,11,gain,54,68,0.81,False,A,since,higher,0.02317,0.95504,0.02369,greater,"erm A has an expected value of $55.08.
+- Term B offers a guaranteed $54.
+
+Since the expected value of Term A ($55.08) is"
+p2,474,15,mixed,82,113,0.74,True,B,since,higher,0.00073,0.89546,0.00081,higher,".26 \times 0) \]
+\[ EV = 83.22 + 0 \]
+\[ EV = 83.22 \]
+
+The expected value of Alternative B is $83.22, which is slightly"
+p2,499,16,gain,139,234,0.6,False,A,since,higher,0.00548,0.71894,0.00756,greater,"rm A has an expected value of $140.4.
+- Term B offers a guaranteed $139.
+
+Since the expected value of Term A ($140.4) is"
+p2,333,11,neutral,54,68,0.81,False,A,since,higher,0.03396,0.95534,0.03433,greater,"of Arrangement A: $55.48
+- Certain amount from Arrangement B: $54
+
+Since the expected value of Arrangement A ($55.48) is"
+p2,932,31,neutral,51,151,0.29,True,B,since,less,0.97584,0.01455,0.98531,less,"9 \]
+
+Comparing this to Arrangement A, which guarantees $51, we see that the expected value of Arrangement B ($43.79) is"

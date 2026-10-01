@@ -365,6 +365,7 @@ def fig_reason():
     subjects = [
         ("Qwen2.5\nassistant", "qwen-inst_chat"),
         ("OLMo-2\nafter\nfine-tuning", "olmo-sft_fewshot"),
+        ("OLMo-2\nafter\npreference\ntraining", "olmo-dpo_fewshot"),
         ("OLMo-2\nfinished\nassistant", "olmo-inst_fewshot"),
     ]
     at_once = [reason_scores(s, "_riskneutral")[0] for _, s in subjects]
@@ -372,9 +373,9 @@ def fig_reason():
     gap_once = [reason_scores(s, "")[1] for _, s in subjects]
     gap_reason = [reason_scores(s, "_reason")[1] for _, s in subjects]
 
-    fig, (a, b) = plt.subplots(1, 2, figsize=(6.6, 3.3), gridspec_kw={"wspace": 0.38})
+    fig, (a, b) = plt.subplots(1, 2, figsize=(6.6, 3.5), gridspec_kw={"wspace": 0.38})
     x = np.arange(len(subjects))
-    w = 0.34
+    w = 0.36
     bx = dict(facecolor="white", edgecolor="none", pad=0.6)
 
     for yy in (25, 50, 75, 100):
@@ -383,9 +384,9 @@ def fig_reason():
     a.bar(x - w / 2, at_once, width=w, color=GRAY, zorder=3)
     a.bar(x + w / 2, reasoned, width=w, color=PURPLE, zorder=3)
     for xi, (o, r) in zip(x, zip(at_once, reasoned)):
-        a.text(xi - w / 2, o + 1.8, f"{o:.0f}", ha="center", va="bottom", fontsize=8.2,
+        a.text(xi - w / 2, o + 1.8, f"{o:.0f}", ha="center", va="bottom", fontsize=7.4,
                color=GRAY_TEXT, bbox=bx, zorder=5)
-        a.text(xi + w / 2, r + 1.8, f"{r:.0f}", ha="center", va="bottom", fontsize=8.2,
+        a.text(xi + w / 2, r + 1.8, f"{r:.0f}", ha="center", va="bottom", fontsize=7.4,
                color=PURPLE, bbox=bx, zorder=5)
     a.text(-0.55, 108, "answer at once", color=GRAY_TEXT, fontsize=7.8, ha="left")
     a.text(0.95, 108, "reason first", color=PURPLE, fontsize=7.8, ha="left")
@@ -395,7 +396,7 @@ def fig_reason():
     a.set_yticks([25, 50, 75, 100])
     a.set_yticklabels(["25", "50", "75", "100"], fontsize=8)
     a.set_xticks(x)
-    a.set_xticklabels([s[0] for s in subjects], fontsize=7.6, color=INK)
+    a.set_xticklabels([s[0] for s in subjects], fontsize=6.8, color=INK)
     bare(a, keep_bottom=True)
 
     b.axhline(0, color=INK, lw=0.7, zorder=2)
@@ -403,16 +404,16 @@ def fig_reason():
     b.bar(x + w / 2, gap_reason, width=w, color=PURPLE, zorder=3)
     for xi, (o, r) in zip(x, zip(gap_once, gap_reason)):
         b.text(xi - w / 2, o + (1.5 if o >= 0 else -6.5), f"{o:+.0f}", ha="center",
-               va="bottom", fontsize=8.2, color=GRAY_TEXT, zorder=5)
+               va="bottom", fontsize=7.4, color=GRAY_TEXT, zorder=5)
         b.text(xi + w / 2, r + (1.5 if r >= 0 else -6.5), f"{r:+.0f}", ha="center",
-               va="bottom", fontsize=8.2, color=PURPLE, zorder=5)
+               va="bottom", fontsize=7.4, color=PURPLE, zorder=5)
     b.set_title("No instruction: extra gambling when\nthe bet is called a loss (points)",
                 fontsize=8.4, color=INK, loc="left")
     b.set_ylim(-22, 72)
     b.set_yticks([-20, 0, 20, 40, 60])
     b.set_yticklabels(["-20", "0", "20", "40", "60"], fontsize=8)
     b.set_xticks(x)
-    b.set_xticklabels([s[0] for s in subjects], fontsize=7.6, color=INK)
+    b.set_xticklabels([s[0] for s in subjects], fontsize=6.8, color=INK)
     bare(b, keep_bottom=True)
     save(fig, "teach_reason.pdf")
 

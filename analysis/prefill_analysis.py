@@ -7,6 +7,8 @@ sure amount. Reports, by which option the truth favors:
     correct expected value ("The expected value of Option X is $E, which is") (minimal);
   - the generated comparison word by construction: whether the trace reaches the word through
     "..., which is ___ than" or any other phrasing;
+  - the same with "Since the expected value of Option X, $E, is" (since; separate file), which
+    states the same number without the "which is" construction;
   - a clustered logit for using the "which is" construction (cells where the gamble is better).
 
 Usage:
@@ -30,6 +32,9 @@ def main():
     import statsmodels.formula.api as smf
 
     d = pd.read_csv(DATA / "prefill_qwen-inst_chat.csv")
+    since = DATA / "prefill_qwen-inst_chat_since.csv"  # follow-up run, "since" condition only
+    if since.exists():
+        d = pd.concat([d, pd.read_csv(since)], ignore_index=True)
     d["lr"] = np.log(d.p * d.hi / d.sure)
     d = d[(d.frame != "mixed") & (d.lr.abs() >= 0.05)].copy()
     d["truth"] = np.where(d.lr > 0, "gamble", "safe")
@@ -37,15 +42,18 @@ def main():
     w = d.pivot_table(index=["instrument", "trial_id"], columns="condition", values="p_less")
     own = d[d.condition == "own"].set_index(["instrument", "trial_id"])
     w = w.join(own[["frame", "truth", "generated_word", "context", "gamble_id"]])
+    conds = [c for c in ["own", "rule", "minimal", "since"] if c in w.columns]
     w["gen_less"] = w.generated_word.isin(["less", "lower", "smaller"])
     w["which"] = w.context.str.contains(WHICH, regex=True)
     print(f"{len(w)} cells; own-trace argmax matches the generated word in "
           f"{((w.own > 0.5) == w.gen_less).mean():.3f}")
 
     print("\nMean P(less) at the comparison word")
-    print(w.groupby("truth")[["own", "rule", "minimal"]].mean().round(3).to_string())
+    print(w.groupby("truth")[conds].mean().round(3).to_string())
+    print("share with P(less) > 0.5:")
+    print((w.groupby("truth")[conds].apply(lambda x: (x > 0.5).mean())).round(3).to_string())
     print("\nby frame, truth favors gamble")
-    print(w[w.truth == "gamble"].groupby("frame")[["own", "rule", "minimal"]].mean().round(3).to_string())
+    print(w[w.truth == "gamble"].groupby("frame")[conds].mean().round(3).to_string())
     x = w[(w.truth == "gamble") & w.gen_less]
     print(f"\nTraces that wrote a false 'less' (n = {len(x)}): mean P(less) own {x.own.mean():.3f}, "
           f"rule {x.rule.mean():.3f}")

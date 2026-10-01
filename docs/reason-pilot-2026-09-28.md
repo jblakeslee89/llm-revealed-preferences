@@ -456,7 +456,21 @@ answer leans safe. The written trace states the right arithmetic and a verdict
 supplied by the phrase. For trace-based auditing the lesson stands, with a narrower
 mechanism than motivated reasoning.
 
-Caveats: one model; the minimal prefix itself uses the "which is" construction, so
-it measures the default of that phrase rather than an unconditioned verdict; a
-minimal prefix with a different construction ("Since $E is") would separate the
-two and costs one more short GPU run.
+Follow-up, same session: a fourth condition states the same correct number without
+the construction, "Since the expected value of Option X, $E, is" (`--conditions
+since`, `data/prefill_qwen-inst_chat_since.csv`):
+
+| Truth favors | which-is prefix: mean P(less) | share > 0.5 | since prefix: mean P(less) | share > 0.5 |
+|---|---|---|---|---|
+| gamble | 0.815 | 0.892 | **0.168** | **0.113** |
+| safe | 0.964 | 0.981 | 0.600 | 0.600 |
+
+Same number, same prompt, different sentence frame: after "which is" the model says
+"less" 89% of the time when the gamble is better; after "Since ... is" it says so 11%
+of the time. The "since" frame discriminates (0.60 vs 0.17) where "which is" barely
+does (0.96 vs 0.82), with some bias the other way (it calls the safe option's EV
+"greater" 40% of the time when it is smaller). The false verdicts belong to the
+phrase.
+
+Caveat: one model, one trace per cell (greedy); the phrase result is specific to Qwen's
+habitual wording and may not transfer to other families.

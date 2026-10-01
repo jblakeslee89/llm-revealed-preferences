@@ -90,9 +90,11 @@ detectable. Preference optimization, invisible in the immediate-answer parameter
 behaves when it deliberates, and the attribution to supervised fine-tuning is a result about the
 immediate-answer regime. The traces also carry a caution for anyone who reads reasoning as a record of
 the computation: most of Qwen's remaining misses outside the loss frame compute the expected value
-correctly and then misstate the comparison, always in favor of the safe option. Two follow-ups sharpen the picture. One added sentence,
-telling the model to compare final dollar amounts, removes the reasoning-regime framing error entirely
-(mixed-frame accuracy 0.869 to 1.000), so that error is a bookkeeping habit, not a preference. And paying
+correctly and then misstate the comparison in favor of the safe option, and a prefill test traces the
+misstatements to one stock phrase. Two follow-ups sharpen the picture. One added sentence,
+telling the model to compare final dollar amounts, removes Qwen's reasoning-regime framing error
+entirely (mixed-frame accuracy 0.869 to 1.000), so that error is a bookkeeping habit, not a preference;
+OLMo Instruct makes the same slip and ignores the sentence (0.588 to 0.581). And paying
 the model through training, the closest available analogue to Smith's payment, does not teach the
 computation in the immediate-answer regime: across six configurations the paid model settled on a
 fixed answer and never learned to tell better gambles from worse ones.
@@ -673,23 +675,42 @@ none of those traces mentions risk, safety or certainty. Under reasoning, then, 
 arithmetic habit, not a preference, and the model reliably drops the habit when it is told both what to
 compute and how to compare.
 
-\textbf{The written verdict leans toward the safe option.} Outside the loss frame, Qwen's uninstructed
-reasoning still misses 72 of 460 clear cells, and the misses are not risk aversion. In 65 of them the
-trace computes the gamble's expected value correctly and then misstates the comparison (``The expected
-value of Option A is \$152.04, which is less than the guaranteed \$117''); in 6 it acknowledges the higher
-expected value and takes the sure amount for its certainty. Checking every numeric comparison between
-the expected value and the sure amount (\texttt{analysis/trace\_comparisons.py}) shows that the errors run
-one way: 40 of the 62 comparisons whose truth favors the gamble are reversed, against none of the 153
-whose truth favors the sure amount (Fisher $p < 10^{-27}$). Random slips would reverse both. The false
-statement is more likely when the model's immediate answer on the same cell leans safe (clustered logit
-coefficient on immediate $P(\text{gamble})$ $-1.22$, $p = 0.006$) and when the wording mentions risk
-(false-statement rate 0.15 under gain wording, 0.37 neutral, 0.45 risk), and it does not depend on how
-far apart the two numbers are ($p = 0.61$). The model's written comparison is pulled toward the answer its
-immediate-answer policy already favors. The EV instruction removes the reversals (none in 73), and the
-clarifying line alone nearly does (2 in 258). OLMo Instruct shows the same asymmetry more weakly (24 of
-90 against 5 of 86) alongside two-way comparison errors. For anyone using reasoning traces to audit a
-model's choices, this is a measured case in which the trace reports the right arithmetic and a verdict
-the arithmetic does not support.
+OLMo Instruct does not. The same four prompts on the same 400 cells leave its mixed-frame agreement at
+0.62, 0.59, 0.59 and 0.58 (no instruction, line only, rule only, both), and the frame gap within
+$\pm 0.06$ throughout. The traces show the same slip as Qwen's and show the line being ignored: after
+being told to compare final amounts, OLMo writes ``a 58\% chance to gain \$167 for a total of \$278
+\ldots\ The expected value of Arrangement B is $(0.58 \times \$167) + (0.42 \times \$0) = \$96.06$.''
+The share of mixed-frame traces containing the change-from-holdings number does not fall (0.58 with
+the rule, 0.59 with rule and line; Qwen's falls from 0.35 to 0.24 and its errors vanish). About 60\% of
+OLMo's mixed-frame misses carry that slip, and the rest are comparison errors in both directions. The
+habit is shared; the ability to act on a correction is a Qwen result.
+
+\textbf{The written verdict leans toward the safe option, through a stock phrase.} Outside the loss
+frame, Qwen's uninstructed reasoning still misses 72 of 460 clear cells, and the misses are not risk
+aversion. In 65 of them the trace computes the gamble's expected value correctly and then misstates the
+comparison (``The expected value of Option A is \$152.04, which is less than the guaranteed \$117''); in 6
+it acknowledges the higher expected value and takes the sure amount for its certainty. Checking every
+numeric comparison between the expected value and the sure amount (\texttt{analysis/trace\_comparisons.py})
+shows that the errors run one way: 40 of the 62 comparisons whose truth favors the gamble are reversed,
+against none of the 153 whose truth favors the sure amount (Fisher $p < 10^{-27}$). Random slips would
+reverse both.
+
+A prefill test (\texttt{colab/prefill\_comparison.py}) locates the mechanism. Feeding each trace back up
+to the comparison word and reading the model's probability on ``less'' against ``greater'' reproduces
+every generated word, and shows that 63 of the 65 false verdicts follow one construction, ``\$E, which
+is \ldots\ than the guaranteed \$S.'' Reached that way, the word is ``less'' in 63 of 64 cells where the
+gamble is better; reached any other way, the verdict is wrong in 2 of 149. With the correct number
+supplied, the phrase still decides: after ``The expected value of Option A is \$E, which is'' the model
+puts more than half its probability on ``less'' in 89\% of cells where the gamble is better, and after
+``Since the expected value of Option A, \$E, is'' in 11\%. What the wording and the snap answer change is
+how often the trace uses the construction: 20\% of traces under gain wording, 37\% neutral and 55\% risk,
+and more often when the immediate answer on the same cell leans safe (clustered logit coefficient on
+immediate $P(\text{gamble})$ $-1.28$, $p = 0.004$), with no dependence on how far apart the numbers are
+($p = 0.55$). The expected-value instruction removes the false statements in the generated runs (none in
+73). OLMo Instruct shows the same one-way asymmetry more weakly (24 of 90 against 5 of 86) alongside
+two-way comparison errors. For anyone using reasoning traces to audit a model's choices, this is a
+measured case in which the trace reports the right arithmetic and a verdict supplied by a habitual
+phrase, and the phrase leans toward the cautious answer.
 
 \textbf{The staircase depends on the regime.} Under immediate answer the structural parameters were set
 at SFT and the later stages moved nothing detectable (Section~5.3). Under reasoning, the later stages
@@ -875,8 +896,8 @@ decoding (one trace per cell), and four subjects from two families; Llama Instru
 The trace coding relies on automatic extraction of comparisons written with both numbers (about a
 quarter of Qwen's traces), spot-checked by hand. The few-shot reasoning exemplars demonstrate the expected-value arithmetic, which
 primes the uninduced OLMo runs toward it. The reference-point error is identified from traces read by
-hand and a rough text check, and the clarification test that removes it was run on Qwen only; a
-systematic coding of which reference point each trace uses, and the same test on OLMo, remain to be done.
+hand and a numeric text check (the change-from-holdings number within 2\%), not a full coding of the
+reference point each trace uses.
 
 \textbf{No choice here is incentivized.} Every elicitation in Phases 1 through 3 is hypothetical, and
 the induced-value arm is instruction only. Paid training (Section~\ref{sec:paid}) is the closest
@@ -900,8 +921,9 @@ lack the value-tracking that would make the word ``preference'' apply, documents
 differs in sign across families, and answers the Phase 1 near-tie out of sample. It also found the ceiling
 of its own elicitation and, with the reasoning arm, raised it: the models can follow a stated rule when
 they may compute, their framing response and training-stage profile both depend on whether they do, the
-framing response that remains under reasoning is a bookkeeping habit one sentence removes, and the
-written reasoning does not always report the comparison the model acts on.
+framing response that remains under reasoning is a bookkeeping habit one sentence removes in Qwen and
+not in OLMo, and the
+written reasoning can attach a habitual verdict to correct arithmetic.
 
 \vspace{1em}
 \hrule
