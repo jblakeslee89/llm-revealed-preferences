@@ -38,6 +38,7 @@ RED, INK = "#C00000", "#1C1C1E"
 SUBJECTS = [  # label, file stem
     ("Qwen Instruct\n(chat)", "qwen-inst_chat"),
     ("OLMo SFT\n(few-shot)", "olmo-sft_fewshot"),
+    ("OLMo DPO\n(few-shot)", "olmo-dpo_fewshot"),
     ("OLMo Instruct\n(few-shot)", "olmo-inst_fewshot"),
 ]
 CONDITIONS = [  # label, suffix, color
@@ -64,7 +65,7 @@ def main():
     stats = {stem: summarize(stem) for _, stem in SUBJECTS}
     plt.rcParams.update({"font.size": 8, "font.family": ["Helvetica Neue", "Helvetica", "DejaVu Sans"],
                          "axes.edgecolor": "#B0B0B0", "pdf.fonttype": 42})
-    fig, (a, b) = plt.subplots(1, 2, figsize=(10, 3.5), gridspec_kw={"width_ratios": [3, 2]})
+    fig, (a, b) = plt.subplots(1, 2, figsize=(11, 3.6), gridspec_kw={"width_ratios": [3, 2]})
 
     x = np.arange(len(SUBJECTS))
     w = 0.2
@@ -75,7 +76,7 @@ def main():
             a.text(bar.get_x() + bar.get_width() / 2, v + 0.015, f"{v:.2f}", ha="center",
                    fontsize=6.5, color=INK)
     a.axhline(0.5, color=RED, lw=0.8, ls=":")
-    a.text(2.42, 0.51, "chance", color=RED, fontsize=6.5)
+    a.text(len(SUBJECTS) - 0.58, 0.51, "chance", color=RED, fontsize=6.5)
     a.set_xticks(x, [s for s, _ in SUBJECTS])
     a.set_ylim(0, 1.08)
     a.set_ylabel("Agreement with expected value\n(clear cells)")

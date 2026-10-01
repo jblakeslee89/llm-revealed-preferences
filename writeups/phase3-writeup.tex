@@ -84,10 +84,13 @@ immediately, and uninstructed they compute expected value on their own in most t
 response changes with the regime. Qwen's strong amplification under loss wording ($+0.626$) reverses to a
 small suppression ($-0.135$, 95\% CI $[-0.221, -0.053]$), produced by one recurring accounting error:
 the model compares the gamble's expected change in wealth with the sure option's total. The staircase
-changes too. Under reasoning, OLMo SFT keeps a large frame gap ($+0.375$) that is nearly gone at the
-final Instruct checkpoint ($+0.055$), so the later training stages, invisible in the immediate-answer
-parameters, move behavior when the model deliberates. The attribution to supervised fine-tuning is a
-result about the immediate-answer regime. Two follow-ups sharpen the picture. One added sentence,
+changes too. Under reasoning, OLMo SFT keeps a large frame gap ($+0.375$) that is gone by the DPO
+checkpoint ($+0.015$; difference $-0.360$, 95\% CI $[-0.429, -0.287]$), and the final stage adds nothing
+detectable. Preference optimization, invisible in the immediate-answer parameters, sets how the model
+behaves when it deliberates, and the attribution to supervised fine-tuning is a result about the
+immediate-answer regime. The traces also carry a caution for anyone who reads reasoning as a record of
+the computation: most of Qwen's remaining misses outside the loss frame compute the expected value
+correctly and then misstate the comparison, always in favor of the safe option. Two follow-ups sharpen the picture. One added sentence,
 telling the model to compare final dollar amounts, removes the reasoning-regime framing error entirely
 (mixed-frame accuracy 0.869 to 1.000), so that error is a bookkeeping habit, not a preference. And paying
 the model through training, the closest available analogue to Smith's payment, does not teach the
@@ -219,8 +222,8 @@ Reasoning costs roughly ten times as much compute as an immediate answer, so the
 40 gambles per instrument, with every frame, template and order of each (840 cells, fixed seed). All
 comparisons with the immediate-answer runs below are on these matched cells. Subjects are each model in
 the format where it passes the dominance control: Qwen Instruct in chat, OLMo SFT and OLMo Instruct in
-few-shot, each uninduced and under the risk-neutral instruction. The OLMo DPO checkpoint and Llama
-Instruct are not yet run.
+few-shot, each uninduced and under the risk-neutral instruction, and OLMo DPO in few-shot to locate
+the reasoning-regime change between training stages. Llama Instruct is not yet run.
 
 \section{Econometric Model and Estimation}
 
@@ -585,18 +588,18 @@ Table~\ref{tab:reason} and Figure~\ref{fig:reason} compare the four conditions o
 share of the 620 clear core cells on which the model puts more than half its probability on the
 expected-value-optimal option (hard accuracy, so the immediate-answer figures differ slightly from the
 compliance mass in Table~\ref{tab:induced}). Gap is mean $P(\text{gamble})$ in the mixed frame minus
-the gain frame.}
+the gain frame. Qwen answers in chat format, the OLMo checkpoints in few-shot.}
 \label{tab:reason}
-\begin{tabular}{@{}lcccccc@{}}
+\begin{tabular}{@{}lcccccccc@{}}
 \toprule
- & \multicolumn{2}{c}{Qwen Instruct (chat)} & \multicolumn{2}{c}{OLMo SFT (few-shot)} & \multicolumn{2}{c}{OLMo Instruct (few-shot)} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
-Condition & EV & Gap & EV & Gap & EV & Gap \\
+ & \multicolumn{2}{c}{Qwen Instruct} & \multicolumn{2}{c}{OLMo SFT} & \multicolumn{2}{c}{OLMo DPO} & \multicolumn{2}{c}{OLMo Instruct} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+Condition & EV & Gap & EV & Gap & EV & Gap & EV & Gap \\
 \midrule
-Immediate, uninduced & 0.532 & $+0.626$ & 0.519 & $+0.241$ & 0.497 & $+0.346$ \\
-Immediate, induced   & 0.569 & $+0.401$ & 0.545 & $-0.008$ & 0.542 & $+0.003$ \\
-Reason, uninduced    & 0.829 & $-0.135$ & 0.681 & $+0.375$ & 0.740 & $+0.055$ \\
-Reason, induced      & 0.965 & $-0.145$ & 0.713 & $+0.358$ & 0.803 & $-0.024$ \\
+Immediate, uninduced & 0.532 & $+0.626$ & 0.519 & $+0.241$ & 0.502 & $+0.319$ & 0.497 & $+0.346$ \\
+Immediate, induced   & 0.569 & $+0.401$ & 0.545 & $-0.008$ & 0.549 & $+0.014$ & 0.542 & $+0.003$ \\
+Reason, uninduced    & 0.829 & $-0.135$ & 0.681 & $+0.375$ & 0.741 & $+0.015$ & 0.740 & $+0.055$ \\
+Reason, induced      & 0.965 & $-0.145$ & 0.713 & $+0.358$ & 0.832 & $-0.071$ & 0.803 & $-0.024$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -606,8 +609,8 @@ Reason, induced      & 0.965 & $-0.145$ & 0.713 & $+0.358$ & 0.803 & $-0.024$ \\
 \includegraphics[width=\textwidth]{figures/phase3_reason.pdf}
 \caption{Panel A: agreement with expected value on clear cells, by elicitation regime and instruction.
 Reasoning moves every subject well above chance, and the instruction adds to it. Panel B: the frame gap
-without instruction. Reasoning reverses Qwen's response to loss wording and removes OLMo Instruct's,
-while OLMo SFT keeps a large gap.}
+without instruction. Reasoning reverses Qwen's response to loss wording and removes OLMo Instruct's.
+OLMo SFT keeps a large gap, which is gone by the DPO checkpoint.}
 \label{fig:reason}
 \end{figure}
 
@@ -670,15 +673,37 @@ none of those traces mentions risk, safety or certainty. Under reasoning, then, 
 arithmetic habit, not a preference, and the model reliably drops the habit when it is told both what to
 compute and how to compare.
 
+\textbf{The written verdict leans toward the safe option.} Outside the loss frame, Qwen's uninstructed
+reasoning still misses 72 of 460 clear cells, and the misses are not risk aversion. In 65 of them the
+trace computes the gamble's expected value correctly and then misstates the comparison (``The expected
+value of Option A is \$152.04, which is less than the guaranteed \$117''); in 6 it acknowledges the higher
+expected value and takes the sure amount for its certainty. Checking every numeric comparison between
+the expected value and the sure amount (\texttt{analysis/trace\_comparisons.py}) shows that the errors run
+one way: 40 of the 62 comparisons whose truth favors the gamble are reversed, against none of the 153
+whose truth favors the sure amount (Fisher $p < 10^{-27}$). Random slips would reverse both. The false
+statement is more likely when the model's immediate answer on the same cell leans safe (clustered logit
+coefficient on immediate $P(\text{gamble})$ $-1.22$, $p = 0.006$) and when the wording mentions risk
+(false-statement rate 0.15 under gain wording, 0.37 neutral, 0.45 risk), and it does not depend on how
+far apart the two numbers are ($p = 0.61$). The model's written comparison is pulled toward the answer its
+immediate-answer policy already favors. The EV instruction removes the reversals (none in 73), and the
+clarifying line alone nearly does (2 in 258). OLMo Instruct shows the same asymmetry more weakly (24 of
+90 against 5 of 86) alongside two-way comparison errors. For anyone using reasoning traces to audit a
+model's choices, this is a measured case in which the trace reports the right arithmetic and a verdict
+the arithmetic does not support.
+
 \textbf{The staircase depends on the regime.} Under immediate answer the structural parameters were set
 at SFT and the later stages moved nothing detectable (Section~5.3). Under reasoning, the later stages
 matter. OLMo SFT keeps a large frame gap ($+0.375$, CI $[+0.286, +0.466]$), larger than its own
 immediate-answer gap, and by the final Instruct checkpoint it is nearly gone: the difference is $-0.320$
 (CI $[-0.449, -0.201]$). Induced expected-value agreement also rises from SFT to Instruct ($0.713$ to
 $0.803$, difference $+0.090$, CI $[+0.030, +0.160]$); the uninduced rise ($0.681$ to $0.740$) is not
-distinguishable from zero. Preference optimization and the final stage leave the immediate-answer
-parameters where SFT put them and change how the model reasons. The DPO checkpoint has not been run in
-this arm, so the change cannot yet be divided between DPO and the final stage.
+distinguishable from zero. Running the DPO checkpoint divides the change between the two later stages,
+and it all belongs to DPO. From SFT to DPO the uninduced frame gap falls by $0.360$ (CI $[-0.429,
+-0.287]$) and induced expected-value agreement rises from $0.713$ to $0.832$ ($+0.119$, CI $[+0.057,
++0.182]$). From DPO to Instruct the gap does not move ($+0.040$, CI $[-0.076, +0.156]$) and induced
+agreement dips slightly ($-0.029$, CI $[-0.054, -0.005]$). Preference optimization leaves the
+immediate-answer parameters where SFT put them and sets how the model reasons; the final stage changes
+neither.
 
 \subsection{Paying for the rule: induced value through training}\label{sec:paid}
 Smith's induced-value procedure works because the subject is paid in a currency it wants. A language model
@@ -846,9 +871,9 @@ phrasing. A compliance failure under one phrasing is weaker evidence than a fail
 the robustness check is unrun.
 
 \textbf{The reasoning arm is partial.} It covers half the gambles, one instruction phrasing, greedy
-decoding (one trace per cell), and three subjects; the OLMo DPO checkpoint and Llama Instruct remain to be
-run, and the DPO run is needed to divide the SFT-to-Instruct change in the reasoning regime between DPO
-and the final stage. The few-shot reasoning exemplars demonstrate the expected-value arithmetic, which
+decoding (one trace per cell), and four subjects from two families; Llama Instruct remains to be run.
+The trace coding relies on automatic extraction of comparisons written with both numbers (about a
+quarter of Qwen's traces), spot-checked by hand. The few-shot reasoning exemplars demonstrate the expected-value arithmetic, which
 primes the uninduced OLMo runs toward it. The reference-point error is identified from traces read by
 hand and a rough text check, and the clarification test that removes it was run on Qwen only; a
 systematic coding of which reference point each trace uses, and the same test on OLMo, remain to be done.
@@ -874,8 +899,9 @@ optimization begins, shows that base models
 lack the value-tracking that would make the word ``preference'' apply, documents that the framing response
 differs in sign across families, and answers the Phase 1 near-tie out of sample. It also found the ceiling
 of its own elicitation and, with the reasoning arm, raised it: the models can follow a stated rule when
-they may compute, their framing response and training-stage profile both depend on whether they do, and
-the framing response that remains under reasoning is a bookkeeping habit one sentence removes.
+they may compute, their framing response and training-stage profile both depend on whether they do, the
+framing response that remains under reasoning is a bookkeeping habit one sentence removes, and the
+written reasoning does not always report the comparison the model acts on.
 
 \vspace{1em}
 \hrule
