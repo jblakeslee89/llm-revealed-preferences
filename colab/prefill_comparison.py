@@ -17,6 +17,8 @@ model's next-token probability on the "less" group (less, lower, smaller) agains
     minimal  the prompt, then a one-sentence assistant prefix stating the correct expected
              value: "The expected value of Option X is $E, which is" (the verdict with none
              of the model's own preceding text)
+    since    the same, phrased without the "which is" construction: "Since the expected
+             value of Option X, $E, is"
 
 Output: one row per cell and condition with p_less = P(less group) / P(less + greater).
 
@@ -120,9 +122,11 @@ def main():
     def text_for(it, cond):
         induce = INDUCE["riskneutral"] if cond == "rule" else None
         head, add_special = reason_prefix(tok, it["prompt"], args.fmt, induce)
+        name = option_name(it["prompt"], it["r"]["gamble_letter"])
         if cond == "minimal":
-            name = option_name(it["prompt"], it["r"]["gamble_letter"])
             body = f"The expected value of {name} is ${it['ev']:.2f}, which is"
+        elif cond == "since":
+            body = f"Since the expected value of {name}, ${it['ev']:.2f}, is"
         else:
             body = it["prefix"]
         return head + lead + body, add_special
