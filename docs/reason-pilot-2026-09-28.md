@@ -317,3 +317,53 @@ quarter of Qwen traces); one coder (automated, spot-checked by hand on 15 OLMo a
 check on OLMo DPO; and an intervention test, prefilling the trace up to the
 comparison word and reading P("less") vs P("greater"), would measure the pull
 directly instead of inferring it from generated text.
+
+## OLMo-2 DPO, fewshot, reasoning (Oct 1 2026): the change happens at DPO
+
+`data/phase3_olmo-dpo_fewshot_reason_riskneutral.csv`,
+`data/phase3_olmo-dpo_fewshot_reason.csv`. Same 840 cells, run on a paid Colab T4
+(about 30 min per run). Excluded: 1 (induced), 3 (uninduced). End states:
+induced 810 answer / 29 eos / 1 blank; uninduced 326 answer / 488 eos / 26 blank.
+The eos traces are complete (median 373 characters, 6 over 1,100), ending in a
+stated choice, as for Instruct. 91% of uninduced DPO traces mention expected value
+(SFT 74%, Instruct 89%).
+
+`analysis/score_reason_staircase.py` (dominance = hard accuracy on the 40 dominant
+cells; EV = hard EV agreement on the 620 clear core cells; gap = mean P(gamble),
+mixed minus gain):
+
+| Condition | SFT EV | SFT gap | DPO EV | DPO gap | Instruct EV | Instruct gap |
+|---|---|---|---|---|---|---|
+| immediate, uninduced | 0.519 | +0.241 | 0.502 | +0.319 | 0.497 | +0.346 |
+| immediate, induced | 0.545 | -0.008 | 0.549 | +0.014 | 0.542 | +0.003 |
+| reason, uninduced | 0.681 | +0.375 | 0.741 | **+0.015** | 0.740 | +0.055 |
+| reason, induced | 0.713 | +0.358 | **0.832** | -0.071 | 0.803 | -0.024 |
+
+Stage contrasts under reasoning, 95% cluster bootstrap (40 gamble clusters, 2,000
+draws):
+
+| Contrast | DPO minus SFT | Instruct minus DPO |
+|---|---|---|
+| frame gap, uninduced | **-0.360** [-0.429, -0.287] | +0.040 [-0.076, +0.156] |
+| frame gap, induced | **-0.429** [-0.547, -0.300] | +0.047 [-0.034, +0.127] |
+| EV, induced | **+0.119** [+0.057, +0.182] | -0.029 [-0.054, -0.005] |
+| EV, uninduced | +0.060 [-0.031, +0.148] | -0.001 [-0.045, +0.045] |
+
+The SFT-to-Instruct change under reasoning, flagged in the SFT section as not yet
+attributable, is entirely a DPO effect. Preference optimization removes the
+reasoning-regime framing gap (+0.375 to +0.015) and raises EV compliance when the
+rule is stated (0.713 to 0.832); the final RLVR stage moves nothing detectable and,
+if anything, slightly lowers induced EV agreement. Under immediate answer, as
+before, no stage after SFT moves anything.
+
+So the staircase result is now regime-specific and stage-specific: the structural
+parameters of the immediate answer are fixed at SFT; how the model reasons about the
+same choices is set at DPO. The comparison-bias check (`trace_comparisons.py`) puts
+DPO between SFT and Instruct (reversed toward safe 23/92, toward gamble 11/95,
+p = 0.02), and DPO traces show the mixed-frame reference slip seen in Qwen
+("the expected value of choosing Term B is $71.71 - $94 = -$22.29. Since -$22.29 is
+less than $0, choosing Term A is the better option").
+
+Caveats: one family, one seed of each checkpoint, fewshot reasoning exemplars that
+demonstrate the EV arithmetic. The DPO and Instruct runs share the same 20 gambles
+per instrument as SFT, so the contrasts are paired.
