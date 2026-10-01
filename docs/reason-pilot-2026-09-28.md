@@ -257,3 +257,63 @@ reasoning is an arithmetic habit, not a preference, and the model heeds a
 correction to that habit reliably only when it is also told what to compute.
 Every trace in the clarify-only run frames the choice in expected-value terms
 (100%).
+
+## Trace coding (Oct 1 2026): the stated comparison bends toward the safe answer
+
+Open item from the Qwen section: what are the non-mixed misses in the uninduced
+reasoning run (risk and neutral frames at about 0.79)? `analysis/trace_comparisons.py`
+extracts every explicit numeric comparison in a trace and checks it against the
+numbers; an EV-vs-sure comparison is one whose two numbers are within 2% of p x hi
+and the sure amount.
+
+The 72 Qwen misses outside the mixed frame, read by hand and by regex: 65 compute the
+gamble's expected value correctly and then misstate the comparison ("The expected
+value of Option A is $152.04, which is less than the guaranteed $117"); 6
+acknowledge the higher expected value and choose the sure amount for its certainty;
+1 is unclassified. So about 90% of these misses are false comparisons, not risk
+aversion.
+
+The false comparisons run one way. Numeric EV-vs-sure statements, reversed / total,
+by which option the true comparison favors:
+
+| Run | truth favors gamble | truth favors safe | Fisher p |
+|---|---|---|---|
+| Qwen, reason, uninduced | **40 / 62** | **0 / 153** | 7e-28 |
+| Qwen, reason, EV rule | 0 / 23 | 0 / 50 | 1 |
+| Qwen, reason, clarify only | 2 / 125 | 0 / 133 | 0.23 |
+| Qwen, reason, EV rule + clarify | 0 / 73 | 0 / 62 | 1 |
+| OLMo SFT, reason, uninduced | 2 / 19 | 5 / 10 | 0.03 |
+| OLMo SFT, reason, EV rule | 4 / 13 | 0 / 8 | 0.13 |
+| OLMo Instruct, reason, uninduced | 24 / 90 | 5 / 86 | 0.0002 |
+| OLMo Instruct, reason, EV rule | 8 / 31 | 1 / 38 | 0.009 |
+
+Random slips would reverse both directions at similar rates. Qwen never misstates a
+comparison that favors the safe option and misstates two in three of those that
+favor the gamble. In the wider regex set (any worded comparison against the sure
+amount, cells where the gamble is better, n = 204), the false "less than" rate is
+0.145 in the gain wording, 0.370 neutral and 0.452 in the risk wording. A clustered
+logit (40 gamble clusters) finds the false statement predicted by the model's
+immediate-answer P(gamble) on the same cell (coefficient -1.22, p = 0.006) and by
+the wording (neutral +1.58, risk +1.71, both p < 0.001), and not by how far apart
+the numbers are (log EV ratio, p = 0.61).
+
+Reading. In the uninduced reasoning regime, Qwen's written comparison is pulled
+toward the answer its immediate-answer policy already favors, and more so when the
+prompt mentions risk. The arithmetic is right; the verdict on the arithmetic is not.
+That is a specific, measurable case of a reasoning trace that does not faithfully
+report the computation behind the choice, and it explains most of the residual EV
+misses outside the loss frame. Telling the model what to compute (the EV rule)
+removes it entirely (0 false statements in 73), and the clarification line alone
+nearly removes it (2 in 258).
+
+OLMo Instruct shows the same asymmetry more weakly and also makes two-way
+comparison errors (14 of 51 other comparisons false, e.g. "$52 is greater than
+$60.48"). OLMo SFT has few parsable statements and, if anything, errs the other
+way (5 of 10 reversed toward the gamble); the sample is too small to say more.
+
+Caveats: regex extraction covers only comparisons written with both numbers (about a
+quarter of Qwen traces); one coder (automated, spot-checked by hand on 15 OLMo and
+72 Qwen statements); Qwen is the only model with a large sample. Next: the same
+check on OLMo DPO; and an intervention test, prefilling the trace up to the
+comparison word and reading P("less") vs P("greater"), would measure the pull
+directly instead of inferring it from generated text.
