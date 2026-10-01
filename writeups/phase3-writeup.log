@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  30 SEP 2026 14:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  1 OCT 2026 15:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -22,17 +22,13 @@ File: size11.clo 2024/06/29 v1.4n Standard LaTeX file (size option)
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
 \bibindent=\dimen141
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/geometry/geometry.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks17
-)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/ifvtex.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
-
 (/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
@@ -48,25 +44,20 @@ Package: iftex 2024/12/12 v1.0g TeX engine tests
 \Gm@layouthoffset=\dimen148
 \Gm@layoutvoffset=\dimen149
 \Gm@dimlist=\toks18
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2024/11/05 v2.17t AMS math features
 \@mathmargin=\skip51
-
 For additional information on amsmath, use the `?' option.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2021/08/26 v2.01 AMS text
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks19
 \ex@=\dimen150
-))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty
+)) (/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen151
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count273
@@ -116,10 +107,8 @@ LaTeX Info: Redefining \Relbar on input line 970.
 \mathdisplay@stack=\toks23
 LaTeX Info: Redefining \[ on input line 2953.
 LaTeX Info: Redefining \] on input line 2954.
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
@@ -127,8 +116,7 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty
+)) (/usr/local/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen159
 \lightrulewidth=\dimen160
@@ -147,8 +135,7 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@thisruleclass=\count287
 \@lastruleclass=\count288
 \@thisrulewidth=\dimen171
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/enumitem/enumitem.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/enumitem/enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip54
 \enit@outerparindent=\dimen172
@@ -156,8 +143,7 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \enit@inbox=\box54
 \enit@count@id=\count289
 \enitdp@description=\count290
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/titlesec/titlesec.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/titlesec/titlesec.sty
 Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \ttl@box=\box55
 \beforetitleunit=\skip55
@@ -168,92 +154,72 @@ Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \titlewidth=\dimen175
 \titlewidthlast=\dimen176
 \titlewidthfirst=\dimen177
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 106.
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen178
 \Gin@req@width=\dimen179
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
-)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
-
 (/usr/local/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
-)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
 )
-
 (/usr/local/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
-))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty
+)) (/usr/local/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2023-11-26 v2.56 Cross-referencing by name of section
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
 (/usr/local/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
 ty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
- (/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
 \c@section@level=\count291
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count292
-)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
 \@linkdim=\dimen180
 \Hy@linkcounter=\count293
 \Hy@pagecounter=\count294
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2024-11-05 v7.01l Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
-)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count295
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2024-11-05 v7.01l Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -267,17 +233,14 @@ Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
 \c@Hy@tempcnt=\count296
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4763.
 \XeTeXLinkMargin=\dimen181
-
 (/usr/local/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
-
 (/usr/local/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
@@ -292,7 +255,6 @@ Package hyperref Info: backreferencing OFF on input line 6057.
 Package hyperref Info: Link coloring OFF on input line 6062.
 Package hyperref Info: Link coloring with OCG OFF on input line 6067.
 Package hyperref Info: PDF/A mode OFF on input line 6072.
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
@@ -302,10 +264,8 @@ package with kernel methods
 \c@Hfootnote=\count300
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2024-11-05 v7.01l Hyperref driver for pdfTeX
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty
 Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
@@ -326,12 +286,10 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \Hy@SectionHShift=\skip57
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: pdftex.def on input line 274.
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
@@ -342,13 +300,11 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count303
 \l__pdf_internal_box=\box56
-)
-(./phase3-writeup.aux)
+) (./phase3-writeup.aux)
 \openout1 = `phase3-writeup.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
@@ -369,7 +325,6 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
 LaTeX Font Info:    ... okay on input line 28.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 28.
 LaTeX Font Info:    ... okay on input line 28.
-
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -421,25 +376,21 @@ LaTeX Font Info:    ... okay on input line 28.
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package hyperref Info: Link coloring OFF on input line 28.
-
 (./phase3-writeup.out) (./phase3-writeup.out)
 \@outlinefile=\write3
 \openout3 = `phase3-writeup.out'.
 
 LaTeX Font Info:    Trying to load font information for U+msa on input line 30.
 
-
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 30.
-
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -464,7 +415,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 <figures/phase3_staircase.pdf, id=154, 686.64342pt x 252.88126pt>
 File: figures/phase3_staircase.pdf Graphic file (type pdf)
 <use figures/phase3_staircase.pdf>
-Package pdftex.def Info: figures/phase3_staircase.pdf  used on input line 384.
+Package pdftex.def Info: figures/phase3_staircase.pdf  used on input line 389.
 (pdftex.def)             Requested size: 469.75502pt x 173.00652pt.
 
 
@@ -472,73 +423,75 @@ Package pdftex.def Info: figures/phase3_staircase.pdf  used on input line 384.
 <figures/phase3_profiles.pdf, id=223, 794.97pt x 614.295pt>
 File: figures/phase3_profiles.pdf Graphic file (type pdf)
 <use figures/phase3_profiles.pdf>
-Package pdftex.def Info: figures/phase3_profiles.pdf  used on input line 424.
+Package pdftex.def Info: figures/phase3_profiles.pdf  used on input line 429.
 (pdftex.def)             Requested size: 469.75502pt x 363.00267pt.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
 [9]
-<figures/phase3_format.pdf, id=230, 701.09677pt x 205.87689pt>
+
+[10 <./figures/phase3_profiles.pdf>]
+<figures/phase3_format.pdf, id=277, 701.09677pt x 205.87689pt>
 File: figures/phase3_format.pdf Graphic file (type pdf)
 <use figures/phase3_format.pdf>
-Package pdftex.def Info: figures/phase3_format.pdf  used on input line 474.
+Package pdftex.def Info: figures/phase3_format.pdf  used on input line 479.
 (pdftex.def)             Requested size: 469.75502pt x 137.94308pt.
 
 
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-
-[10 <./figures/phase3_profiles.pdf>]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-
 [11 <./figures/phase3_format.pdf>]
-<figures/phase3_induced.pdf, id=331, 688.7003pt x 220.35776pt>
+<figures/phase3_induced.pdf, id=330, 688.7003pt x 220.35776pt>
 File: figures/phase3_induced.pdf Graphic file (type pdf)
 <use figures/phase3_induced.pdf>
-Package pdftex.def Info: figures/phase3_induced.pdf  used on input line 552.
+Package pdftex.def Info: figures/phase3_induced.pdf  used on input line 557.
 (pdftex.def)             Requested size: 469.75502pt x 150.30528pt.
-
-
-[12 <./figures/phase3_induced.pdf>]
-<figures/phase3_reason.pdf, id=394, 722.7pt x 252.945pt>
-File: figures/phase3_reason.pdf Graphic file (type pdf)
-<use figures/phase3_reason.pdf>
-Package pdftex.def Info: figures/phase3_reason.pdf  used on input line 606.
-(pdftex.def)             Requested size: 469.75502pt x 164.41615pt.
-
-
-[13 <./figures/phase3_reason.pdf>]
-
-[14]
-<figures/phase3_holdout.pdf, id=419, 701.09744pt x 203.21803pt>
-File: figures/phase3_holdout.pdf Graphic file (type pdf)
-<use figures/phase3_holdout.pdf>
-Package pdftex.def Info: figures/phase3_holdout.pdf  used on input line 720.
-(pdftex.def)             Requested size: 469.75502pt x 136.16156pt.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
+[12]
+<figures/phase3_reason.pdf, id=342, 794.97pt x 260.17201pt>
+File: figures/phase3_reason.pdf Graphic file (type pdf)
+<use figures/phase3_reason.pdf>
+Package pdftex.def Info: figures/phase3_reason.pdf  used on input line 611.
+(pdftex.def)             Requested size: 469.75502pt x 153.74231pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[13 <./figures/phase3_induced.pdf>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[14 <./figures/phase3_reason.pdf>]
+
 [15]
+<figures/phase3_holdout.pdf, id=423, 701.09744pt x 203.21803pt>
+File: figures/phase3_holdout.pdf Graphic file (type pdf)
+<use figures/phase3_holdout.pdf>
+Package pdftex.def Info: figures/phase3_holdout.pdf  used on input line 766.
+(pdftex.def)             Requested size: 469.75502pt x 136.16156pt.
 
-[16 <./figures/phase3_holdout.pdf>]
+LaTeX Warning: `h' float specifier changed to `ht'.
 
-[17]
+
+
+[16]
+
+[17 <./figures/phase3_holdout.pdf>]
 
 [18]
 
 [19]
 
-[20] (./phase3-writeup.aux)
+[20]
+
+[21] (./phase3-writeup.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -547,13 +500,13 @@ Package rerunfilecheck Info: File `phase3-writeup.out' has not changed.
 (rerunfilecheck)             Checksum: C4EA373B953015792FE8D7122162028A;5263.
  ) 
 Here is how much of TeX's memory you used:
- 11509 strings out of 473190
- 175071 string characters out of 5715801
- 600666 words of memory out of 5000000
+ 11510 strings out of 473190
+ 175078 string characters out of 5715801
+ 600760 words of memory out of 5000000
  34550 multiletter control sequences out of 15000+600000
  569151 words of font info for 76 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,13n,79p,662b,596s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,13n,79p,662b,594s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -569,10 +522,10 @@ ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texliv
 e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive
 /2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/
 2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on phase3-writeup.pdf (20 pages, 356808 bytes).
+Output written on phase3-writeup.pdf (21 pages, 362087 bytes).
 PDF statistics:
- 603 PDF objects out of 1000 (max. 8388607)
- 310 compressed objects within 4 object streams
- 77 named destinations out of 1000 (max. 500000)
+ 607 PDF objects out of 1000 (max. 8388607)
+ 313 compressed objects within 4 object streams
+ 78 named destinations out of 1000 (max. 500000)
  223 words of extra memory for PDF output out of 10000 (max. 10000000)
 
