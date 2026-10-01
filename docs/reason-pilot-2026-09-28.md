@@ -297,14 +297,15 @@ immediate-answer P(gamble) on the same cell (coefficient -1.22, p = 0.006) and b
 the wording (neutral +1.58, risk +1.71, both p < 0.001), and not by how far apart
 the numbers are (log EV ratio, p = 0.61).
 
-Reading. In the uninduced reasoning regime, Qwen's written comparison is pulled
-toward the answer its immediate-answer policy already favors, and more so when the
-prompt mentions risk. The arithmetic is right; the verdict on the arithmetic is not.
-That is a specific, measurable case of a reasoning trace that does not faithfully
-report the computation behind the choice, and it explains most of the residual EV
-misses outside the loss frame. Telling the model what to compute (the EV rule)
-removes it entirely (0 false statements in 73), and the clarification line alone
-nearly removes it (2 in 258).
+Reading (revised after the prefill test below). The arithmetic is right and the
+verdict on it is not, and the errors favor the safe option only. The prefill test
+locates the mechanism in a stock phrase: once a trace writes "$E, which is ___ than
+the guaranteed $S", the word is "less" almost regardless of the numbers. Wording and
+the immediate-answer lean predict whether the trace uses that phrase, not the verdict
+given the phrase. So the safe lean enters through the choice of sentence template, a
+weaker and more mechanical claim than "the model rationalizes its preferred answer".
+Telling the model what to compute (the EV rule) removes the false statements (0 in
+73), and the clarification line alone nearly does (2 in 258).
 
 OLMo Instruct shows the same asymmetry more weakly and also makes two-way
 comparison errors (14 of 51 other comparisons false, e.g. "$52 is greater than
@@ -313,10 +314,8 @@ way (5 of 10 reversed toward the gamble); the sample is too small to say more.
 
 Caveats: regex extraction covers only comparisons written with both numbers (about a
 quarter of Qwen traces); one coder (automated, spot-checked by hand on 15 OLMo and
-72 Qwen statements); Qwen is the only model with a large sample. Next: the same
-check on OLMo DPO; and an intervention test, prefilling the trace up to the
-comparison word and reading P("less") vs P("greater"), would measure the pull
-directly instead of inferring it from generated text.
+72 Qwen statements); Qwen is the only model with a large sample. The DPO check and
+the prefill test are reported below.
 
 ## OLMo-2 DPO, fewshot, reasoning (Oct 1 2026): the change happens at DPO
 
@@ -367,3 +366,97 @@ less than $0, choosing Term A is the better option").
 Caveats: one family, one seed of each checkpoint, fewshot reasoning exemplars that
 demonstrate the EV arithmetic. The DPO and Instruct runs share the same 20 gambles
 per instrument as SFT, so the contrasts are paired.
+
+## OLMo clarification check (Oct 1 2026): the line does nothing for OLMo
+
+`data/phase3_olmo-inst_fewshot_reason_clarify.csv`,
+`data/phase3_olmo-inst_fewshot_reason_riskneutral_clarify.csv`: OLMo Instruct,
+fewshot, reasoning first, gain and mixed frames of the same 20 gambles (400 cells
+each), 0 excluded. `analysis/score_clarify.py olmo-inst_fewshot`:
+
+| Reasoning first | Gain EV | Mixed EV | mixed misses | when gamble optimal | Frame gap |
+|---|---|---|---|---|---|
+| uninduced | 0.831 | 0.619 | 61 | 0.544 | +0.055 |
+| clarify only | 0.781 | 0.588 | 66 | 0.378 | -0.044 |
+| EV rule | 0.875 | 0.588 | 66 | 0.522 | -0.024 |
+| EV rule + clarify | 0.887 | 0.581 | 67 | 0.489 | -0.055 |
+
+Qwen for comparison: mixed EV 0.869 with the rule, 1.000 with rule + clarify.
+
+The line that removed Qwen's loss-frame error leaves OLMo's untouched. The traces
+show why: OLMo keeps computing the gamble as a change from current holdings after
+being told to compare final amounts ("you have a 58% chance to gain $167 for a total
+of $278 ... The expected value of Arrangement B is (0.58 * $167) + (0.42 * $0) =
+$96.06. Since $96.06 is less than $111"). It even states the final total and then
+multiplies the gain. Share of clear mixed-frame traces containing the
+change-from-holdings number (p x gain, or the net change, within 2%):
+
+| | uninduced | clarify | EV rule | EV rule + clarify |
+|---|---|---|---|---|
+| Qwen | 0.469 | | 0.350 | 0.244 (0 errors) |
+| OLMo Instruct | 0.481 | 0.462 | 0.575 | 0.588 |
+
+About 60% of OLMo's mixed-frame misses contain that slip; the rest are comparison
+errors in both directions ("$59.38 > $64", "$161.64 is less than $111"). So the
+"bookkeeping habit one sentence removes" is a Qwen result. For OLMo the same habit
+is present and the sentence does not reach it, consistent with OLMo's weaker
+instruction-following throughout (immediate-answer induced compliance 0.54, the
+dominance and format results of Phase 3).
+
+## Prefill test (Oct 1 2026): the false verdict comes from a stock phrase
+
+`colab/prefill_comparison.py` on Qwen Instruct's uninduced reasoning traces: for the
+492 of 800 traces with a comparison against the sure amount, cut the trace just
+before the comparison word and read P(less group) / P(less + greater group).
+Conditions: own (the model's own trace), rule (same trace, EV rule prepended to the
+prompt), minimal (prompt, then "The expected value of Option X is $E, which is"
+with the correct E). `data/prefill_qwen-inst_chat.csv`;
+`analysis/prefill_analysis.py`. 318 non-mixed clear cells; the own-trace argmax
+reproduces the generated word in 318 of 318.
+
+Mean P(less):
+
+| Truth favors | own | rule | minimal |
+|---|---|---|---|
+| gamble (n = 213) | 0.298 | 0.223 | **0.815** |
+| safe (n = 105) | 0.723 | 0.698 | 0.964 |
+
+Given only "The expected value of Option A is $152.04, which is", Qwen continues
+with "less" 82% of the time even when $152.04 is above the sure amount (89% of cells
+past 0.5; gain wording 0.69, neutral 0.93, risk 0.82). The verdict is close to
+insensitive to the numbers at that position.
+
+Generated word by construction (own traces):
+
+| Truth | reached via "..., which is ___ than" | generated "less" | generated "greater" |
+|---|---|---|---|
+| gamble | yes | **63** | 1 |
+| gamble | no | 2 | 147 |
+| safe | yes | 53 | 0 |
+| safe | no | 23 | 29 |
+
+So 63 of the 65 false "less" statements are the phrase "$E, which is less than the
+guaranteed $S"; reached any other way ("Since the expected value of Payout B
+($162.84) is greater than ..."), the verdict is wrong 2 times in 149. What predicts
+the error is whether the trace uses that construction (risk wording 55% of traces,
+neutral 37%, gain 20%; clustered logit on cells where the gamble is better: risk
++1.68, neutral +1.27, immediate-answer P(gamble) -1.28 with p = 0.004, log EV ratio
+p = 0.55).
+
+On the false traces, prepending the EV rule with the identical trace text lowers
+P(less) from 0.976 to 0.727: the instruction weakens the stock continuation at the
+verdict but does not overturn it once the phrase is written. The rule's full effect
+in the generated runs (0 false statements) comes mostly from steering the trace away
+from the phrase.
+
+Reading: the residual EV misses of uninduced Qwen reasoning outside the loss frame
+are mostly a phrase-level default, "which is less than the guaranteed ...", that
+the model reaches for more often when the wording mentions risk and when its snap
+answer leans safe. The written trace states the right arithmetic and a verdict
+supplied by the phrase. For trace-based auditing the lesson stands, with a narrower
+mechanism than motivated reasoning.
+
+Caveats: one model; the minimal prefix itself uses the "which is" construction, so
+it measures the default of that phrase rather than an unconditioned verdict; a
+minimal prefix with a different construction ("Since $E is") would separate the
+two and costs one more short GPU run.
