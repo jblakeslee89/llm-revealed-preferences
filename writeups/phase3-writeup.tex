@@ -922,6 +922,16 @@ two questions instructions could not settle: whether payment can induce a specif
 carries over to immediate answers. It needs generation during training, roughly ten to twenty times the
 compute of the pilot.
 
+\textbf{Lottery choices are not advice.} Every subject here chooses lotteries for itself, and deployed
+models advise others on decisions in other units. Whether the measured curvature, loss aversion,
+wording effect and verdict habits predict the risk posture of a model's recommendations is untested. A
+follow-on (\texttt{docs/extension-advice-2026-10.md}) maps the same gambles, number for number, into
+advisory questions in national security domains (lives protected, objectives held, crisis
+escalation), posed to the model as itself and as an adviser to a commander or an official, in both
+frames and both option orders; it then moves to open-ended scenario briefs coded for risk posture. The
+test is whether money-domain behavior predicts advisory behavior cell by cell and whether the
+parameters are invariant across domains and roles.
+
 \textbf{Hardware, quantization, and one staircase.} All runs use 4-bit quantization on free Colab T4
 hardware. The exercise compares checkpoints under identical conditions, so a small uniform quantization
 effect would not disturb the staircase, though this is unverified against full precision. The

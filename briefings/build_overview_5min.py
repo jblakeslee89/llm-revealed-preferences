@@ -66,8 +66,8 @@ TEXT = [
         "Text 29": "A model can return confident answers while failing to prefer $70 to $50. Eighty free-money "
                    "questions catch it, and cost almost nothing to run.",
         "Text 31": "What comes next",
-        "Text 32": "Pay the model while it reasons, where it can already compute. Then ask whether models "
-                   "cooperate more with a counterpart from their own family.",
+        "Text 32": "Pay the model while it reasons. Ask whether models favor their own family, and whether "
+                   "these risk habits carry into the advice they give commanders and officials.",
     },
 ]
 
@@ -113,8 +113,10 @@ NOTES = [
     "Four takeaways. Audit at the fine-tuning checkpoint, because that is where most of the snap-answer "
     "profile appears. Say whether you measured snap answers or reasoning, because the two can disagree. "
     "Check that the subject is paying attention before trusting any estimate. And read reasoning traces "
-    "knowing each family has its own habits. Next, we pay the model while it reasons, and then use the "
-    "same machinery to ask whether AI agents favor their own kind. Thank you.",
+    "knowing each family has its own habits. Next, we pay the model while it reasons, use the same "
+    "machinery to ask whether AI agents favor their own kind, and then ask whether the risk habits we "
+    "measured show up in the advice a model gives a commander or an official, with the same numbers as "
+    "our bets. Thank you.",
 ]
 
 
