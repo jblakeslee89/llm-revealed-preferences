@@ -12,7 +12,8 @@ sure amount. Reports, by which option the truth favors:
   - a clustered logit for using the "which is" construction (cells where the gamble is better).
 
 Usage:
-    python analysis/prefill_analysis.py
+    python analysis/prefill_analysis.py            # Qwen Instruct (chat)
+    python analysis/prefill_analysis.py llama-inst_chat
 """
 
 from __future__ import annotations
@@ -27,12 +28,12 @@ DATA = Path(__file__).resolve().parent.parent / "data"
 WHICH = r"which\s+(?:is|are)\s*(?:slightly|significantly|much|far|still)?\s*$"
 
 
-def main():
+def main(stem="qwen-inst_chat"):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    d = pd.read_csv(DATA / "prefill_qwen-inst_chat.csv")
-    since = DATA / "prefill_qwen-inst_chat_since.csv"  # follow-up run, "since" condition only
+    d = pd.read_csv(DATA / f"prefill_{stem}.csv")
+    since = DATA / f"prefill_{stem}_since.csv"  # follow-up run, "since" condition only
     if since.exists():
         d = pd.concat([d, pd.read_csv(since)], ignore_index=True)
     d["lr"] = np.log(d.p * d.hi / d.sure)
@@ -62,9 +63,12 @@ def main():
     print(pd.crosstab([w.truth, w.which], w.gen_less.map({True: "less", False: "greater"})).to_string())
     print("\n'which is' construction rate by frame:", w.groupby("frame").which.mean().round(3).to_dict())
 
-    imm = pd.read_csv(DATA / "phase3_qwen-inst_chat.csv")[["instrument", "trial_id", "p_gamble"]]
+    imm = pd.read_csv(DATA / f"phase3_{stem}.csv")[["instrument", "trial_id", "p_gamble"]]
     g = w[w.truth == "gamble"].reset_index().merge(imm, on=["instrument", "trial_id"])
     g["which_i"] = g.which.astype(int)
+    if g["which_i"].nunique() < 2:
+        print("\nNo variation in the 'which is' construction; logit not estimated.")
+        return
     g = g.merge(d[d.condition == "own"][["instrument", "trial_id", "lr"]], on=["instrument", "trial_id"])
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -76,4 +80,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(*sys.argv[1:2])

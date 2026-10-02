@@ -51,6 +51,7 @@ RUNS = [
     "olmo-dpo_fewshot_reason", "olmo-dpo_fewshot_reason_riskneutral",
     "olmo-inst_fewshot_reason", "olmo-inst_fewshot_reason_riskneutral",
     "olmo-inst_fewshot_reason_clarify", "olmo-inst_fewshot_reason_riskneutral_clarify",
+    "llama-inst_chat_reason", "llama-inst_chat_reason_riskneutral",
 ]
 
 
@@ -132,6 +133,8 @@ def main():
         o = st[st["kind"] == "other"]
         print(f"{stem:46s} {fg:4d} / {ng:<6d}  {fs:4d} / {ns:<5d}  {p:8.2g}   {int((~o['true']).sum())} / {len(o)}")
     worded_logit("qwen-inst_chat_reason", "qwen-inst_chat")
+    if (DATA / "phase3_llama-inst_chat_reason.csv").exists():
+        worded_logit("llama-inst_chat_reason", "llama-inst_chat")
 
 
 if __name__ == "__main__":

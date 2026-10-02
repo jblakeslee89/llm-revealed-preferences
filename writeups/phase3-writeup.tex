@@ -225,7 +225,7 @@ Reasoning costs roughly ten times as much compute as an immediate answer, so the
 comparisons with the immediate-answer runs below are on these matched cells. Subjects are each model in
 the format where it passes the dominance control: Qwen Instruct in chat, OLMo SFT and OLMo Instruct in
 few-shot, each uninduced and under the risk-neutral instruction, and OLMo DPO in few-shot to locate
-the reasoning-regime change between training stages. Llama Instruct is not yet run.
+the reasoning-regime change between training stages, and Llama Instruct in chat as a third family.
 
 \section{Econometric Model and Estimation}
 
@@ -708,9 +708,22 @@ and more often when the immediate answer on the same cell leans safe (clustered 
 immediate $P(\text{gamble})$ $-1.28$, $p = 0.004$), with no dependence on how far apart the numbers are
 ($p = 0.55$). The expected-value instruction removes the false statements in the generated runs (none in
 73). OLMo Instruct shows the same one-way asymmetry more weakly (24 of 90 against 5 of 86) alongside
-two-way comparison errors. For anyone using reasoning traces to audit a model's choices, this is a
-measured case in which the trace reports the right arithmetic and a verdict supplied by a habitual
-phrase, and the phrase leans toward the cautious answer.
+two-way comparison errors.
+
+Llama, run through the same arm in chat format, shows that the habit is family-specific. Reasoning lifts
+its expected-value agreement from 0.515 to 0.821 uninstructed and 0.947 with the rule, close to Qwen,
+and its frame gap stays near zero in both regimes, as it was in its immediate answers. Its false
+comparisons run the other way: 41 of 216 comparisons whose truth favors the sure amount are reversed in
+favor of the gamble, against 1 of 296 in the opposite direction ($p \approx 10^{-15}$), in the template
+``Since \$115.72 is greater than \$149, Option A has a higher expected value.'' The trigger is order, not
+risk: the false rate is 0.30 when the gamble is listed first and 0.04 when the sure option is ($p
+\approx 4\times10^{-7}$), where Qwen shows no order effect. Llama never uses Qwen's ``which is''
+construction, and given a one-sentence prefix with the correct number its default verdict is
+``greater'' (``less'' 14\% of the time after ``which is'' and 5\% after ``Since \ldots\ is'' even when
+the sure amount is larger). For anyone using reasoning traces to audit a model's choices, these are
+measured cases in which the trace reports the right arithmetic and a verdict supplied by a habit, and
+the habit differs by family: toward the cautious answer in Qwen, toward the first-listed option in
+Llama.
 
 \textbf{The staircase depends on the regime.} Under immediate answer the structural parameters were set
 at SFT and the later stages moved nothing detectable (Section~5.3). Under reasoning, the later stages
@@ -892,7 +905,8 @@ phrasing. A compliance failure under one phrasing is weaker evidence than a fail
 the robustness check is unrun.
 
 \textbf{The reasoning arm is partial.} It covers half the gambles, one instruction phrasing, greedy
-decoding (one trace per cell), and four subjects from two families; Llama Instruct remains to be run.
+decoding (one trace per cell), and five subjects from three families; Llama has no immediate-answer run
+under the instruction, so its instruction effect is measured only under reasoning.
 The trace coding relies on automatic extraction of comparisons written with both numbers (about a
 quarter of Qwen's traces), spot-checked by hand. The few-shot reasoning exemplars demonstrate the expected-value arithmetic, which
 primes the uninduced OLMo runs toward it. The reference-point error is identified from traces read by

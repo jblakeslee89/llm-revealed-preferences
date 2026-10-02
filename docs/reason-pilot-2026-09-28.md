@@ -474,3 +474,67 @@ phrase.
 
 Caveat: one model, one trace per cell (greedy); the phrase result is specific to Qwen's
 habitual wording and may not transfer to other families.
+
+## Llama-3.1-8B Instruct, chat, reasoning (Oct 1 2026): same lift, opposite verdict habit
+
+`data/phase3_llama-inst_chat_reason_riskneutral.csv`,
+`data/phase3_llama-inst_chat_reason.csv`, `data/prefill_llama-inst_chat.csv`. Same
+840 cells, paid Colab T4, HF token from a Colab secret (gated model). 0 excluded in
+either run; 828 / 840 uninduced traces end in "Answer:"; 96.5% mention expected value.
+There is no immediate-answer induced Llama run, so that cell of the comparison is
+missing.
+
+| Llama Instruct (chat), same cells | Dominance | EV agreement (clear) | Frame gap |
+|---|---|---|---|
+| immediate, uninduced | 0.925 | 0.515 | -0.050 |
+| reason, uninduced | 0.975 | 0.821 | -0.033 |
+| reason, induced | 1.000 | 0.947 | +0.075 |
+
+Reasoning lifts Llama as it lifts Qwen (0.829 / 0.965) and OLMo Instruct (0.740 /
+0.803). Llama's frame gap is near zero in both regimes, as in Phase 3 (Llama barely
+reacts to loss wording). Its weakest frame under the rule is mixed (0.85 clear-cell
+agreement; the others 0.97 to 1.00).
+
+**The verdict habit runs the other way.** Uninduced, Llama misses more where the sure
+amount is better (accuracy 0.739) than where the gamble is (0.888). Numeric EV-vs-sure
+statements (`trace_comparisons.py`): reversed toward the gamble in 41 of 216 whose
+truth favors the safe option, toward the safe option in 1 of 296 whose truth favors the
+gamble (Fisher p = 1e-15). With the rule: 18 / 282 vs 7 / 377. The template is
+"Since $E is greater than $S, Option A has a higher expected value", written with E
+below S ("Since $115.72 is greater than $149").
+
+The habit depends on option order, not on safety. Among statements whose truth favors
+the sure amount, the false "greater" rate is 0.303 when the gamble is listed first and
+0.043 when the sure option is listed first (Fisher p = 4e-7); by wording, gain 0.03,
+neutral 0.26, risk 0.25, mixed 0.28. Qwen's false "less" shows no order effect (0.33 vs
+0.31). Llama's written verdict favors whichever option it computed first, which is
+usually Option A.
+
+Prefill test (`prefill_analysis.py llama-inst_chat`): the own-trace argmax reproduces
+the generated word in 291 of 291 cells. Llama never uses Qwen's "which is" construction
+(0 of 291). Given a one-sentence prefix with the correct number, Llama's default is
+"greater":
+
+| Truth favors | own | rule | minimal ("which is") | since ("Since ... is") |
+|---|---|---|---|---|
+| gamble | 0.025 | 0.034 | 0.017 | 0.008 |
+| safe | 0.601 | 0.901 | 0.144 | 0.052 |
+
+(mean P(less)). Even when the sure amount is larger, Llama completes "The expected
+value of Option A is $E, which is" with "less" 14% of the time and "Since the
+expected value of Option A, $E, is" with "less" 5% of the time. Qwen's defaults in the
+same frames were 96% and 60%. With its own trace up to the word, Llama's verdict is
+mostly right when the truth favors the safe option (0.60, rising to 0.90 when the rule is
+prepended).
+
+Reading across the two chat models: both compute expected value correctly in reasoning
+and both attach habitual verdicts that the numbers only partly control. The habits
+differ by family in direction and trigger: Qwen's favors the safe option through a
+stock phrase that appears more under risk wording; Llama's favors the first-computed
+option, independent of wording construction. A trace-based audit has to learn each
+model's verdict habit before trusting its comparisons. The habit result in the Phase 3
+writeup should be stated as family-specific.
+
+Caveat: Llama's prefill "own" condition covers 291 traces with a comparison against the
+sure amount; the `which is` logit in `prefill_analysis.py` is degenerate for Llama
+(no such traces) and is not reported.

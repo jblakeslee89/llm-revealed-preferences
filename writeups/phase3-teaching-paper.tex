@@ -831,6 +831,13 @@ amount, so the habit still pushes in the cautious direction. Told the rule, the 
 slips. For anyone who audits an AI system by reading its reasoning, this is the practical point: a trace
 can show the correct calculation and then a verdict supplied by a habit of wording.
 
+Llama has a habit too, pointed the other way. Its backward statements read ``Since \$115.72 is greater
+than \$149, Option A has a higher expected value'': they favor whichever option it worked out first,
+usually the gamble, and they appear mainly when the gamble is listed first (30 percent of the relevant
+comparisons, against 4 percent when the sure amount is listed first). Given the correct number, Llama's
+default verdict is ``greater.'' Two families, two opposite habits: whoever audits a model by its
+reasoning has to learn that model's habits first.
+
 The finished OLMo assistant's gap nearly vanishes when it
 reasons, falling to 5 points, and its errors under loss wording run both ways, including plain slips
 such as ``Since \$151.84 is less than \$117.''
@@ -893,8 +900,8 @@ structural model is missing whatever preference training changes.
 \textbf{One phrasing per instruction.} Each induced rule was tested under a single wording. A
 compliance failure under one wording is weaker evidence than a failure under several.
 
-\textbf{The reasoning test is partial.} It covers half the questions, four models from two families, and
-one wording of the instruction; Llama remains to be run. OLMo's
+\textbf{The reasoning test is partial.} It covers half the questions, five models from three families,
+and one wording of the instruction. OLMo's
 fill-in-the-blank examples show the expected-value arithmetic, which nudges its uninstructed
 reasoning toward it. The backward comparisons are found by an automatic check that reads only
 comparisons written out with both numbers, about a quarter of Qwen's answers, and the phrase test covers one model; other families may have
@@ -966,8 +973,9 @@ that the shared component exists and identifies where it comes from.
 % ============================================================
 \section{Where research goes next}
 
-\textbf{Finish the reasoning test.} Run Llama, a third family, through the same reasoning questions,
-and repeat the phrase test on OLMo and Llama to see whether each family has its own habitual verdict.
+\textbf{Finish the reasoning test.} Repeat the phrase test on OLMo, the one family whose verdict
+habits are still unmeasured, and test whether a habit like Qwen's or Llama's can be removed by
+rewording the instruction rather than the question.
 Code every written answer for the reference point it uses.
 
 \textbf{Pay the model when it may reason.} Payment through training did not teach the arithmetic
