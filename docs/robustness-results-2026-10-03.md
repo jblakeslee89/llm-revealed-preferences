@@ -74,4 +74,35 @@ OLMo's reasoning-regime numbers should be reported as a range, not a point.
 - Llama fills the missing immediate-answer cell, with a different failure mode (format refusal).
 - The reasoning-regime frame gap needs a caveat that its size depends on wording.
 
-Arm 5 (paid training with reasoning) is not part of this notebook and remains unrun.
+## Check against the pre-set decision rules (added Oct 3, thread review)
+
+The plan fixed five rules before the runs. Three pass cleanly. Two need a caveat in the writeup.
+
+1. **Phrasings: immediate compliance stays below about 0.65 in every family and wording.**
+   Borderline for one cell. OLMo with the rule after the question reaches 0.673 [0.550, 0.801],
+   and its dominance accuracy falls to 0.713 (1.000 with the rule before). The lift is noisy and
+   comes with lost dominance, so it reads as a weaker engagement with the format, not as
+   compliance. It stays far below the same wording under reasoning (0.94). Every
+   reason-minus-immediate lift is positive.
+2. **Full set: the new 40 gambles fall inside the first 40's intervals.** Passes for every
+   induced run. Fails for Qwen uninduced: 0.719 [0.653, 0.786] on the new gambles is below the
+   first half's interval (0.829 [0.755, 0.890]). The induced claim is unaffected. Any
+   uninduced-reasoning number for Qwen should be the 80-gamble figure, not the 40-gamble one.
+3. **Sampled traces: greedy matches the sampled majority in at least about 90% of cells.**
+   Passes for Qwen (97%) and Llama (95%). Fails for OLMo (79%), so OLMo is reported as a
+   range (random trace 0.736, greedy 0.80, majority 0.80).
+   The plan's follow-up check on verdict habits, run on the induced sampled traces:
+   the directional bias in stated EV-versus-sure comparisons survives sampling. OLMo reverses
+   comparisons when the gamble is better 32% of the time versus 8% when the safe option is
+   better (64/198 vs 16/211, Fisher p = 2e-10; greedy 8/31 vs 1/38). Llama leans the other
+   way, 0.9% versus 3.8% (11/1,265 vs 35/928, p = 3e-6; greedy 7/377 vs 18/282). Qwen's
+   induced traces make almost no false comparisons, sampled (1/509) or greedy (0/73). Qwen's
+   stock phrase lives in the uninduced runs, which were not sampled. So "verdict habits are not
+   a greedy-decoding artifact" is shown for OLMo and Llama, but not for Qwen's stock phrase.
+4. **Llama immediate induced near 0.55.** Not the predicted pattern. In chat, Llama answers in
+   one letter in only 3% of cells (52 of 1,680 kept, where every clear cell is correct) and
+   explains instead. The "fails in one letter" half of the claim holds for Llama in the
+   few-shot format (0.46) and under two paraphrases (0.54, 0.62). In chat its failure is
+   refusing the format, which needs its own sentence.
+5. **Paid with reasoning.** Not run.
+
