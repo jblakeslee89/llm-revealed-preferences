@@ -1,0 +1,63 @@
+spec = intercept; B = 200 wild-cluster replicates, 80 gamble clusters, weights shared across subjects
+
+== per-subject 95% percentile intervals ==
+   subject  param     mle      lo       hi  boot_median  edge_share   B
+ olmo-base  alpha  0.3190  0.1812   0.4279       0.3167       0.000 200
+ olmo-base lambda  0.0001  0.0001   0.3077       0.0033       0.495 200
+ olmo-base  gamma  1.5869  1.1740   1.9183       1.5621       0.000 200
+ olmo-base      c  0.7693  0.7076   0.8615       0.7791         NaN 200
+  olmo-sft  alpha  0.3355  0.0000   0.5773       0.3004       0.060 200
+  olmo-sft lambda  0.0001  0.0001   0.7550       0.0774       0.405 200
+  olmo-sft  gamma  2.1859  1.0545   6.8178       2.2469       0.000 200
+  olmo-sft      c -0.7979 -0.8295  -0.5095      -0.6915         NaN 200
+  olmo-dpo  alpha  0.2731  0.0000   0.4671       0.2611       0.045 200
+  olmo-dpo lambda  0.0001  0.0001   0.6887       0.0735       0.360 200
+  olmo-dpo  gamma  2.2845  1.3058   5.2165       2.3402       0.000 200
+  olmo-dpo      c -1.0214 -0.9742  -0.5601      -0.8101         NaN 200
+ olmo-inst  alpha  0.2614  0.0162   0.4486       0.2514       0.020 200
+ olmo-inst lambda  0.0001  0.0001   0.6426       0.0804       0.355 200
+ olmo-inst  gamma  2.0313  1.2411   3.6205       2.1151       0.000 200
+ olmo-inst      c -1.3034 -1.2387  -0.7035      -1.0343         NaN 200
+llama-base  alpha  0.3240  0.1555   0.4688       0.3299       0.000 200
+llama-base lambda  0.0001  0.0001   0.3940       0.0001       0.545 200
+llama-base  gamma  1.7093  1.2030   2.2086       1.6826       0.000 200
+llama-base      c -0.0504 -0.0872   0.0209      -0.0460         NaN 200
+llama-inst  alpha  0.4310  0.2463   0.6093       0.4412       0.000 200
+llama-inst lambda  0.0001  0.0001   0.3359       0.0283       0.435 200
+llama-inst  gamma  2.8942  1.8147   4.6709       2.7025       0.000 200
+llama-inst      c -1.1057 -1.1746  -0.9823      -1.0812         NaN 200
+ qwen-base  alpha  0.3862  0.2306   0.5089       0.3729       0.000 200
+ qwen-base lambda  0.0001  0.0001   0.4983       0.0001       0.570 200
+ qwen-base  gamma  0.9922  0.7222   1.2767       0.9888       0.000 200
+ qwen-base      c -0.8644 -0.9333  -0.6323      -0.8358         NaN 200
+ qwen-inst  alpha  0.1135  0.0237   0.1923       0.1093       0.005 200
+ qwen-inst lambda 38.8823 17.6532 185.2700      44.0921       0.000 200
+ qwen-inst  gamma  2.1707  1.5870   3.0160       2.2450       0.000 200
+ qwen-inst      c -1.9440 -2.3504  -0.7790      -1.6909         NaN 200
+
+== contrasts (to - from), paired replicates ==
+                        contrast  param  estimate      lo       hi  lo_unpaired  hi_unpaired  excludes_0  resid_corr
+ Qwen base -> instruct (fewshot)  alpha   -0.2727 -0.3825  -0.1548      -0.4274      -0.0959        True      0.5174
+ Qwen base -> instruct (fewshot) lambda   38.8822 17.4367 185.1890      17.4660     185.2263        True      0.5174
+ Qwen base -> instruct (fewshot)  gamma    1.1785  0.6287   2.1462       0.4947       2.1624        True      0.5174
+ Qwen base -> instruct (fewshot)      c   -1.0796 -1.4840   0.0188      -1.5400       0.0358       False      0.5174
+Llama base -> instruct (fewshot)  alpha    0.1070 -0.0570   0.3079      -0.1017       0.3529       False      0.0418
+Llama base -> instruct (fewshot) lambda    0.0000 -0.2791   0.2596      -0.3939       0.3315       False      0.0418
+Llama base -> instruct (fewshot)  gamma    1.1849  0.0182   3.2870      -0.0056       3.1971        True      0.0418
+Llama base -> instruct (fewshot)      c   -1.0553 -1.1306  -0.9373      -1.1409      -0.9235        True      0.0418
+                OLMo base -> SFT  alpha    0.0164 -0.2475   0.2172      -0.3631       0.3206       False      0.6216
+                OLMo base -> SFT lambda    0.0000 -0.0620   0.5258      -0.2600       0.6957       False      0.6216
+                OLMo base -> SFT  gamma    0.5991 -0.2567   5.0907      -0.5078       5.2793       False      0.6216
+                OLMo base -> SFT      c   -1.5672 -1.5495  -1.3034      -1.6398      -1.2593        True      0.6216
+                 OLMo SFT -> DPO  alpha   -0.0624 -0.1464   0.0627      -0.4364       0.3618       False      0.9561
+                 OLMo SFT -> DPO lambda    0.0000 -0.1162   0.1026      -0.6946       0.5659       False      0.9561
+                 OLMo SFT -> DPO  gamma    0.0986 -1.2360   0.7229      -5.5811       2.8779       False      0.9561
+                 OLMo SFT -> DPO      c   -0.2234 -0.1701  -0.0501      -0.3343       0.1160        True      0.9561
+            OLMo DPO -> Instruct  alpha   -0.0117 -0.0567   0.0537      -0.3334       0.3555       False      0.9664
+            OLMo DPO -> Instruct lambda    0.0000 -0.0462   0.0656      -0.5448       0.5475       False      0.9664
+            OLMo DPO -> Instruct  gamma   -0.2532 -1.5566  -0.0138      -3.1179       1.2443        True      0.9664
+            OLMo DPO -> Instruct      c   -0.2821 -0.2567  -0.1505      -0.4942       0.0951        True      0.9664
+           OLMo base -> Instruct  alpha   -0.0576 -0.2406   0.0910      -0.3424       0.2055       False      0.4904
+           OLMo base -> Instruct lambda    0.0000 -0.0849   0.4687      -0.2600       0.6274       False      0.4904
+           OLMo base -> Instruct  gamma    0.4445 -0.2822   1.9441      -0.4998       2.0019       False      0.4904
+           OLMo base -> Instruct      c   -2.0727 -1.9444  -1.5693      -2.0364      -1.4864        True      0.4904
