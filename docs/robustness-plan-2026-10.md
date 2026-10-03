@@ -1,11 +1,22 @@
 # Robustness runs for the induced-valuation and reasoning result (plan, Oct 3 2026)
 
-The Paper B claim: told a utility rule, models fail in one-letter answers (EV compliance
-about 0.52 to 0.57) but comply when allowed to reason (0.80 to 0.97); the residual misses come
-from habitual written verdicts; paying through RL does not teach discrimination in the
-immediate-answer regime. The Phase 3 writeup lists five gaps. This note says how each is closed,
-what code runs it, what it costs, and what result would change the claim. Nothing here has been
-run yet.
+Where this sits: Paper 2 of the dissertation, the induced-value responsiveness test. The
+dissertation asks whether revealed-preference methods are valid for LLMs; induced value (Smith
+1976) is the standard check that a subject's choices respond to the payoffs the experimenter
+controls. If choices do not track an induced utility, the preferences elicited elsewhere carry
+little weight.
+
+The claim to make robust: told a utility rule, models fail in one-letter answers (EV compliance
+about 0.52 to 0.57) but comply when allowed to reason (0.80 to 0.97), so responsiveness depends
+on the elicitation regime; the residual misses come from habitual written verdicts; paying
+through RL does not teach discrimination in the immediate-answer regime. The Phase 3 writeup
+lists five gaps. This note says how each is closed, what code runs it, what it costs, and what
+result would change the claim. Nothing here has been run yet.
+
+The frame gap reported below is model-free (P(gamble) in loss wording minus gain wording). It
+is a diagnostic, not a loss-aversion estimate: with a constant term in the Paper 1 choice model,
+loss aversion goes to about zero and the framing effect tracks the stated gain
+(`notes/phase3-robustness-2026-10-03.md`).
 
 ## What the code now supports
 
