@@ -188,3 +188,11 @@ To confirm reading logprobs matches sampling, generate (say) 25 completions per 
 a ~100-cell subset of one instruct model and compare the sampled choice frequency to the
 logprob `p_gamble`. High agreement validates the logprob shortcut. This is a robustness
 appendix, not a gate; the estimator recovery on simulated data is the primary validation.
+
+## Robustness runs (Oct 2026)
+
+Instruction paraphrases (`--induce riskneutral_terse|riskneutral_formula|riskneutral_goal`),
+placement (`--induce-position after`), sampled reasoning traces (`--samples K --temperature T`),
+the full gamble set for reasoning runs (`--resume` onto a copy of the 20-gamble file), and the
+paid-with-reasoning trainer (`rl_induce_reason.py`). Run list, compute estimate and decision
+rules: `docs/robustness-plan-2026-10.md`. Score with `analysis/score_robustness.py`.
