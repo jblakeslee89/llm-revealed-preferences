@@ -8,6 +8,7 @@
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{graphicx}
+\usepackage[authoryear,round]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 
@@ -68,11 +69,11 @@ Where the profile comes from is a separate question, and the staircase answers i
 The OLMo base model places 0.555 of its probability on the larger of two sure amounts, close to a coin
 flip, so SFT is the first stage at which the profile can be measured at all. These data cannot
 distinguish a profile that SFT installs from one planted in pretraining that SFT makes visible, which
-is the account Itzhak, Belinkov, and Stanovsky (2025) give for cognitive biases generally. What the
+is the account \citet{itzhak2025} give for cognitive biases generally. What the
 staircase does establish is order. The measurable economic profile, and the structural parameters
 that summarize it, are in place before preference optimization begins. Two further results hold
-across families. Base models barely track value at all, consistent with the poor utility fits Wang,
-Li, and Chen (2025) report for the same Llama and Qwen pairs, and the dominance control shows why
+across families. Base models barely track value at all, consistent with the poor utility fits
+\citet{wang2025} report for the same Llama and Qwen pairs, and the dominance control shows why
 those fits fail. And the framing response is family-specific: Haiku suppresses gambling under loss
 wording, Qwen amplifies it sharply, OLMo amplifies it moderately, and Llama barely reacts.
 
@@ -205,7 +206,7 @@ expected-value maximization, or expected utility with $u(x) = \sqrt{x}$. Complia
 optimum is scored by \texttt{analysis/score\_induced.py} as the probability mass placed on the
 induced-optimal option, reported on cells where the induced rule clearly separates the two options
 ($|\ln(\mathrm{EU}_g/\mathrm{EU}_s)| \ge 0.05$) and separately on the dominant controls, where both
-rules agree and no arithmetic is required. This is the instruction-only version of Smith's (1976)
+rules agree and no arithmetic is required. This is the instruction-only version of \citeauthor{smith1976}'s (\citeyear{smith1976})
 induced-value procedure, without the incentive that makes the original work.
 
 \subsection{The reason-then-answer arm}\label{sec:reasondesign}
@@ -232,8 +233,8 @@ the reasoning-regime change between training stages, and Llama Instruct in chat 
 \subsection{Fractional maximum likelihood}
 The observed data are probabilities, one per design cell, rather than Bernoulli draws. The Phase 1 and
 Phase 2 likelihoods carry over unchanged if the Bernoulli log-likelihood is replaced by the binomial
-deviance with the observed probability as the target, the standard fractional-response objective (Papke
-and Wooldridge 1996):
+deviance with the observed probability as the target, the standard fractional-response objective
+\citep{papke1996}:
 \[
   D(\theta) = \sum_{c} \left[ y_c \ln \frac{y_c}{\hat p_c(\theta)}
   + (1 - y_c)\ln \frac{1 - y_c}{1 - \hat p_c(\theta)} \right],
@@ -287,7 +288,7 @@ three of the four changed what this phase reports.
   Section~3.4, and it lands harder here than in Phase 1, because the OLMo staircase can ask where in
   post-training a model becomes the kind of subject induced-value theory presumes. His harder variant,
   denominating payoffs in a token or computation budget so the stakes are real, is the fall workplan.
-  \item \textbf{The $\lambda$-$\phi$ collinearity.} He pointed to Rees-Jones and Wang (2022) on testing
+  \item \textbf{The $\lambda$-$\phi$ collinearity.} He pointed to \citet{reesjones2022} on testing
   reference points, a minimally parametric approach to the exact degeneracy Phase 2 hit. It is the
   reading gate for the Phase 2 revision.
   \item \textbf{Temperature and what is being randomized.} He asked whether the model's outputs are
@@ -300,7 +301,7 @@ three of the four changed what this phase reports.
   Implemented as Section~4.2; it answers the Phase 1 near-tie (Section~\ref{sec:holdout}).
 \end{enumerate}
 
-The project sits inside the structural behavioral economics tradition DellaVigna (2018) surveys:
+The project sits inside the structural behavioral economics tradition \citet{dellavigna2018} surveys:
 estimate the parameters of a behavioral model rather than demonstrate a bias, so magnitudes are
 comparable across designs and the identifying assumptions are stated. That is what makes a stage-level
 attribution meaningful rather than decorative.
@@ -448,8 +449,8 @@ The central claim is stated in two parts. In this family, on these instruments, 
 single step and the only one at which the estimated preference parameters move; about three fifths of
 the base-to-Instruct change in both model-free quantities arrives there. And the measurable economic
 profile is in place before preference optimization begins. This bears on a literature that has pointed
-at different stages. Itzhak et al. (2024) found instruction tuning and RLHF amplifying cognitive biases
-relative to base models; the same group's later cross-tuning study (Itzhak, Belinkov, and Stanovsky 2025)
+at different stages. \citet{itzhak2024} found instruction tuning and RLHF amplifying cognitive biases
+relative to base models; the same group's later cross-tuning study \citep{itzhak2025}
 finds that bias profiles cluster by pretraining backbone, with finetuning bringing them out. The
 staircase cannot choose between SFT installing the profile and SFT exposing one planted in pretraining,
 because the base model fails the dominance control and its preferences cannot be measured. What it
@@ -812,10 +813,70 @@ holds only for the immediate-answer regime: when the model reasons first, the la
 the frame gap SFT leaves (Section~\ref{sec:reason}). Either way, the result points research attention at
 the least glamorous stage, and away from any single stage as the whole story.
 
+\subsection{Installed or revealed? Relation to two recent papers}\label{sec:rivals}
+
+Two recent papers bear directly on the staircase, and each invites a different objection.
+
+\textbf{\citet{itzhak2025}: the profile was planted in pretraining.} Their cross-tuning design swaps
+instruction datasets between pretrained backbones and finds that cognitive-bias profiles cluster by
+backbone, with the instruction data a secondary axis; they conclude that pretraining plants a latent
+profile and finetuning brings it out. The objection to this paper follows at once: SFT may not
+\emph{install} the risk and framing profile, only make visible one that was already there. We accept
+the objection's premise. The OLMo base model places 0.555 of its probability on the larger of two sure
+amounts, so the staircase cannot measure the base model's preferences and cannot tell installation
+from exposure. The claim this paper makes is the weaker one the design supports: SFT is the first stage
+at which the profile is measurable, and the structural parameters are in place by then, so the profile
+does not originate at the preference-optimization stage. That claim is compatible with planting.
+
+Two features of the data still bear on the planting account, without settling it. First, their bias
+battery includes the framing effect, the certainty effect and loss aversion, so the two papers measure
+overlapping behavior with different instruments: theirs are bias scores, compared across finetuned models
+in a 2$\times$2 cross-tuning of OLMo-7B and T5-11B on Flan and Tulu-2 with three seeds each; ours are
+structural parameters and terminal-wealth-identical framing contrasts along one training path. Second,
+the between-family heterogeneity that the planting account locates in the backbone appears in our data only after post-training. The
+three base models have small frame gaps of the same sign ($+0.203$ Qwen, $+0.099$ OLMo, $+0.099$
+Llama). Post-training amplifies the gap in OLMo ($+0.349$) and Qwen in its working format ($+0.626$),
+and shrinks it in Llama ($+0.034$). Family-specific direction, arriving with post-training, is what an
+account in which finetuning does more than reveal would predict, though each family's post-training
+recipe differs, so backbone and recipe are confounded across families, and base-model frame gaps
+measured at chance-level engagement carry little weight. The ``swayed by finetuning'' half of
+their title has a counterpart here: after SFT, DPO moves both model-free quantities without moving the
+parameters (Section~\ref{sec:robust}).
+
+The decisive test borrows their design. Fine-tuning the OLMo-2 base model on a second instruction
+mixture, with the instruments and format held fixed, separates the backbone's contribution from the SFT
+data's: if the frame gap and the parameters land where OLMo SFT's do regardless of the mixture, the
+profile was planted; if they track the mixture, SFT installs it. A base-model elicitation that passes
+the dominance control (dominance items among the few-shot exemplars, or more exemplars) is the cheaper
+complement, since it would let the base model's own frame gap be read at full engagement.
+
+\textbf{\citet{wang2025}: base models fit no utility model.} On the same Llama-3.1-8B and Qwen2.5-7B
+pairs, they fit ten utility families (from linear and CRRA through prospect theory and Epstein-Zin) to
+sampled lottery choices and report that the best-fitting model predicts 69.6\% (Llama) and 74.9\% (Qwen)
+of base-model choices, against 93.9\% and 82.7\% for the instruction-tuned models. They also show that
+SFT and, more effectively, DPO on choices generated by a target utility move a model toward that target.
+The objection is that the base-versus-instruct contrast has been done. It has, and on that contrast this
+paper is a replication, with a deterministic logit readout in place of text sampled at temperature 0.7.
+What the replication adds is the reason the base fits fail. Dominance compliance of 0.62 (Llama) and 0.64
+(Qwen) says that the base models are not comparing amounts at all, so their poor fit is a failure of
+engagement, not an unusual utility function, and no richer utility class will repair it.
+
+Three further results go beyond their contrast. First, format. Their base models receive a plain-text
+prompt with in-context examples and their instruct models a chat-formatted prompt, so stage and format
+change together. Section~5.4 shows that format alone can turn the same Qwen Instruct weights from a
+near-total refuser into a coherent subject, in a direction that reverses between families; the
+staircase holds format fixed by construction, and the Llama pair here is compared within the few-shot
+format. Second, location. Base-versus-instruct compares the two ends of an undisclosed pipeline; the
+staircase places the change within one public training path. Third, their modulation result is not in
+tension with the flat parameters after SFT. Their SFT and DPO data are choices generated by a target
+utility function; OLMo's preference data are general-purpose. That DPO \emph{can} move risk preferences
+when the data are built to do so does not imply that general-purpose DPO \emph{does}, and on OLMo it did
+not move the parameters.
+
 \textbf{The bias is a property of a recipe rather than of a technology.} Four systems, four responses to
 the same loss-wording manipulation, from strong suppression through strong amplification to near
 indifference. The published work reporting prospect-theory parameters for a single instruction-tuned
-model, including the closest incumbents (Liu et al. 2025; arXiv:2508.08992), is describing a training
+model, including the closest incumbents \citep{liu2025,cpt2025}, is describing a training
 recipe. Heterogeneity of this size means an evaluation performed on one model transfers to another only
 by assumption.
 
@@ -953,83 +1014,11 @@ written reasoning can attach a habitual verdict to correct arithmetic.
 \hrule
 \vspace{0.5em}
 
-\begin{thebibliography}{99}
-\small
-
-\bibitem{dellavigna2018}
-DellaVigna, S. (2018).
-Structural Behavioral Economics. In \textit{Handbook of Behavioral Economics}, Vol.\ 1, 613--723;
-NBER Working Paper 24797.
-
-\bibitem{holt2002}
-Holt, C. A., and Laury, S. K. (2002).
-Risk Aversion and Incentive Effects. \textit{American Economic Review}, 92(5), 1644--1655.
-
-\bibitem{itzhak2024}
-Itzhak, I., Stanovsky, G., Rosenfeld, N., and Belinkov, Y. (2024).
-Instructed to Bias: Instruction-Tuned Language Models Exhibit Emergent Cognitive Bias.
-\textit{Transactions of the ACL}; arXiv:2308.00225.
-
-\bibitem{itzhak2025}
-Itzhak, I., Belinkov, Y., and Stanovsky, G. (2025).
-Planted in Pretraining, Swayed by Finetuning: A Case Study on the Origins of Cognitive Biases in LLMs.
-\textit{Conference on Language Modeling (COLM)}; arXiv:2507.07186.
-
-\bibitem{kahneman1979}
-Kahneman, D., and Tversky, A. (1979).
-Prospect Theory: An Analysis of Decision under Risk. \textit{Econometrica}, 47(2), 263--291.
-
-\bibitem{koszegi2006}
-K\H{o}szegi, B., and Rabin, M. (2006).
-A Model of Reference-Dependent Preferences. \textit{Quarterly Journal of Economics}, 121(4), 1133--1165.
-
-\bibitem{liu2025}
-Liu, J., Yang, Y., and Tam, K. Y. (2025).
-Evaluating and Aligning Human Economic Risk Preferences in LLMs.
-\textit{Proceedings of EMNLP 2025}; arXiv:2503.06646.
-
-\bibitem{cpt2025}
-CPT Estimation on LLMs (2025). Cumulative Prospect Theory Parameters of Instruction-Tuned Language
-Models. arXiv:2508.08992.
-
-\bibitem{papke1996}
-Papke, L. E., and Wooldridge, J. M. (1996).
-Econometric Methods for Fractional Response Variables. \textit{Journal of Applied Econometrics},
-11(6), 619--632.
-
-\bibitem{prelec1998}
-Prelec, D. (1998).
-The Probability Weighting Function. \textit{Econometrica}, 66(3), 497--527.
-
-\bibitem{reesjones2022}
-Rees-Jones, A., and Wang, K. (2022).
-An Approach to Testing Reference Points. NBER Working Paper 30773.
-
-\bibitem{smith1976}
-Smith, V. L. (1976).
-Experimental Economics: Induced Value Theory. \textit{American Economic Review}, 66(2), 274--279.
-
-\bibitem{train2009}
-Train, K. E. (2009).
-\textit{Discrete Choice Methods with Simulation} (2nd ed.). Cambridge University Press.
-
-\bibitem{tversky1981}
-Tversky, A., and Kahneman, D. (1981).
-The Framing of Decisions and the Psychology of Choice. \textit{Science}, 211(4481), 453--458.
-
-\bibitem{tversky1992}
-Tversky, A., and Kahneman, D. (1992).
-Advances in Prospect Theory: Cumulative Representation of Uncertainty.
-\textit{Journal of Risk and Uncertainty}, 5(4), 297--323.
-
-\bibitem{wang2025}
-Wang, Y., Li, X., and Chen, G. (2025).
-Risk Profiling and Modulation for LLMs. arXiv:2509.23058.
-
-\bibitem{wu1996}
-Wu, G., and Gonzalez, R. (1996).
-Curvature of the Probability Weighting Function. \textit{Management Science}, 42(12), 1676--1690.
-
-\end{thebibliography}
+% Works listed in the earlier hand-written bibliography but not cited in the text.
+\nocite{holt2002,kahneman1979,koszegi2006,prelec1998,train2009,tversky1981,tversky1992,wu1996}
+{\small
+\bibliographystyle{plainnat}
+\bibliography{references}
+}
 
 \end{document}
