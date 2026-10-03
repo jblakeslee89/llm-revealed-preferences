@@ -52,26 +52,37 @@ supervised fine-tuned (SFT), preference-optimized (DPO), and final Instruct. Run
 instruments across that staircase, in a single elicitation format, turns a coarse base-versus-instruct
 contrast into a stage-level attribution.
 
-The headline is that supervised fine-tuning is the largest single step along the OLMo-2 training
-path, and the only step at which the structural preference estimates move. From base to final
-Instruct, dominance compliance rises from 0.555 to 0.896 and the frame gap from $+0.099$ to $+0.349$.
-SFT accounts for about three fifths of each change (dominance $+0.200$, 95\% CI $[+0.177, +0.226]$;
-frame gap $+0.144$, CI $[+0.133, +0.155]$), and it carries the structural fit off the parameter
-bounds where the base model sits. After SFT the estimated parameters hold still: from SFT to DPO,
-$\Delta\lambda = -0.06$ with profile-likelihood CI $[-0.23, +0.11]$ and $\Delta\gamma = +0.04$ with CI
-$[-0.24, +0.34]$. The later stages are still active. DPO adds $+0.126$ to dominance compliance and
+The headline is model-free. Supervised fine-tuning is the largest single step along the OLMo-2
+training path in both quantities that need no preference model. From base to final Instruct, dominance
+compliance rises from 0.555 to 0.896 and the frame gap from $+0.099$ to $+0.349$. SFT accounts for about
+three fifths of each change (dominance $+0.200$, 95\% CI $[+0.177, +0.226]$; frame gap $+0.144$, CI
+$[+0.133, +0.155]$). The later stages are still active. DPO adds $+0.126$ to dominance compliance and
 $+0.075$ to the frame gap, both clearly different from zero, and the final polish adds a small further
-amount. That later movement appears as a deteriorating structural fit (deviance on the same 1{,}600
-cells rises from 229 at SFT to 457 at Instruct) rather than as shifted parameters, so preference
-optimization changes something the specification does not capture.
+amount.
+
+The structural reading of the same staircase is less settled than the model-free one, and we report
+why. The Phase 2 specification has no constant term. Adding one, a fixed lean toward or away from the
+gamble regardless of payoffs, improves the fit at every OLMo stage, and it changes what the
+parameters say. Without the constant, SFT moves loss aversion from zero to $\lambda = 1.14$ and the
+parameters then hold nearly still. With it, the post-trained models put no weight on the loss side of a
+mixed gamble ($\lambda$ at zero at every stage), and what moves at SFT is the lean itself, from toward
+the gamble ($+0.77$) to toward the safe option ($-0.80$). The lean keeps deepening through DPO
+($-1.02$) and the final stage ($-1.30$), which accounts for part of what the later stages change. A
+simulation shows the design separates the two specifications, so the data favor the second.
+The paired comparisons say the same without a model. The models gamble more, not less, when a lottery
+is described as a possible loss, and that extra gambling grows with the size of the stated gain and
+barely responds to the size of the stated loss. The framing response is therefore not loss aversion,
+whatever else it is. One structural result survives both specifications: after SFT the preference
+parameters change by less than a tenth of the SFT step.
 
 Where the profile comes from is a separate question, and the staircase answers it only in part.
 The OLMo base model places 0.555 of its probability on the larger of two sure amounts, close to a coin
 flip, so SFT is the first stage at which the profile can be measured at all. These data cannot
 distinguish a profile that SFT installs from one planted in pretraining that SFT makes visible, which
 is the account \citet{itzhak2025} give for cognitive biases generally. What the
-staircase does establish is order. The measurable economic profile, and the structural parameters
-that summarize it, are in place before preference optimization begins. Two further results hold
+staircase does establish is order. The measurable economic profile is in place before preference
+optimization begins, and the structural parameters that summarize it, under either specification,
+change little afterward. Two further results hold
 across families. Base models barely track value at all, consistent with the poor utility fits
 \citet{wang2025} report for the same Llama and Qwen pairs, and the dominance control shows why
 those fits fail. And the framing response is family-specific: Haiku suppresses gambling under loss
@@ -116,10 +127,11 @@ amount barely more often than a coin flip. The base model does not have odd pref
 preferences in any usable sense, and is producing a plausible-looking letter rather than comparing two
 amounts of money. After supervised fine-tuning, the first and simplest of the assistant-training
 steps, it picked the larger amount three quarters of the time and began reacting to how the choices
-were worded, and our model of its preferences settled on values that did not change afterward. The
-two later steps, the ones built on human preference comparisons, kept pushing in the same direction:
-the model became more reliable on the easy questions and somewhat more sensitive to wording, without
-changing the preferences our model recovers. The later stages are the ones people usually blame, since
+were worded. The two later steps, the ones built on human preference comparisons, kept pushing in the
+same direction: the model became more reliable on the easy questions, somewhat more sensitive to
+wording, and steadily more inclined toward the safe option across the board. The wording effect is not
+the human one, though. People avoid a gamble when its downside is called a loss; these models take it
+more often, and they respond to how big the stated gain is, not to how big the stated loss is. The later stages are the ones people usually blame, since
 human feedback enters there. Here the measurable preferences are already in place before those stages
 begin. Whether supervised fine-tuning created them, or only made visible something the model absorbed
 from its reading, is a question the base model's near-random answers leave open.
@@ -257,6 +269,16 @@ intervals that are probably too narrow. A contrast between two subjects combines
 exactly, since they share no parameters. An earlier version of this phase used a bootstrap over design
 cells; it failed at the old parameter bounds, where one interval overflowed to $-3.8\times10^{48}$.
 
+Two checks on these intervals and on the specification are reported in Section~\ref{sec:robust}. A
+wild cluster bootstrap around each fitted model (\texttt{analysis/bootstrap\_refit.py}; Rademacher
+weights on each gamble's block of residuals, 400 replicates, the same weights for every subject so
+that stage contrasts are paired) gives every subject, boundary or not, an interval calibrated the same
+way \citep{cameron2008}. At a boundary estimate the bootstrap is itself inconsistent \citep{andrews2000},
+so those intervals are read as a check on the dispersion fallback rather than as exact coverage. And a
+second specification adds a constant $c$ to the choice index, with template and gamble random
+intercepts on top of it (\texttt{analysis/template\_effects.py}); random-effect variances are tested
+against zero as boundary hypotheses \citep{self1987}.
+
 Validation gate: the estimator recovers the generating parameters near-exactly on the simulated
 probability agent (\texttt{data/phase3\_dryrun.csv}), so the degenerate fits reported below are
 properties of the models' choice patterns rather than estimator failures.
@@ -267,7 +289,8 @@ compliance} is the mean probability placed on the strictly larger sure amount ac
 controls, a per-model, per-format engagement check: a subject that fails it is not expressing
 preferences. \textbf{The frame gap} is mean $P(\text{gamble})$ in the mixed frame minus the gain frame
 over terminal-wealth-identical lotteries, the Phase 2 headline in probability units. Structural
-parameters are reported alongside, with boundary flags, for the reason given in Section~8.
+parameters are reported alongside, under both specifications, for the reasons given in
+Section~\ref{sec:robust} and Section~8.
 
 Phase 1 closed on an honest weakness: the structural model essentially tied a probability-only logit on
 in-sample fit and lost on BIC. \texttt{analysis/holdout\_validation.py} settles it out of sample. The 40
@@ -366,21 +389,36 @@ result.
 
 \begin{table}[h]
 \centering
-\caption{OLMo-2 training staircase, all elicited under the identical few-shot format
-($n = 1{,}680$ cells per stage; structural fit on the 1{,}600 core cells under $\phi = 1$). Brackets
-are 95\% profile-likelihood intervals from the wide-bounds refit. $^{\dagger}$ = estimate at the edge of
-the wide box, where $\lambda$ reaches zero and $\alpha$ reaches one; the base model's intervals use the
-unclustered dispersion scaling.}
+\caption{OLMo-2 training staircase, all elicited under the identical few-shot format ($n = 1{,}680$
+cells per stage; structural fits on the 1{,}600 core cells under $\phi = 1$). Panel A: model-free
+quantities. Panel B: the Phase 2 specification, with 95\% profile-likelihood intervals (gamble-clustered)
+for the post-trained stages and wild-cluster-bootstrap intervals for the base model, where the profile
+falls back to dispersion scaling and is too narrow. Panel C: the same model plus a constant $c$ on the
+choice index (negative = lean toward the safe option), with bootstrap intervals; the $c$ intervals are
+somewhat off-center at DPO and Instruct (Section~\ref{sec:robust}). Quasi-LR for adding $c$: 360, 31, 33,
+35. $^{\dagger}$ = estimate at the edge of the parameter space.}
 \label{tab:stairs}
 \small
-\begin{tabular}{@{}lcccccc@{}}
+\begin{tabular}{@{}lcccc@{}}
 \toprule
-Stage & Dominance & Frame gap & $\lambda$ & $\gamma$ & $\alpha$ & $\delta$ \\
+ & Base & SFT & DPO & Instruct \\
 \midrule
-Base     & 0.555 & $+0.099$ & $0.000^{\dagger}$ {\scriptsize$[0, 0.03]$} & 1.839 {\scriptsize$[1.65, 2.07]$} & $1.000^{\dagger}$ {\scriptsize$[0.99, 1]$} & $-0.874$ \\
-SFT      & 0.756 & $+0.243$ & 1.142 {\scriptsize$[1.01, 1.26]$} & 0.378 {\scriptsize$[0.17, 0.57]$} & 0.061 {\scriptsize$[0, 0.23]$} & $+1.179$ \\
-DPO      & 0.882 & $+0.318$ & 1.081 {\scriptsize$[0.96, 1.19]$} & 0.419 {\scriptsize$[0.24, 0.60]$} & 0.042 {\scriptsize$[0, 0.20]$} & $+1.073$ \\
-Instruct & 0.896 & $+0.349$ & 1.057 {\scriptsize$[0.95, 1.16]$} & 0.349 {\scriptsize$[0.20, 0.52]$} & 0.035 {\scriptsize$[0, 0.18]$} & $+1.064$ \\
+\multicolumn{5}{@{}l}{\textit{A. Model-free}} \\
+Dominance & 0.555 & 0.756 & 0.882 & 0.896 \\
+Frame gap & $+0.099$ & $+0.243$ & $+0.318$ & $+0.349$ \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textit{B. No constant (Phase 2 specification)}} \\
+$\lambda$ & $0.00^{\dagger}$ {\scriptsize$[0, 0.52]$} & 1.14 {\scriptsize$[1.01, 1.26]$} & 1.08 {\scriptsize$[0.96, 1.19]$} & 1.06 {\scriptsize$[0.95, 1.16]$} \\
+$\gamma$ & 1.84 {\scriptsize$[1.32, 2.58]$} & 0.38 {\scriptsize$[0.17, 0.57]$} & 0.42 {\scriptsize$[0.24, 0.60]$} & 0.35 {\scriptsize$[0.20, 0.52]$} \\
+$\alpha$ & $1.00^{\dagger}$ {\scriptsize$[0.87, 1]$} & 0.06 {\scriptsize$[0, 0.23]$} & 0.04 {\scriptsize$[0, 0.20]$} & 0.03 {\scriptsize$[0, 0.18]$} \\
+Deviance & 120.7 & 228.8 & 421.2 & 457.2 \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textit{C. With a constant lean $c$}} \\
+$c$ & $+0.77$ {\scriptsize$[+0.71, +0.86]$} & $-0.80$ {\scriptsize$[-0.83, -0.51]$} & $-1.02$ {\scriptsize$[-0.97, -0.56]$} & $-1.30$ {\scriptsize$[-1.24, -0.70]$} \\
+$\lambda$ & $0.00^{\dagger}$ {\scriptsize$[0, 0.31]$} & $0.00^{\dagger}$ {\scriptsize$[0, 0.76]$} & $0.00^{\dagger}$ {\scriptsize$[0, 0.69]$} & $0.00^{\dagger}$ {\scriptsize$[0, 0.64]$} \\
+$\gamma$ & 1.59 {\scriptsize$[1.17, 1.92]$} & 2.19 {\scriptsize$[1.05, 6.82]$} & 2.28 {\scriptsize$[1.31, 5.22]$} & 2.03 {\scriptsize$[1.24, 3.62]$} \\
+$\alpha$ & 0.32 {\scriptsize$[0.18, 0.43]$} & 0.34 {\scriptsize$[0, 0.58]$} & 0.27 {\scriptsize$[0, 0.47]$} & 0.26 {\scriptsize$[0.02, 0.45]$} \\
+Deviance & 95.3 & 224.6 & 413.2 & 447.5 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -395,66 +433,112 @@ are both family-specific.}
 \label{fig:stairs}
 \end{figure}
 
-\textbf{Base to SFT: everything moves.} Dominance compliance rises from 0.555 to 0.756 ($+0.200$, 95\%
-CI $[+0.177, +0.226]$). The frame gap more than doubles, from $+0.099$ to $+0.243$ ($+0.144$, CI
-$[+0.133, +0.155]$). The structural fit leaves the corner of the parameter space. With the old
-clip removed, the base model's $\lambda$ goes all the way to zero (upper limit 0.03): it puts no weight
-on the loss side of a mixed-frame gamble. SFT moves it to 1.142, $\Delta\lambda = +1.14$ with CI
-$[+1.02, +1.26]$. Weighting moves from 1.839 to 0.378, $\Delta\gamma = -1.46$ with CI $[-1.79, -1.18]$,
-and curvature from its upper limit of one to 0.061, $\Delta\alpha = -0.94$ with CI $[-1.00, -0.78]$. The
-position parameter reverses sign, from $-0.874$ to $+1.179$. A base model whose fit sits in a corner of
-the parameter space becomes, after one supervised stage, a subject with an interior fit and a measurable
-framing response. At SFT and every later stage the $\alpha$ interval runs down to zero, so payoff size
-barely enters the value function. That is the structural form of the Phase 1 finding that the model
-prices probability rather than payoffs.
+\textbf{Model-free: SFT is the largest step, and the later stages keep moving.} Dominance compliance
+rises from 0.555 to 0.756 at SFT ($+0.200$, 95\% CI $[+0.177, +0.226]$), then to 0.882 at DPO
+($+0.126$, CI $[+0.098, +0.152]$) and 0.896 at Instruct ($+0.014$, CI $[+0.003, +0.024]$). The frame gap
+more than doubles at SFT, from $+0.099$ to $+0.243$ ($+0.144$, CI $[+0.133, +0.155]$), and rises to
+$+0.318$ at DPO ($+0.075$, CI $[+0.069, +0.082]$) and $+0.349$ at Instruct ($+0.031$, CI
+$[+0.025, +0.036]$). SFT carries about three fifths of the base-to-Instruct change in each. These
+differences are paired over identical cells and bootstrapped over the 40 gamble identifiers; because the
+logit readout is deterministic, the intervals reflect only the design distribution, which is why they
+are narrow.
 
-\textbf{SFT to DPO: parameters hold, behavior keeps moving.} Dominance compliance continues to climb,
-0.756 to 0.882 ($+0.126$, CI $[+0.098, +0.152]$), and the frame gap rises to $+0.318$ ($+0.075$, CI
-$[+0.069, +0.082]$). Both changes are clearly nonzero. The preference parameters do not move by an
-amount the profile-likelihood intervals can detect: $\Delta\lambda = -0.06$ with CI $[-0.23, +0.11]$,
-$\Delta\gamma = +0.04$ with CI $[-0.24, +0.34]$, $\Delta\alpha = -0.02$ with CI $[-0.22, +0.20]$.
+\textbf{The framing response is not loss aversion.} A positive frame gap means the models gamble
+\emph{more} when the same lottery is described from a starting endowment, with its downside called a
+loss, which is the opposite of what loss aversion predicts. Pairing each mixed-frame cell with its
+gain-frame twin and regressing the difference in log-odds on the sizes of the stated gain and the stated
+loss (gamble-clustered standard errors) shows what drives it. The extra gambling grows with the stated
+gain at every stage (per log unit: $+0.13$ base, $+0.26$ SFT, $+0.43$ DPO, $+0.49$ Instruct, standard
+errors 0.01 to 0.06) and barely responds to the stated loss ($-0.11$, $-0.10$, $-0.23$, $-0.23$, standard
+errors 0.03 to 0.15). The mixed-frame wording names the gain explicitly (``a gain of \$$G$''), and the
+post-trained models respond to that number.
 
-\textbf{DPO to Instruct: small movement.} Dominance 0.882 to 0.896 ($+0.014$, CI $[+0.003, +0.024]$),
-frame gap $+0.318$ to $+0.349$ ($+0.031$, CI $[+0.025, +0.036]$). The parameter changes are
-$\Delta\lambda = -0.02$ with CI $[-0.18, +0.13]$, $\Delta\gamma = -0.07$ with CI $[-0.32, +0.19]$, and
-$\Delta\alpha = -0.01$ with CI $[-0.20, +0.18]$. Every parameter interval covers zero.
+\textbf{Structural: what moves depends on one specification choice.} Panel~B is the Phase 2
+specification. Under it, everything moves at SFT: $\Delta\lambda = +1.14$ (bootstrap CI
+$[+0.60, +1.25]$), $\Delta\gamma = -1.46$ ($[-2.14, -0.85]$), $\Delta\alpha = -0.94$ ($[-1.00, -0.73]$),
+and the fit leaves the corner of the parameter space where the base model sits. After SFT the parameters
+hold nearly still. Paired over the same gambles, whose residuals correlate 0.96 between adjacent stages,
+the post-SFT changes are detectable but small: $\Delta\lambda = -0.06$ $[-0.10, -0.03]$ and
+$\Delta\gamma = +0.04$ $[+0.04, +0.13]$ from SFT to DPO, and $\Delta\gamma = -0.07$ $[-0.10, -0.03]$ from
+DPO to Instruct, each under a tenth of the corresponding SFT step. Treated as independent, as the
+profile contrasts treat them, every post-SFT interval covers zero (SFT to DPO $\Delta\lambda$ profile CI
+$[-0.23, +0.11]$, $\Delta\gamma$ $[-0.24, +0.34]$).
 
-Stage differences in the model-free quantities are paired over identical cells and bootstrapped over
-the 40 gamble identifiers; because the logit readout is deterministic, these intervals reflect only the
-design distribution, and they are narrow for that reason. Parameter intervals are the gamble-clustered
-profile-likelihood intervals of Section~4 (\texttt{analysis/profile\_refit.py}); Figure~\ref{fig:profiles}
-shows the profiles themselves.
+Panel~C adds a constant $c$ to the choice index. It improves the fit at every stage, and the
+structural story changes. Loss aversion goes to zero at every stage, so the $\lambda \approx 1.1$ of
+Panel~B was the model using $\lambda$, which acts only in the mixed frame, as a partial constant. The
+base-to-SFT changes in $\lambda$, $\gamma$ and $\alpha$ all have intervals covering zero, and what moves
+is $c$: from a lean toward the gamble at base ($+0.77$) to a lean toward the safe option after SFT
+($-0.80$), a change of $-1.57$. The lean keeps deepening after SFT, by $-0.22$ (paired CI
+$[-0.17, -0.05]$) at DPO and $-0.28$ ($[-0.26, -0.15]$) at Instruct, while the other parameters stay
+within their intervals. A simulation (Section~\ref{sec:robust}) shows that the design separates the two
+specifications: data generated from Panel~B's fit return $\lambda$ near one when $c$ is left free, and
+data generated from Panel~C's fit return $\lambda$ near zero. The fit comparison therefore favors
+Panel~C, and its reading matches the model-free regression above.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{figures/phase3_profiles.pdf}
-\caption{Scaled profile deviance for $\alpha$, $\lambda$ and $\gamma$ across the wide-bounds refit. The
-horizontal line is the 95\% cutoff; a curve that stays under it to the edge of the axis marks a
+\caption{Scaled profile deviance for $\alpha$, $\lambda$ and $\gamma$ under the Panel~B specification.
+The horizontal line is the 95\% cutoff; a curve that stays under it to the edge of the axis marks a
 parameter the data do not bound in that direction. Solid curves use the gamble-clustered scaling,
 dashed curves the dispersion fallback for fits at the edge of the box. Top row: after SFT the three
 OLMo stages lie on top of one another, while the base model sits apart.}
 \label{fig:profiles}
 \end{figure}
 
-The two sets of results fit together in one way. The structural parameters settle at SFT, while the
-model-free quantities keep rising through DPO. The later movement shows up as a worse structural fit:
-deviance on the same 1{,}600 core cells rises from 229 at SFT to 421 at DPO and 457 at Instruct, and the
-Pearson dispersion rises with it. Nor is it a fall in choice noise within the model. The Fechner scale
-$\mu$ declines after SFT, but so does $\alpha$, and with a value function this flat their ratio, which
-sets how sharply choices respond to value, stays near 0.10 at all three post-trained stages.
-Preference optimization therefore changes something the specification does not capture, and
-identifying what it changes is open work.
-
-The central claim is stated in two parts. In this family, on these instruments, SFT is the largest
-single step and the only one at which the estimated preference parameters move; about three fifths of
-the base-to-Instruct change in both model-free quantities arrives there. And the measurable economic
-profile is in place before preference optimization begins. This bears on a literature that has pointed
-at different stages. \citet{itzhak2024} found instruction tuning and RLHF amplifying cognitive biases
-relative to base models; the same group's later cross-tuning study \citep{itzhak2025}
+The central claim is stated in three parts, ordered by how much they depend on the model. First,
+model-free: in this family, on these instruments, SFT is the largest single step in both value-tracking
+and the framing response, carrying about three fifths of the base-to-Instruct change, and the later
+stages keep moving both in the same direction. Second, the framing response that SFT introduces is not
+loss aversion: it rises with the stated gain and barely with the stated loss, and a structural fit that
+allows a constant finds no weight on losses at any stage. Third, under either specification the
+structural parameters are essentially in place after SFT; what the later stages add is, under the
+better-fitting specification, a growing lean toward the safe option. This bears on a literature that
+has pointed at different stages. \citet{itzhak2024} found instruction tuning and RLHF amplifying
+cognitive biases relative to base models; the same group's later cross-tuning study \citep{itzhak2025}
 finds that bias profiles cluster by pretraining backbone, with finetuning bringing them out. The
 staircase cannot choose between SFT installing the profile and SFT exposing one planted in pretraining,
-because the base model fails the dominance control and its preferences cannot be measured. What it
-rules out is that the profile first appears at the preference-optimization stage.
+because the base model fails the dominance control and its preferences cannot be measured
+(Section~\ref{sec:rivals}). What it rules out is that the profile first appears at the
+preference-optimization stage.
+
+\subsection{Robustness of the staircase}\label{sec:robust}
+
+\textbf{Interval calibration.} The wild cluster bootstrap confirms the gamble-clustered profile
+intervals for every interior subject: bootstrap intervals are 64\% to 103\% of the profile widths at the
+three post-trained OLMo stages and for Llama Instruct. For the five subjects at the edge of the
+parameter space, where the profile falls back to dispersion scaling, the fallback was too narrow for OLMo
+base ($\lambda$ upper limit 0.03 becomes 0.52; $\gamma$ $[1.65, 2.07]$ becomes $[1.32, 2.58]$) and
+roughly right for Llama base. The base-to-SFT contrasts of Panel~B still exclude zero with the wider
+intervals, and so do the Llama base-to-Instruct contrasts in $\lambda$ and $\gamma$. Clipped cells per
+replicate run 0\% to 8\% except for Qwen Instruct in few-shot (21\%), the near-total refuser already
+excluded from attribution claims.
+
+\textbf{The constant.} Adding $c$ improves the fit for nine of eleven subjects (not Qwen Instruct
+few-shot or Llama Instruct chat) and sends $\lambda$ to zero for all but three (Qwen Instruct few-shot,
+Llama Instruct chat, and OLMo Instruct chat at 0.07). The bootstrap of the Panel~C fit is visibly biased
+for $c$ at the later OLMo stages, where the point estimates sit just outside their percentile intervals,
+because the surface has a ridge among $c$, $\gamma$ and $\alpha$ and refits drift along it; the signs of the
+$c$ contrasts are robust, their exact bounds less so. To check identification,
+\texttt{analysis/lossid\_power.py} simulates 40 data sets from each of the two SFT fits, with noise
+shaped like the real residuals (template, gamble and cell components on the logit scale), and refits with
+$\lambda$ and $c$ both free. From Panel~B's fit, $\hat\lambda$ has median 0.97 (10th--90th percentile
+$[0.45, 1.55]$); from Panel~C's fit, median 0.10 ($[0.00, 0.40]$). The design separates the two because
+$c$ shifts every frame while $\lambda$ acts only in the mixed frame. A crossed block that varies gain and
+loss size independently (\texttt{src/design\_lossid.py}, 792 cells, not yet run) narrows $\hat\lambda$
+only modestly in the same simulation. Its value is the model-free loss-size regression above, which it
+makes sharper: in the current grid the stated loss spans \$29 to \$186 and correlates with the stated
+gain (log-log $r = 0.50$), and in the block it spans \$14 to \$271 and is orthogonal to it.
+
+\textbf{Templates and gambles.} Template random intercepts on top of $c$ are significant for every
+subject and absorb about a fifth of the remaining deviance at each post-trained OLMo stage (20\% SFT,
+21\% DPO, 17\% Instruct; 7\% at base). The share does not grow at DPO, so wording heterogeneity is not
+what the later stages add, although its absolute spread does grow: the standard deviation of gamble
+uptake across the five templates is 0.05 at base and 0.12 to 0.16 after post-training, and one template
+carries a strong, deepening lean toward the safe option. Gamble random intercepts, with templates as
+fixed effects, are not significant at any OLMo stage ($\sigma \le 0.12$, $p \ge 0.18$). Neither kind of
+heterogeneity moves $\lambda$, $\gamma$ or $\alpha$ once $c$ is in the model.
 
 \subsection{Format instability, with a model-specific direction}
 The dual-format arm was included as a control and returned a result. The same Qwen Instruct weights
@@ -500,9 +584,11 @@ $\Delta\gamma$ CI $[+0.61, +1.41]$) cannot be read as a post-training effect, be
 behavior does not represent that model in its natural format; it is reported as format-confounded and
 excluded from the attribution claims. The Llama pair, elicited few-shot on both sides of a format-stable
 instruct model, gives $\Delta\lambda = +1.20$ with CI $[+1.04, +1.27]$ and $\Delta\gamma = -1.00$ with
-CI $[-1.35, -0.72]$ from base to instruct. As with OLMo, the base model's $\lambda$ sits at zero, which is
-the parameter's natural floor, so the contrast in levels is well defined; the base side uses the
-unclustered scaling. Because Llama's parameters move with format, this contrast holds for the few-shot
+CI $[-1.35, -0.72]$ from base to instruct (bootstrap CIs $[+1.05, +1.26]$ and $[-1.52, -0.70]$). As with
+OLMo, the base model's $\lambda$ sits at zero, which is the parameter's natural floor, so the contrast in
+levels is well defined. As with OLMo too, the $\lambda$ contrast does not survive a constant term: with $c$
+in the model, Llama Instruct's $\lambda$ is also zero and the move is in the lean ($c$ from $-0.05$ to
+$-1.11$, paired CI $[-1.13, -0.94]$). Because Llama's parameters move with format, this contrast holds for the few-shot
 format and should not be carried to chat.
 
 \subsection{Framing heterogeneity across families}
@@ -726,8 +812,9 @@ measured cases in which the trace reports the right arithmetic and a verdict sup
 the habit differs by family: toward the cautious answer in Qwen, toward the first-listed option in
 Llama.
 
-\textbf{The staircase depends on the regime.} Under immediate answer the structural parameters were set
-at SFT and the later stages moved nothing detectable (Section~5.3). Under reasoning, the later stages
+\textbf{The staircase depends on the regime.} Under immediate answer the structural parameters were
+essentially in place after SFT, and the later stages added mainly a lean toward the safe option
+(Section~5.3). Under reasoning, the later stages
 matter. OLMo SFT keeps a large frame gap ($+0.375$, CI $[+0.286, +0.466]$), larger than its own
 immediate-answer gap, and by the final Instruct checkpoint it is nearly gone: the difference is $-0.320$
 (CI $[-0.449, -0.201]$). Induced expected-value agreement also rises from SFT to Instruct ($0.713$ to
@@ -737,8 +824,8 @@ and it all belongs to DPO. From SFT to DPO the uninduced frame gap falls by $0.3
 -0.287]$) and induced expected-value agreement rises from $0.713$ to $0.832$ ($+0.119$, CI $[+0.057,
 +0.182]$). From DPO to Instruct the gap does not move ($+0.040$, CI $[-0.076, +0.156]$) and induced
 agreement dips slightly ($-0.029$, CI $[-0.054, -0.005]$). Preference optimization leaves the
-immediate-answer parameters where SFT put them and sets how the model reasons; the final stage changes
-neither.
+immediate-answer parameters close to where SFT put them and sets how the model reasons; the final stage
+changes neither.
 
 \subsection{Paying for the rule: induced value through training}\label{sec:paid}
 Smith's induced-value procedure works because the subject is paid in a currency it wants. A language model
@@ -803,11 +890,11 @@ came from presupposes that something was there to be biased.
 training is the stage most often blamed for human-like biases, since it is the stage where human
 judgments enter the weights. In the one family that publishes stage-level checkpoints, the frame gap,
 the value-tracking, and the interior structural fit are all present after supervised fine-tuning, and
-the estimated parameters do not move afterward. DPO still matters: it adds roughly a third of the total
-change in both model-free quantities, through a channel the structural model does not represent. So the
-ordering is clear, and the division of labor is only partly clear. SFT sets the parameters and does
-most of the moving; preference optimization amplifies the model-free expression without relocating the
-estimates. This is one family with one set of instruments, and the base model's failed dominance
+the estimated parameters change little afterward. DPO still matters: it adds roughly a third of the total
+change in both model-free quantities, and in the better-fitting specification it shows up as a deepening
+lean toward the safe option rather than as shifted preference parameters. So the ordering is clear, and
+the division of labor is partly clear. SFT does most of the moving; preference optimization amplifies the
+model-free expression and the safe lean without relocating the other estimates. This is one family with one set of instruments, and the base model's failed dominance
 control leaves open whether SFT is the origin or only the point of first visibility. The claim also
 holds only for the immediate-answer regime: when the model reasons first, the later stages remove most of
 the frame gap SFT leaves (Section~\ref{sec:reason}). Either way, the result points research attention at
@@ -840,8 +927,10 @@ and shrinks it in Llama ($+0.034$). Family-specific direction, arriving with pos
 account in which finetuning does more than reveal would predict, though each family's post-training
 recipe differs, so backbone and recipe are confounded across families, and base-model frame gaps
 measured at chance-level engagement carry little weight. The ``swayed by finetuning'' half of
-their title has a counterpart here: after SFT, DPO moves both model-free quantities without moving the
-parameters (Section~\ref{sec:robust}).
+their title has a counterpart here: after SFT, DPO moves both model-free quantities and deepens the safe
+lean while the other parameters barely move (Section~\ref{sec:robust}). And the property that SFT
+brings out is not the human one: the post-trained models' framing response tracks the stated gain and
+not the stated loss, so whatever is planted, it is not loss aversion in the prospect-theory sense.
 
 The decisive test borrows their design. Fine-tuning the OLMo-2 base model on a second instruction
 mixture, with the instruments and format held fixed, separates the backbone's contribution from the SFT
@@ -870,8 +959,8 @@ format. Second, location. Base-versus-instruct compares the two ends of an undis
 staircase places the change within one public training path. Third, their modulation result is not in
 tension with the flat parameters after SFT. Their SFT and DPO data are choices generated by a target
 utility function; OLMo's preference data are general-purpose. That DPO \emph{can} move risk preferences
-when the data are built to do so does not imply that general-purpose DPO \emph{does}, and on OLMo it did
-not move the parameters.
+when the data are built to do so does not imply that general-purpose DPO \emph{does}, and on OLMo it
+moved the parameters by less than a tenth of the SFT step.
 
 \textbf{The bias is a property of a recipe rather than of a technology.} Four systems, four responses to
 the same loss-wording manipulation, from strong suppression through strong amplification to near
@@ -903,7 +992,7 @@ any one subject.
 behavioral property or first makes it measurable, the checkpoint that follows it is the earliest place
 the property can be inspected, and in this family it is where most of the change happens. An audit that
 begins at the preference-optimization stage, which receives most of the governance attention, starts
-after the parameters are set. Where to correct a property is a separate question this design does not
+after most of the change has happened. Where to correct a property is a separate question this design does not
 answer: if the disposition is planted in pretraining, changing the supervised data may move its
 expression without removing it. The method generalizes: any lab retaining intermediate checkpoints can
 run this diagnostic on any behavioral property a fixed instrument can measure.
@@ -939,14 +1028,17 @@ and the framing-heterogeneity result is precisely the reason such claims are uns
 
 \section{Limitations and Next Phase}
 
-\textbf{Fits at the edge of the parameter space.} Five subjects have a parameter at the edge of the
-wide box: the OLMo and Llama base models and Qwen Instruct in chat put $\lambda$ at zero, OLMo base and Llama Instruct in
-chat put $\alpha$ at one, and Qwen Instruct in few-shot has no upper limit on $\lambda$. For these the
-clustered sandwich is invalid and the intervals use dispersion scaling alone, which ignores the
-correlation among a gamble's ten presentations and is probably too narrow. The staircase's central
-claims do not rest on these intervals: the post-SFT contrasts are interior and clustered, and the move
-at SFT is visible in dominance compliance and the frame gap alone. A parametric bootstrap from the
-fitted model, clustered by gamble, would give the boundary subjects properly calibrated intervals.
+\textbf{Loss aversion depends on a constant the Phase 2 specification omitted.} The $\lambda$ estimates
+of Phases 2 and 3 were fit without a constant lean. With one, $\lambda$ goes to zero for most subjects
+here, and the fit improves (Section~\ref{sec:robust}). The Phase 2 Haiku estimate ($\lambda = 3.23$),
+fit to sampled choices with a negative frame gap, should be re-estimated the same way before it is
+cited. The crossed gain-by-loss block (\texttt{data/phase3\_lossid\_grid.csv}) is ready to run and would
+sharpen the model-free loss-size test.
+
+\textbf{Intervals at the edge of the parameter space.} Five subjects have a parameter at the edge of
+the wide box. The gamble-clustered bootstrap gives them calibrated intervals, wider than the dispersion
+fallback for OLMo base, but at a boundary the bootstrap is itself not exact. The staircase's
+model-free claims do not rest on these intervals.
 
 \textbf{The base model cannot be measured, so origin is open.} SFT is the first stage at which the
 profile is measurable, and that is all the staircase can say about its origin. Two follow-ups would
@@ -955,11 +1047,12 @@ exemplars, or dominance items among the few-shot examples), after which the fram
 and a probe for a framing direction in base-model activations. The second connects to the
 interpretability leads in \texttt{docs/}.
 
-\textbf{What DPO changes is unmodeled.} Preference optimization moves both model-free quantities while
-the structural parameters hold and the fit deteriorates. The position parameter barely moves after SFT
-($+1.18$, $+1.07$, $+1.06$), so it is not the channel. Candidates include heterogeneity across templates
-or gambles and a noise process that is not Fechner. Fitting template random effects at each stage is
-the natural first check.
+\textbf{What DPO changes is only partly modeled.} Preference optimization moves both model-free
+quantities while $\lambda$, $\gamma$ and $\alpha$ barely move and the fit deteriorates. The position
+parameter is not the channel ($+1.18$, $+1.07$, $+1.06$), and template and gamble random effects absorb
+a stable share of the deviance at every stage rather than a growing one. A constant lean toward the
+safe option accounts for part of it. A noise process that is not Fechner, or template-specific noise
+scales, are the next candidates.
 
 \textbf{One instruction phrasing in the induced arm.} Each induced rule was tested under a single
 phrasing. A compliance failure under one phrasing is weaker evidence than a failure under several, and
@@ -1001,7 +1094,8 @@ intermediate checkpoints. A second staged family would turn the central claim in
 
 Phase 3 has done its job. It carries the Phase 1 and Phase 2 instruments to models whose training history
 is visible, shows that the measured profile is in place at supervised fine-tuning before preference
-optimization begins, shows that base models
+optimization begins, shows that the framing response it installs or reveals is not loss aversion,
+shows that base models
 lack the value-tracking that would make the word ``preference'' apply, documents that the framing response
 differs in sign across families, and answers the Phase 1 near-tie out of sample. It also found the ceiling
 of its own elicitation and, with the reasoning arm, raised it: the models can follow a stated rule when
