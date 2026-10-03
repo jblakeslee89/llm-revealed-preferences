@@ -1,0 +1,11 @@
+truth A (no c):   lambda 1.142 gamma 0.378 alpha 0.061 c 0        dev 228.8
+truth B (with c): lambda 0.0001 gamma 2.186 alpha 0.335 c -0.798 dev 224.6
+
+R = 40 simulations per cell; noise sd template 0.6, gamble 0.15, cell 1.0 (logit scale)
+truth design  lambda_med  lambda_q10  lambda_q90  share_lambda_gt_0.5  c_med  ddev_lambda0_med
+    A     D1       0.973       0.447       1.550                0.875 -0.057             0.393
+    A     D2       1.054       0.441       1.546                0.875 -0.119             0.565
+    B     D1       0.095       0.000       0.399                0.075 -0.533             0.007
+    B     D2       0.022       0.000       0.307                0.000 -0.615             0.001
+
+Reading: the block separates the truths if lambda_hat is high under A and near 0 under B on D2.

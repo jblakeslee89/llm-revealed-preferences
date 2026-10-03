@@ -46,10 +46,15 @@ Adding one constant c to the choice index (a fixed lean toward or away from the 
 of value) improves the fit significantly for nine of eleven subjects (quasi-LR 31-35 at the OLMo
 post-SFT stages, 360 at OLMo base, 93 at Llama Instruct few-shot; not significant for Qwen Instruct
 few-shot or Llama Instruct chat). It sends lambda to its floor (1e-4) for every subject except Qwen
-Instruct few-shot (39), Llama Instruct chat (4.2) and OLMo Instruct chat (0.07). With alpha near zero the
-value function is almost flat in payoffs, so "losses weigh 1.1x gains" and "a constant lean toward the
-safe option" fit the gain/mixed contrast nearly equally well. Lambda is not separately identified from
-c in this design.
+Instruct few-shot (39), Llama Instruct chat (4.2) and OLMo Instruct chat (0.07).
+
+**Correction (later the same day, see section 4):** an earlier version of this note said lambda is
+not separately identified from c in this design. Simulation says otherwise: the current grid does
+separate the two, because c shifts every frame and lambda only the mixed one. The intercept fit is the
+data's answer, not an identification failure: once a constant is allowed, the post-trained models put
+no weight on the loss side of a mixed gamble. A positive frame gap (more gambling when the same lottery
+is described as a possible loss) is the opposite of what loss aversion predicts, and lambda about 1.1
+in the base specification was the model using lambda as a partial intercept.
 
 Under the intercept specification (bootstrap B = 200, paired):
 
@@ -100,3 +105,37 @@ final stage, which is part of what the base spec was failing to capture after SF
    lean increasingly toward the safe option, a shift that starts at SFT and continues through DPO.
 3. A design fix for identification: add mixed-frame gambles whose loss side varies independently of the
    gain side (or loss-only gambles), so lambda is pinned by a contrast a constant cannot mimic.
+
+## 4. Identification check and the crossed gain x loss block (added Oct 3 2026)
+
+`src/design_lossid.py` builds a 36-item block (`data/phase3_lossid_grid.csv`, 792 cells, instrument
+`p3`) in the existing mixed-frame wording, with loss size L (14 to 271) and gain size G (0.45 to 5.5 x L)
+crossed, p jittered near one half, gain-frame twins and dominance controls. `analysis/lossid_power.py`
+simulates the SFT fit under two truths, A (lambda 1.14, c = 0) and B (lambda 0, c = -0.80), with noise
+shaped like the real residuals, and refits with lambda and c both free (R = 40 each):
+
+| truth | design | lambda-hat median [10%, 90%] |
+|---|---|---|
+| A | current grid | 0.97 [0.45, 1.55] |
+| A | + block | 1.05 [0.44, 1.55] |
+| B | current grid | 0.10 [0.00, 0.40] |
+| B | + block | 0.02 [0.00, 0.31] |
+
+The current grid already separates the truths; the block narrows lambda-hat only modestly. The reason:
+with alpha near zero, loss aversion acts as a fixed penalty on any option with a loss side, which only
+the frame contrast can identify, and the grid has that.
+
+Model-free, the mixed-minus-gain logit gap (paired cells, gamble-clustered SEs) rises with the stated
+gain and barely responds to the stated loss:
+
+| subject | per log G | per log L |
+|---|---|---|
+| OLMo base | +0.13 (0.01) | -0.11 (0.03) |
+| OLMo SFT | +0.26 (0.03) | -0.10 (0.08) |
+| OLMo DPO | +0.43 (0.05) | -0.23 (0.12) |
+| OLMo Instruct | +0.49 (0.06) | -0.23 (0.15) |
+| Llama Instruct | +0.06 (0.03) | +0.10 (0.10) |
+
+The block's real value is this model-free test, made sharp: in the current grid L spans 29-186 and is
+correlated with G (r = 0.50); in the block L spans 14-271 and is orthogonal to G. It costs about half a
+Phase 3 grid per model (immediate answers, T4).
