@@ -109,7 +109,11 @@ entirely (mixed-frame accuracy 0.869 to 1.000), so that error is a bookkeeping h
 OLMo Instruct makes the same slip and ignores the sentence (0.588 to 0.581). And paying
 the model through training, the closest available analogue to Smith's payment, does not teach the
 computation in the immediate-answer regime: across six configurations the paid model settled on a
-fixed answer and never learned to tell better gambles from worse ones.
+fixed answer and never learned to tell better gambles from worse ones. Paid while it reasons, the same
+model responds. Never told the rule, Qwen's agreement with expected value rises from 0.829 to 0.927,
+within 0.04 of the told-and-reasoning level, it drops the stock phrase behind its false verdicts, and
+under a square-root payoff it moves toward risk aversion, which instruction alone could not produce. OLMo
+Instruct does not respond to payment.
 
 \section{The Result in Plain Language}
 
@@ -166,7 +170,10 @@ through the arithmetic, it made the same bookkeeping mistake again and again, co
 change in its money and the sure option as a total, and that mistake always favors the safe choice.
 Adding one sentence, ``compare the final dollar amounts,'' made the mistake disappear. We also tried
 paying the model for good choices by training it on the lottery payoffs. When it had to answer at once,
-payment did not teach it the arithmetic; it only learned to give the same answer every time.
+payment did not teach it the arithmetic; it only learned to give the same answer every time. When it could
+reason first, payment worked for Qwen: never told the rule, it came close to its told-the-rule accuracy,
+stopped writing its backward verdicts, and under a cautious payoff became more cautious. OLMo did not
+change.
 
 \section{Experimental Design}
 
@@ -849,8 +856,58 @@ framing gap disappears along with any sensitivity to the options.
 The result fits Section~\ref{sec:reason}. In a one-letter answer the model does not compute expected value,
 whether it is told the rule or paid for it, and payment then drives it to a constant policy. This is a
 pilot with one family, one adapter size and short training, and one fix (gambles balanced by stakes as
-well as by count) is untested. The more informative incentive experiment pays the model in the reasoning
-regime, where it already computes; Section~8 describes it.
+well as by count) is untested.
+
+\textbf{Paid while it reasons, the model responds.} The informative test pays the model in the regime where
+it already computes (\texttt{colab/rl\_induce\_reason.py}). Each step samples four reasoning traces for each
+of eight training prompts, reads the answer distribution after each trace, pays the lottery outcome
+through the induced utility, and updates a LoRA adapter on the trace and the answer with a
+leave-one-out advantage and a per-token penalty on drift from the untrained model. The model is paid and
+never told the rule, so the comparison with the told-and-reasoning runs of Section~\ref{sec:reason} is
+payment against instruction. Three 200-step runs on an A100: Qwen with the linear utility, Qwen with
+$u(x) = \sqrt{x}$, and OLMo Instruct with the linear utility, each scored afterwards on the 840
+reasoning-arm cells (Table~\ref{tab:paidreason}).
+
+\begin{table}[h]
+\centering
+\small
+\caption{Payment in the reasoning regime. Agreement with the paid rule's optimum on clear core cells of
+the 840 reasoning-arm cells; the paid models were never told the rule. Brackets: paired 95\%
+cluster-bootstrap intervals for the difference from the unpaid, untold run on the same cells.}
+\label{tab:paidreason}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Subject and paid rule & Unpaid, untold & Paid, untold & Difference & Told the rule \\
+\midrule
+Qwen, linear (EV) & 0.829 & 0.927 & $+0.098$ {\scriptsize$[+0.043, +0.163]$} & 0.965 \\
+Qwen, $\sqrt{x}$ & 0.606 & 0.739 & $+0.133$ {\scriptsize$[+0.069, +0.208]$} & 0.124\textsuperscript{a} \\
+OLMo Instruct, linear (EV) & 0.741 & 0.776 & $+0.035$ {\scriptsize$[-0.017, +0.086]$} & 0.803 \\
+\bottomrule
+\multicolumn{5}{@{}l}{\scriptsize\textsuperscript{a} Told the rule, immediate answer; there is no
+told-and-reasoning $\sqrt{x}$ run.}
+\end{tabular}
+\end{table}
+
+Paid for expected value and never told the rule, Qwen closes about 70\% of the distance between its
+uninstructed and its instructed reasoning, and free-money accuracy stays at 1.000. Paid under the
+square-root utility, it moves toward risk aversion: agreement with the square-root optimum rises by
+0.133 and agreement with expected value falls by 0.139 (CI $[0.079, 0.210]$), a shift instruction never
+produced. OLMo Instruct shows no detectable gain, its free-money accuracy slips from 1.000 to 0.900, and its
+loss-wording gap moves by $-0.250$ (CI $[-0.350, -0.146]$), the same non-response it showed to the
+clarifying sentence. By the plan's pre-set rule, the Phase~4 negative reflects the answer regime for Qwen,
+since the same incentive works once it reasons; for OLMo the negative extends to reasoning.
+
+Payment also reached the written verdict. In the paid-for-expected-value model, the ``\ldots, which is
+\ldots\ than'' construction falls from 34\% of comparisons with the sure amount to 5\%, false ``less''
+verdicts when the gamble is better fall from 25\% to 1\%, and reversed numeric comparisons from 39 of 53
+to 2 of 15; the model now writes ``Since the expected value of Outcome A (\$150.98) is higher than the
+guaranteed amount from Outcome B (\$106)'' (\texttt{analysis/verdict\_habits\_paid.py}). Much of its gain
+in Table~\ref{tab:paidreason} is the removal of that habit. Paid under the square-root utility, the habit
+survives (false ``less'' 19\%), plausibly because a verdict that favors the sure amount is often the paid
+choice under a risk-averse payoff. No paid model reverses a comparison whose truth favors the sure
+amount. Two cautions: in both Qwen runs the held-out monitor peaked between steps 50 and 125 and slid by
+step 200, and the evaluation used the step-200 adapter, so the gains are if anything understated; and each
+configuration ran once, with one learning rate and drift penalty.
 
 \subsection{Held-out validation}\label{sec:holdout}
 Phase 1 reported honestly that a probability-only logit essentially tied the structural model in sample
@@ -1067,14 +1124,12 @@ primes the uninduced OLMo runs toward it. The reference-point error is identifie
 hand and a numeric text check (the change-from-holdings number within 2\%), not a full coding of the
 reference point each trace uses.
 
-\textbf{No choice here is incentivized.} Every elicitation in Phases 1 through 3 is hypothetical, and
-the induced-value arm is instruction only. Paid training (Section~\ref{sec:paid}) is the closest
-available analogue to payment, and in the immediate-answer regime it failed to teach the computation. The
-next incentive experiment pays the model in the reasoning regime, where it already computes, and targets
-two questions instructions could not settle: whether payment can induce a specified risk-averse utility
-($u(x) = \sqrt{x}$, where instruction alone collapsed to 0.124 compliance), and whether paid reasoning
-carries over to immediate answers. It needs generation during training, roughly ten to twenty times the
-compute of the pilot.
+\textbf{Payment is through training, and only partly tested.} Every elicitation in Phases 1 through 3 is
+hypothetical, and the induced-value arm is instruction only. Paid training (Section~\ref{sec:paid}) is
+the closest available analogue to payment: it failed in the immediate-answer regime and worked for Qwen
+in the reasoning regime, including for a risk-averse utility, while OLMo did not respond. Open: whether
+paid reasoning carries over to immediate answers; sensitivity to the learning rate, the drift penalty,
+the number of steps (the monitor peaked mid-training) and the seed; and a second family that responds.
 
 \textbf{Lottery choices are not advice.} Every subject here chooses lotteries for itself, and deployed
 models advise others on decisions in other units. Whether the measured curvature, loss aversion,
@@ -1101,8 +1156,10 @@ differs in sign across families, and answers the Phase 1 near-tie out of sample.
 of its own elicitation and, with the reasoning arm, raised it: the models can follow a stated rule when
 they may compute, their framing response and training-stage profile both depend on whether they do, the
 framing response that remains under reasoning is a bookkeeping habit one sentence removes in Qwen and
-not in OLMo, and the
-written reasoning can attach a habitual verdict to correct arithmetic.
+not in OLMo, the
+written reasoning can attach a habitual verdict to correct arithmetic, and payment, which taught nothing
+in one-letter answers, moves Qwen's reasoning most of the way to its instructed level and removes the
+habit.
 
 \vspace{1em}
 \hrule

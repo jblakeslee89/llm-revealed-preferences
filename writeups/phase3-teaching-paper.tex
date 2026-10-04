@@ -165,7 +165,8 @@ followed almost perfectly on questions requiring no arithmetic. Allowed to work 
 in writing before answering, the same models follow the rule 71 to 96 percent of the time, and the
 framing effect changes with the answering mode: one model's reaction to loss wording reverses
 direction, through a bookkeeping error it makes over and over. One added sentence removes that
-error, and paying the model through training does not teach it the arithmetic. We treat the interpretation of
+error. Paying the model through training does not teach it the arithmetic in snap answers, but
+paying it while it reasons does, for one of the two models. We treat the interpretation of
 the second result as a lesson in identification: the data cannot separate training that created
 these dispositions from training that made a latent disposition readable, and we show why the
 policy conclusion holds under either story.
@@ -873,8 +874,24 @@ giving the same answer to every question: always the sure amount in the early ve
 the gamble once the payments favored gambling, since most of our bets pay more on average when
 you take them. A fixed answer is the best a model can do if it cannot tell a good bet from a bad one,
 and that is exactly where the model settled. This fits the rest of the section. In a snap answer the
-model does not do the multiplication, whether it is told the rule or paid for it. The natural next
-experiment pays it when it may reason first, where it already can.
+model does not do the multiplication, whether it is told the rule or paid for it.
+
+So we paid it while it reasons. Each round, the model wrote out its reasoning for a batch of fresh
+bets, the bets were played out, and the payoff adjusted its weights, as before. It was never told the
+rule. Qwen responded. Its agreement with expected value on our questions rose from 83 to 93 percent,
+close to the 96 percent it reaches when told the rule outright. Paid under the square-root rule
+instead, which rewards caution, it became more cautious: its choices moved toward the square-root
+answer and away from expected value, something the instruction alone never achieved (12 percent).
+OLMo did not change.
+
+Payment also fixed the backward verdicts. The paid Qwen almost stopped writing ``which is less than
+the guaranteed'': false verdicts on questions where the gamble was better fell from a quarter of its
+comparisons to 1 percent, and it now writes ``Since the expected value of Outcome A (\$150.98) is higher
+than the guaranteed amount from Outcome B (\$106).'' Paid under the cautious rule, it kept the habit,
+perhaps because a verdict that favors the sure amount is often the one that pays under that rule. The
+lesson matches the rest of this section: in snap answers the format is the obstacle, since the same
+incentive works once the model may reason, and when the model can do the arithmetic, payment changes how it writes the conclusion as well as which
+answer it picks.
 
 % ============================================================
 \section{What this study cannot say}
@@ -908,15 +925,16 @@ reasoning toward it. The backward comparisons are found by an automatic check th
 comparisons written out with both numbers, about a quarter of Qwen's answers, and the phrase test covers one model; other families may have
 other habits of wording.
 
-\textbf{The payment test is a pilot.} It used one model, a small trainable add-on to the model's
-weights, and at most 150 training steps per version, and it paid only for snap answers. It shows
-that payment of this kind does not teach the arithmetic in that mode; it does not show that no form
-of payment could.
+\textbf{The payment tests are small.} Each used a small trainable add-on to the model's weights.
+The snap-answer pilot ran at most 150 steps per version on one model; the reasoning test ran once per
+setup, 200 steps each, on two models. Its gains are probably understated, because the models did best
+midway through training and we scored the final version. Whether paid reasoning carries over into snap
+answers is untested.
 
 \textbf{The stakes are hypothetical.} Nothing was at stake for any subject in the main
 experiment. By Smith's own argument, an unincentivized elicitation is a weaker instrument than an
-incentivized one. Our induced-value arm is instruction only, and the payment pilot in Section~7 is
-the closest analogue we have so far.
+incentivized one. Our induced-value arm is instruction only, and payment through training (Section~7) is
+the closest analogue we have.
 
 % ============================================================
 \section{Why this matters}
@@ -979,12 +997,9 @@ habits are still unmeasured, and test whether a habit like Qwen's or Llama's can
 rewording the instruction rather than the question.
 Code every written answer for the reference point it uses.
 
-\textbf{Pay the model when it may reason.} Payment through training did not teach the arithmetic
-in snap answers, but the model already does the arithmetic when it reasons. Paying it in that mode
-asks two questions instructions could not settle: can payment install a specific risk-averse
-utility, where the square-root instruction collapsed to 12 percent compliance; and does paid reasoning
-carry over into snap answers? This needs the model to write its reasoning during training, roughly ten
-to twenty times the computing cost of the pilot.
+\textbf{Follow up the payment result.} Paying Qwen while it reasons worked, including for a cautious
+rule; paying OLMo did not. Next: does paid reasoning carry over into snap answers, how many training
+steps does it take before the gains peak, and does a second family respond like Qwen or like OLMo?
 
 \textbf{Replicate the staircase on a second family.} The central claim rests on one lineage. Any
 laboratory that retains intermediate checkpoints can run this diagnostic, and a second family
