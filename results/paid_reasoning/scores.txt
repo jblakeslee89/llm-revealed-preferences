@@ -1,0 +1,30 @@
+######## Qwen, paid linear (untold) vs unpaid untold reasoning
+
+== phase4_qwen-inst_chat_reason_paid-linear.csv  (induce=none, scored as riskneutral; 840 cells, 40 gambles, 840 rows)
+    dom 1.000 [1.000, 1.000]   ev 0.927 [0.905, 0.949]   mass 0.928 [0.905, 0.950]   gap -0.127 [-0.232, -0.017]
+    minus phase3_qwen-inst_chat_reason.csv on 840 shared cells: dom +0.000 [+0.000, +0.000]  ev +0.098 [+0.043, +0.163]  mass +0.099 [+0.044, +0.164]  gap +0.009 [-0.101, +0.092]
+######## Qwen, paid linear (untold) vs told-the-rule reasoning
+
+== phase4_qwen-inst_chat_reason_paid-linear.csv  (induce=none, scored as riskneutral; 840 cells, 40 gambles, 840 rows)
+    dom 1.000 [1.000, 1.000]   ev 0.927 [0.905, 0.949]   mass 0.928 [0.905, 0.950]   gap -0.127 [-0.232, -0.017]
+    minus phase3_qwen-inst_chat_reason_riskneutral.csv on 840 shared cells: dom +0.000 [+0.000, +0.000]  ev -0.037 [-0.059, -0.018]  mass -0.036 [-0.058, -0.018]  gap +0.018 [-0.073, +0.098]
+######## Qwen, paid sqrt (untold) vs unpaid untold reasoning, scored against sqrt
+
+== phase4_qwen-inst_chat_reason_paid-sqrt.csv  (induce=none, scored as sqrt; 840 cells, 40 gambles, 840 rows)
+    dom 1.000 [1.000, 1.000]   ev 0.739 [0.660, 0.819]   mass 0.740 [0.660, 0.819]   gap -0.170 [-0.271, -0.072]
+    minus phase3_qwen-inst_chat_reason.csv on 840 shared cells: dom +0.000 [+0.000, +0.000]  ev +0.133 [+0.069, +0.208]  mass +0.134 [+0.069, +0.210]  gap -0.035 [-0.141, +0.055]
+######## Qwen, paid sqrt scored against risk-neutral (did it move away from EV?)
+
+== phase4_qwen-inst_chat_reason_paid-sqrt.csv  (induce=none, scored as riskneutral; 840 cells, 40 gambles, 840 rows)
+    dom 1.000 [1.000, 1.000]   ev 0.690 [0.584, 0.804]   mass 0.690 [0.584, 0.805]   gap -0.170 [-0.271, -0.072]
+    minus phase3_qwen-inst_chat_reason.csv on 840 shared cells: dom +0.000 [+0.000, +0.000]  ev -0.139 [-0.210, -0.079]  mass -0.139 [-0.211, -0.078]  gap -0.035 [-0.141, +0.055]
+######## OLMo, paid linear (untold) vs unpaid untold reasoning
+
+== phase4_olmo-inst_fewshot_reason_paid-linear.csv  (induce=none, scored as riskneutral; 840 cells, 40 gambles, 840 rows)
+    dom 0.900 [0.812, 0.977]   ev 0.776 [0.731, 0.820]   mass 0.773 [0.728, 0.818]   gap -0.195 [-0.326, -0.071]
+    minus phase3_olmo-inst_fewshot_reason.csv on 839 shared cells: dom -0.077 [-0.167, +0.000]  ev +0.035 [-0.017, +0.086]  mass +0.032 [-0.018, +0.082]  gap -0.250 [-0.350, -0.146]
+######## OLMo, paid linear (untold) vs told-the-rule reasoning
+
+== phase4_olmo-inst_fewshot_reason_paid-linear.csv  (induce=none, scored as riskneutral; 840 cells, 40 gambles, 840 rows)
+    dom 0.900 [0.812, 0.977]   ev 0.776 [0.731, 0.820]   mass 0.773 [0.728, 0.818]   gap -0.195 [-0.326, -0.071]
+    minus phase3_olmo-inst_fewshot_reason_riskneutral.csv on 840 shared cells: dom -0.075 [-0.158, +0.000]  ev -0.027 [-0.067, +0.021]  mass -0.030 [-0.071, +0.018]  gap -0.171 [-0.269, -0.065]
