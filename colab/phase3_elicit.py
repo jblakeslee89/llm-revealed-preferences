@@ -96,7 +96,10 @@ CHAT_REASON_SUFFIX = ("\nThink it through briefly, then give your final choice o
 OUT_FIELDS = ["instrument", "trial_id", "gamble_id", "frame", "anchor", "sure", "hi",
               "p", "ev_ratio", "template_id", "safe_first", "gamble_letter",
               "model", "fmt", "induce", "reason", "p_gamble", "ab_mass", "excluded",
-              "reason_ended", "reasoning", "note"]
+              "reason_ended", "reasoning", "note", "induce_position", "sample", "temperature"]
+# fields added Oct 2026; files written before then lack them, and --resume onto such a file
+# only works for a run whose values for them are these defaults
+NEW_FIELD_DEFAULTS = {"induce_position": "before", "sample": 0, "temperature": 0}
 
 # Induced-valuation arm (Armour feedback, Aug 2026): assert a utility function and
 # instruct the model to maximize it. Compliance with the induced optimum (scored by
@@ -121,6 +124,22 @@ CLARIFY = ("When you compare the options, compare the final dollar amounts you w
            "with under each, not the changes from what you hold now.")
 INDUCE["clarify"] = "Instruction: " + CLARIFY
 INDUCE["riskneutral_clarify"] = INDUCE["riskneutral"] + " " + CLARIFY
+
+# Phrasing robustness (Oct 2026). The induced-valuation finding (fails in one letter, complies
+# when it reasons) rests on one wording of the risk-neutral rule. These paraphrases state the
+# same rule differently: shorter and without the persona, as a scoring formula, and as a goal
+# that names no computation. Score all of them against the risk-neutral optimum; the label
+# prefix tells analysis/score_robustness.py which rule applies.
+INDUCE["riskneutral_terse"] = (
+    "Instruction: pick the option with the higher expected value.")
+INDUCE["riskneutral_formula"] = (
+    "Instruction: give each option a score equal to the sum, over its outcomes, of probability "
+    "times dollar payoff (a certain amount scores its own value). Choose the option with the "
+    "higher score.")
+INDUCE["riskneutral_goal"] = (
+    "Instruction: imagine this exact choice will be repeated many times and you keep the total. "
+    "Your only goal is to end up with as much money as possible over all the repetitions. "
+    "Variability in what you get does not matter to you.")
 
 
 def candidate_ids(tok, strings):
@@ -152,26 +171,36 @@ def load_model(model_id, load_4bit=True):
     return tok, model
 
 
-def build_input(tok, prompt, fmt, induce_text=None):
+def place(induce_text, body, position):
+    """Instruction before the question (the original arm) or after it (placement check)."""
+    if not induce_text:
+        return body
+    return induce_text + "\n\n" + body if position == "before" else body + "\n\n" + induce_text
+
+
+def build_input(tok, prompt, fmt, induce_text=None, position="before"):
     if fmt == "chat":
-        content = prompt + "\nAnswer with only A or B."
-        if induce_text:
-            content = induce_text + "\n\n" + content
+        if position == "before":
+            content = place(induce_text, prompt + "\nAnswer with only A or B.", position)
+        else:  # keep the answer-format line last
+            content = place(induce_text, prompt, position) + "\nAnswer with only A or B."
         msgs = [{"role": "user", "content": content}]
         ids = tok.apply_chat_template(msgs, add_generation_prompt=True, return_tensors="pt",
                                       return_dict=False)
         return ids
     # fewshot: the instruction precedes the examples. All four example answers are
     # consistent with both induced rules, so the examples never contradict the instruction.
-    text = FEWSHOT + prompt.rstrip() + "\nAnswer:"
-    if induce_text:
-        text = induce_text + "\n\n" + text
+    # With position "after" it sits between the examples and the target question instead.
+    if position == "before":
+        text = place(induce_text, FEWSHOT + prompt.rstrip() + "\nAnswer:", position)
+    else:
+        text = FEWSHOT + place(induce_text, prompt.rstrip(), position) + "\nAnswer:"
     return tok(text, return_tensors="pt").input_ids
 
 
 @torch.no_grad()
-def score(tok, model, prompt, fmt, a_ids, b_ids, induce_text=None):
-    ids = build_input(tok, prompt, fmt, induce_text).to(model.device)
+def score(tok, model, prompt, fmt, a_ids, b_ids, induce_text=None, position="before"):
+    ids = build_input(tok, prompt, fmt, induce_text, position).to(model.device)
     logits = model(ids).logits[0, -1]          # next-token logits
     probs = torch.softmax(logits.float(), dim=-1)
     mass_a = float(probs[a_ids].sum())
@@ -181,18 +210,20 @@ def score(tok, model, prompt, fmt, a_ids, b_ids, induce_text=None):
 
 # ---------------------------------------------------------------- reason-then-answer
 
-def reason_prefix(tok, prompt, fmt, induce_text=None):
+def reason_prefix(tok, prompt, fmt, induce_text=None, position="before"):
     """Text the model continues with its reasoning. Returns (text, add_special_tokens)."""
     if fmt == "chat":
-        content = prompt + CHAT_REASON_SUFFIX
-        if induce_text:
-            content = induce_text + "\n\n" + content
+        if position == "before":
+            content = place(induce_text, prompt + CHAT_REASON_SUFFIX, position)
+        else:
+            content = place(induce_text, prompt, position) + CHAT_REASON_SUFFIX
         msgs = [{"role": "user", "content": content}]
         # the template string already carries BOS/role tokens, so don't add them again
         return tok.apply_chat_template(msgs, add_generation_prompt=True, tokenize=False), False
-    text = FEWSHOT_REASON + prompt.rstrip() + "\nReasoning:"
-    if induce_text:
-        text = induce_text + "\n\n" + text
+    if position == "before":
+        text = place(induce_text, FEWSHOT_REASON + prompt.rstrip() + "\nReasoning:", position)
+    else:
+        text = FEWSHOT_REASON + place(induce_text, prompt.rstrip(), position) + "\nReasoning:"
     return text, True
 
 
@@ -211,17 +242,22 @@ def cut_reasoning(gen, fmt):
 
 
 @torch.no_grad()
-def reason_batch(tok, model, prompts, fmt, a_ids, b_ids, induce_text, max_new_tokens):
-    """Greedy reasoning, then read A/B mass at 'Answer:' after the model's own reasoning.
+def reason_batch(tok, model, prompts, fmt, a_ids, b_ids, induce_text, max_new_tokens,
+                 position="before", temperature=0.0):
+    """Reasoning, then read A/B mass at 'Answer:' after the model's own reasoning.
 
-    Greedy decoding keeps the arm deterministic, like the logit readout it extends: the
-    randomness in the design stays in templates, orders and payoffs, not in sampling."""
-    pre = [reason_prefix(tok, p, fmt, induce_text) for p in prompts]
+    Greedy decoding (temperature 0, the default) keeps the arm deterministic, like the logit
+    readout it extends: the randomness in the design stays in templates, orders and payoffs.
+    temperature > 0 samples the trace instead (--samples), to check that the greedy trace is
+    representative of what the model writes; the readout after each trace is still exact."""
+    pre = [reason_prefix(tok, p, fmt, induce_text, position) for p in prompts]
     add_special = pre[0][1]
     texts = [t for t, _ in pre]
     enc = tok(texts, return_tensors="pt", padding=True,
               add_special_tokens=add_special).to(model.device)
-    out = model.generate(**enc, max_new_tokens=max_new_tokens, do_sample=False,
+    sampling = dict(do_sample=True, temperature=temperature, top_p=1.0, top_k=0) \
+        if temperature > 0 else dict(do_sample=False)
+    out = model.generate(**enc, max_new_tokens=max_new_tokens, **sampling,
                          stop_strings=["Answer:", "\n\n"] if fmt == "fewshot" else ["Answer:"],
                          tokenizer=tok, pad_token_id=tok.pad_token_id)
     gens = tok.batch_decode(out[:, enc.input_ids.shape[1]:], skip_special_tokens=True)
@@ -260,13 +296,19 @@ def main():
     ap.add_argument("--grid", required=True, help="phase3_grid.csv exported by run_phase3.py")
     ap.add_argument("--out", required=True)
     ap.add_argument("--fmt", choices=["fewshot", "chat"], default="fewshot")
-    ap.add_argument("--induce", choices=["none", "riskneutral", "sqrt", "clarify",
-                                         "riskneutral_clarify"], default="none",
+    ap.add_argument("--induce", choices=["none"] + list(INDUCE), default="none",
                     help="prepend an induced-utility instruction (Armour arm); score "
                          "compliance afterwards with analysis/score_induced.py")
     ap.add_argument("--reason", action="store_true",
                     help="reason-then-answer: generate reasoning greedily, then read A/B "
                          "mass at 'Answer:' (tests cannot-compute vs will-not-comply)")
+    ap.add_argument("--induce-position", choices=["before", "after"], default="before",
+                    help="put the instruction before the question (original arm) or after it")
+    ap.add_argument("--samples", type=int, default=1,
+                    help="reason mode: sampled traces per cell (default 1 = one greedy trace)")
+    ap.add_argument("--temperature", type=float, default=0.7,
+                    help="sampling temperature when --samples > 1")
+    ap.add_argument("--seed", type=int, default=0, help="sampling seed when --samples > 1")
     ap.add_argument("--max-new-tokens", type=int, default=320)
     ap.add_argument("--batch-size", type=int, default=16, help="reason mode only")
     ap.add_argument("--gambles", type=int, default=0,
@@ -282,6 +324,12 @@ def main():
     ap.add_argument("--mass-threshold", type=float, default=0.20)
     args = ap.parse_args()
     induce_text = INDUCE.get(args.induce)
+    if args.samples > 1 and not args.reason:
+        ap.error("--samples needs --reason (the immediate-answer readout is already exact)")
+    temperature = args.temperature if args.samples > 1 else 0.0
+    torch.manual_seed(args.seed)
+    run_fields = {"induce_position": args.induce_position,
+                  "sample": None, "temperature": temperature}
 
     tok, model = load_model(args.model, load_4bit=not args.no_4bit)
     if args.adapter:
@@ -301,35 +349,50 @@ def main():
     if args.frames:
         keep = set(args.frames.split(","))
         rows = [r for r in rows if r["frame"] in keep]
+    # one work item per (cell, sample); greedy and immediate runs have only sample 0
+    work = [(r, s) for r in rows for s in range(args.samples)]
     done = set()
+    fields = OUT_FIELDS
     if args.resume and os.path.exists(args.out):
         with open(args.out) as f:
-            done = {(d["instrument"], d["trial_id"]) for d in csv.DictReader(f)}
-        rows = [r for r in rows if (r["instrument"], r["trial_id"]) not in done]
+            reader = csv.DictReader(f)
+            fields = reader.fieldnames
+            done = {(d["instrument"], d["trial_id"], int(d.get("sample") or 0)) for d in reader}
+        # e.g. completing the full gamble set on a reasoning file written before Oct 2026
+        for k, v in NEW_FIELD_DEFAULTS.items():
+            if k not in fields and k != "sample" and run_fields[k] != v:
+                ap.error(f"{args.out} has no '{k}' column; this run's value differs from the "
+                         f"default ({v!r}), so write to a new file instead")
+        if "sample" not in fields and args.samples > 1:
+            ap.error(f"{args.out} has no 'sample' column; write sampled runs to a new file")
+        work = [(r, s) for r, s in work if (r["instrument"], r["trial_id"], s) not in done]
         print(f"resuming: {len(done)} cells already in {args.out}")
-    print(f"{len(rows)} cells to score for {args.model} ({args.fmt}"
-          f"{', reason' if args.reason else ''})")
+    print(f"{len(work)} cells to score for {args.model} ({args.fmt}"
+          f"{', reason' if args.reason else ''}"
+          f"{f', {args.samples} samples at T={temperature}' if args.samples > 1 else ''})")
 
     def results():
         if not args.reason:
-            for r in rows:
-                ma, mb = score(tok, model, r["prompt"], args.fmt, a_ids, b_ids, induce_text)
-                yield r, ma, mb, "", ""
+            for r, s in work:
+                ma, mb = score(tok, model, r["prompt"], args.fmt, a_ids, b_ids, induce_text,
+                               args.induce_position)
+                yield r, s, ma, mb, "", ""
             return
-        for k in range(0, len(rows), args.batch_size):
-            chunk = rows[k:k + args.batch_size]
-            got = reason_batch(tok, model, [r["prompt"] for r in chunk], args.fmt,
-                               a_ids, b_ids, induce_text, args.max_new_tokens)
-            for r, (ma, mb, text, how) in zip(chunk, got):
-                yield r, ma, mb, text, how
+        for k in range(0, len(work), args.batch_size):
+            chunk = work[k:k + args.batch_size]
+            got = reason_batch(tok, model, [r["prompt"] for r, _ in chunk], args.fmt,
+                               a_ids, b_ids, induce_text, args.max_new_tokens,
+                               args.induce_position, temperature)
+            for (r, s), (ma, mb, text, how) in zip(chunk, got):
+                yield r, s, ma, mb, text, how
 
     n_excl = 0
     ended = {}
     with open(args.out, "a" if done else "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=OUT_FIELDS)
+        w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
         if not done:
             w.writeheader()
-        for i, (r, mass_a, mass_b, reasoning, how) in enumerate(results()):
+        for i, (r, s, mass_a, mass_b, reasoning, how) in enumerate(results()):
             ended[how] = ended.get(how, 0) + 1
             ab = mass_a + mass_b
             if ab > 0:
@@ -344,13 +407,14 @@ def main():
                        reason=int(args.reason), reason_ended=how, reasoning=reasoning,
                        p_gamble="" if p_gamble != p_gamble else round(p_gamble, 5),
                        ab_mass=round(ab, 5), excluded=excluded,
-                       note=f"massA={mass_a:.3g} massB={mass_b:.3g}")
+                       note=f"massA={mass_a:.3g} massB={mass_b:.3g}",
+                       induce_position=args.induce_position, sample=s, temperature=temperature)
             w.writerow(out)
             f.flush()
-            if (i + 1) % (args.batch_size * 4 if args.reason else 100) == 0 or i + 1 == len(rows):
-                print(f"  {i+1}/{len(rows)} | excluded {n_excl}"
+            if (i + 1) % (args.batch_size * 4 if args.reason else 100) == 0 or i + 1 == len(work):
+                print(f"  {i+1}/{len(work)} | excluded {n_excl}"
                       + (f" | ended {ended}" if args.reason else ""))
-    print(f"Wrote {args.out}. Excluded (low A/B mass): {n_excl/max(len(rows), 1):.1%}")
+    print(f"Wrote {args.out}. Excluded (low A/B mass): {n_excl/max(len(work), 1):.1%}")
 
 
 if __name__ == "__main__":
