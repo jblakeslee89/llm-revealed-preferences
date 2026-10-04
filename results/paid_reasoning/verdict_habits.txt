@@ -1,0 +1,30 @@
+840-cell evaluations, Qwen Instruct (chat), non-mixed frames
+                 run  traces rev_gamble rev_safe  which_is  false_less  ev_word
+      unpaid, untold     640      39/53    0/138     0.344       0.252    0.939
+unpaid, told EV rule     640       0/21     0/40     0.000       0.000    0.998
+ paid linear, untold     640       2/15    0/100     0.050       0.012    0.938
+   paid sqrt, untold     640      24/53    0/111     0.253       0.191    0.938
+
+Training monitor traces, qwen_reason_linear (48 held-out prompts per step; non-mixed frames)
+ step  traces rev_gamble rev_safe  which_is  false_less  ev_word
+    0      32        1/1      0/6     0.125       0.067      1.0
+   25      32        0/0      0/8     0.000       0.000      1.0
+   50      32        0/0      0/8     0.000       0.000      1.0
+   75      32        0/0      0/9     0.000       0.000      1.0
+  100      32        0/0      0/8     0.000       0.000      1.0
+  125      32        0/0      0/8     0.000       0.000      1.0
+  150      32        0/0      0/5     0.000       0.000      1.0
+  175      32        0/0      0/8     0.000       0.000      1.0
+  200      32        0/0      0/5     0.071       0.071      1.0
+
+Training monitor traces, qwen_reason_sqrt (48 held-out prompts per step; non-mixed frames)
+ step  traces rev_gamble rev_safe  which_is  false_less  ev_word
+    0      32        1/1      0/6     0.125       0.067      1.0
+   25      32        1/2      0/6     0.250       0.154      1.0
+   50      32        3/3      0/6     0.312       0.250      1.0
+   75      32        1/3      0/5     0.235       0.083      1.0
+  100      32        1/4      0/5     0.375       0.083      1.0
+  125      32        1/3      0/5     0.267       0.091      1.0
+  150      32        2/2      0/5     0.188       0.154      1.0
+  175      32        0/0      0/5     0.071       0.091      1.0
+  200      32        1/1      0/5     0.214       0.100      1.0

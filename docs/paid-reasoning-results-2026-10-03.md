@@ -69,3 +69,31 @@ within 0.04 of the told level. For OLMo it does not hold. The result is family-s
 - The sqrt run had a larger training pool than the plan's default (650 balanced gambles).
 - `monitor_traces.jsonl` holds the written reasoning at each monitor evaluation; whether payment
   changed the verdict habits (Qwen's stock phrase) is not yet checked.
+
+## Follow-up: did payment change the verdict habit?
+
+`analysis/verdict_habits_paid.py` (output in `results/paid_reasoning/verdict_habits.txt`)
+repeats the trace checks of `trace_comparisons.py` and the prefill test on the evaluation
+traces, non-mixed frames (640 per run).
+
+| Qwen, reason first | Reversed EV-vs-sure statements, truth favors gamble | ...truth favors sure amount | "which is ___ than" construction | False "less" when the gamble is better |
+|---|---|---|---|---|
+| unpaid, untold | 39 / 53 | 0 / 138 | 0.344 | 0.252 |
+| unpaid, told the EV rule | 0 / 21 | 0 / 40 | 0.000 | 0.000 |
+| **paid linear, untold** | **2 / 15** | 0 / 100 | **0.050** | **0.012** |
+| paid sqrt, untold | 24 / 53 | 0 / 111 | 0.253 | 0.191 |
+
+Paid for expected value, Qwen dropped the stock phrase almost entirely ("which is less than"
+in 19% of the unpaid model's gamble-better traces, 1% of the paid model's) and writes the
+comparison as "Since the expected value of Outcome A ($150.98) is higher than the guaranteed
+amount from Outcome B ($106)". The false verdicts fall from 39 of 53 to 2 of 15, close to the
+told-the-rule level. On the training monitor the habit is gone by step 25 and stays gone (one
+reappearance at step 200). Much of the paid model's gain in EV agreement (+0.098) comes from
+removing this habit: payment fixed the verdict, which was the main remaining source of error.
+
+Paid under the sqrt utility, the habit survives (false "less" 0.191, "which is" construction
+0.253, numeric reversals 24 of 53), with no downward trend on the monitor. One reading: under a
+risk-averse payoff, a verdict that favors the sure amount is often the paid choice, so the
+phrase is not penalized and stays. The written arithmetic is still false in those traces; only
+the chosen option is (sometimes) right under the paid rule. Both runs keep the one-way
+asymmetry: no paid model ever reverses a comparison whose truth favors the sure amount.
