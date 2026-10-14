@@ -17,7 +17,7 @@ Then, against the money / self cells of the same model and regime:
   - differences in risky, gap and order with 95% cluster-bootstrap intervals over gambles
 
 Usage:
-    python analysis/stage_a.py [--B 1000]
+    python analysis/stage_a.py [--B 1000] [--stems claude_api,gpt_api]
 """
 
 from __future__ import annotations
@@ -123,9 +123,13 @@ def phase3_check(stem):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--B", type=int, default=1000)
+    ap.add_argument("--stems", default=None,
+                    help="comma-separated file stems to analyze instead of the three open models, "
+                         "e.g. claude_api,gpt_api for data/stageA_claude_api.csv (src/api_elicit.py)")
     args = ap.parse_args()
     rng = np.random.default_rng(1)
-    for label, stem in MODELS:
+    models = [(s, s) for s in args.stems.split(",")] if args.stems else MODELS
+    for label, stem in models:
         for suffix, regime in (("", "immediate answer"), ("_reason", "reason first")):
             path = DATA / f"stageA_{stem}{suffix}.csv"
             if path.exists():
