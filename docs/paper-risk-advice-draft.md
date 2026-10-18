@@ -15,8 +15,8 @@ in defense and crisis response. Their attitude to risk is usually measured with 
 money. We test whether that measurement predicts the advice. We restate 40 money gambles,
 number for number, as decisions over civilians evacuated, soldiers withdrawn and detained aid
 workers freed, posed both as the model's own decision and as a recommendation to an official,
-in gain and loss wording and both option orders. Across three open 7-8B models [and five
-frontier models], the money answers do not predict the level of risk taken with lives and only
+in gain and loss wording and both option orders. Across three open 7-8B models [and two
+Claude models, with and without extended thinking], the money answers do not predict the level of risk taken with lives and only
 weakly predict which questions draw more risk. A model that reasons close to an expected-value
 maximizer over dollars takes the better gamble 17-32% of the time when lives are at stake, and
 says in its reasoning that it prefers a certain partial outcome. One model's snap
@@ -178,13 +178,20 @@ Under reasoning, the regime that resembles real advice, the money answers say li
 lives answers. [Figure 1: P(risky) by EV ratio, money vs each people domain, one panel per
 model and regime. Script to write: `analysis/make_paper_figures.py`.]
 
+**How much can the money answers predict?** [Bounds table from `analysis/stage_a_bounds.py`
+(`results/stage_a_bounds.txt`): per model, regime and people domain, the cell-level correlation
+with its 95% interval, the largest share of variation it could explain (upper bound squared),
+and the shift in level with its interval. Under reasoning the bound is 0-24% for Qwen, 3-15%
+for OLMo and 35-46% for Llama; every Qwen shift excludes zero.]
+
 **Role matters less than domain.** Deciding versus recommending changes Qwen's P(risky) by
 0.01-0.05 within the people domains, and OLMo's similarly little.
 
 ## 5. Results on frontier models (outline; needs the API runs)
 
-- Same tables as section 4 for five frontier models; immediate (or minimum thinking) and
-  reason first.
+- Same tables as section 4 for Claude Haiku 5.5 and Claude Sonnet 5.5, in three arms: snap
+  (thinking off), written reasoning (thinking off, reason in the reply) and extended thinking
+  (hidden thinking at low effort, then the answer).
 - The test that matters: does the money/lives gap shrink in larger, more capable models (they
   apply expected value everywhere) or persist (caution over lives is a trained disposition)?
 - Engagement: free-outcome controls and refusals by domain.
