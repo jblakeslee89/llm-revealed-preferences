@@ -65,7 +65,7 @@ Readings:
 - **Written reasoning raises r to about 0.6 but keeps the caution shift** for both Sonnet
   and Haiku. Sonnet's brief extended thinking looks the same as its written reasoning.
 - **Thinking in Haiku and Opus erases the domain shift.** Choices track expected value in
-  every domain (EV agreement 0.92-1.00), so money predicts lives well (r ~0.9). The one
+  every domain (EV agreement 0.80-1.00, lowest for Opus on detainees), so money predicts lives well (r ~0.9). The one
   exception is detainees for Opus with reasoning (-0.13 to -0.15).
 - So the claim "a money lottery can't screen advisory risk" holds for snap answers and for
   Sonnet in every arm, but not for Haiku with thinking or Opus. That is a finding to write
