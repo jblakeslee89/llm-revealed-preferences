@@ -69,18 +69,34 @@ Three findings stand out.
 We then use the project's earlier results on the same instrument to explain why (section 6),
 and close with what this means for evaluating models meant to advise (section 7).
 
-## 2. Related work (outline)
+## 2. Related work
 
-- Risk and framing in language models: [from `docs/lit-review-2026-07.md`; the Phase 1-3
-  results of this project as the measurement base].
-- Framing over lives: Tversky and Kahneman (1981), the Asian disease problem; our domains are a
-  structured version of it.
-- Language models in military and crisis simulation: escalation in multi-agent crisis
-  simulations (Rivera et al. 2024) and comparison with expert wargame players (Lamparth et al.
-  2024). [Both to be checked before citing.] These measure behavior in scenarios; none links it
-  to a measured risk attitude.
-- Evaluation validity: the gap between benchmark conditions and deployment conditions. [Cite
-  two or three.]
+**Risk and framing in language models.** A growing literature reads economic preferences off
+language models with the tools of experimental economics: choices over lotteries, framing
+manipulations and structural estimation (Binz and Schulz 2023; Chen et al. 2023; Horton 2023;
+Mei et al. 2024; Liu et al. 2025; Wang et al. 2025; Bini et al. 2026). Instruction tuning has
+been linked to human-like cognitive biases, including framing effects (Itzhak et al. 2024).
+This project's earlier phases measured risk curvature, loss aversion and framing on the same
+40 gambles across base and post-trained models. Nearly all of this work measures preferences
+over money; whether those measurements carry over to other stakes is the question here.
+
+**Framing over lives.** Our people domains are a structured version of Tversky and Kahneman's
+(1981) disease problem: the same outcomes described as lives saved or lost. Where that study
+compared two framings of one scenario, we compare the same numbers across money and three
+kinds of lives, in both frames, while holding the instrument fixed.
+
+**Language models in military and crisis decisions.** Rivera et al. (2024) ran language-model
+agents as nations in a wargame and found escalation in all five models studied, including
+arms-race dynamics and, rarely, nuclear use. Lamparth et al. (2024) compared models with 107
+national-security experts in a US-China crisis wargame and found the models could be more
+aggressive and more sensitive to scenario changes than human teams. Both studies observe
+behavior in rich scenarios. Neither measures an underlying risk attitude and asks whether it
+explains the behavior, which is our contribution. Our structured lives questions find the
+opposite lean, caution rather than aggression. Together with those results, this suggests
+that a model's risk posture depends on the domain and the format of the question, which is
+the central claim of this paper.
+
+**Evaluation validity.** [Two or three citations on benchmark-to-deployment validity to add.]
 
 ## 3. Design
 
