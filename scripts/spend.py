@@ -6,7 +6,7 @@ import pandas as pd
 sys.path.insert(0, "src")
 from api_elicit import PRICES
 
-FILES = ["data/pilot/stageA_*55_*.csv", "data/stageA_*55_*.csv", "data/stageA_opus55*.csv", "data/pilot/stageA_fable51*.csv", "data/stageA_fable51*.csv"]
+FILES = ["data/pilot/stageA_*55_*.csv", "data/stageA_*55_*.csv", "data/stageA_opus55*.csv", "data/pilot/stageA_fable51*.csv", "data/stageA_fable51*.csv"]  # *_high files match these patterns too
 
 # rows dropped from the thinking test slice before the parser fix (Oct 20) were billed too
 DROPPED = 0.28

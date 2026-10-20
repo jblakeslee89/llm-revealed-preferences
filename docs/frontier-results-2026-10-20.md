@@ -80,6 +80,22 @@ with lives (P(risky) down 0.21 to 0.40, all intervals clear of zero) and money o
 predicts lives (r 0.34-0.69). It looks like Sonnet, not Opus: so extended thinking erases
 the gap in Haiku and Opus, but not in Sonnet or Fable. Spend since Oct 19 is now $57.58.
 
+## High effort (Oct 20 evening, $4.59)
+
+Same arm (thinking + one letter), effort high, max_tokens 16000. Thinking barely lengthens:
+Sonnet ~90 output tokens per call (vs ~70 at low), Fable ~56 (vs ~31).
+
+- **Sonnet, full grid ($2.74):** the caution shift halves for civilians and troops (-0.10 to
+  -0.12, was -0.24 to -0.28) and r rises to 0.80-0.85 (was 0.56-0.67); EV agreement 0.94-0.97.
+  Detainees barely move: -0.39 (was -0.46 to -0.48), r 0.41-0.44.
+- **Fable, test slice ($1.85; money and civilians, 10 gambles, noisy):** civilians/advise
+  moves toward money (P(risky) 0.40 vs 0.44 for money/advise; EV agreement 0.97), civilians/self
+  does not (0.28).
+
+Reading: more effort moves Sonnet partway toward Opus on civilians and troops, though it
+thinks only a little longer, while caution with detainees holds. Effort level, not just the
+model, matters. Spend since Oct 19: $62.17.
+
 ## Not yet analyzed
 
 The Stage A2 runs (Haiku all arms; Sonnet snap and thinking, reasoning at 84%) are in
