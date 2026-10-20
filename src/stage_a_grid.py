@@ -95,19 +95,20 @@ ROLES = ["self", "advise"]
 N_DOMINANT = 10
 
 
-def render(dom, role, frame, sure, hi, p, safe_first):
-    t = DOMAINS[dom]
+def render(dom, role, frame, sure, hi, p, safe_first, templates=None):
+    t = (templates or DOMAINS)[dom]
     pc, qc = round(p * 100), round((1 - p) * 100)
     vals = dict(s=sure, h=hi, d=hi - sure, pc=pc, qc=qc)
+    setting = t["setting"] + " " if "setting" in t else ""  # optional scene sentence (stage_a2_grid.py)
     if frame == "gain":
-        lead = t[role]
+        lead = setting + t[role]
         safe, risky = t["sure_gain"].format(**vals), t["gamble_gain"].format(**vals)
     elif frame == "mixed":
         held = t["held"] if role == "self" else t["held_advise"]
-        lead = held.format(**vals) + " " + t[role]
+        lead = setting + held.format(**vals) + " " + t[role]
         safe, risky = t["keep"].format(**vals), t["gamble_mixed"].format(**vals)
     else:  # dominant: sure is the smaller certain amount, hi the larger
-        lead = t[role]
+        lead = setting + t[role]
         safe, risky = t["dom"].format(x=sure), t["dom"].format(x=hi)
     a, b = (safe, risky) if safe_first else (risky, safe)
     ask = t["ask_self"] if role == "self" else t["ask_advise"]
