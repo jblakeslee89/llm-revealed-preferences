@@ -56,6 +56,7 @@ sonnet55_api,sonnet55_api_think,haiku55_api,haiku55_api_think,opus55_api_think,o
 | Haiku thinking | 0.55 | -0.05 to +0.05 | 0.87 to 0.97 |
 | Opus thinking, one letter | 0.46 | -0.07 to +0.07 | 0.88 to 0.94 |
 | Opus thinking, reasoning | 0.44 | -0.15 to +0.05 | 0.79 to 0.98 |
+| Fable thinking, one letter | 0.48 | -0.21 to -0.40 | 0.34 to 0.69 |
 
 Readings:
 - **Snap answers repeat the open-model result.** Sonnet takes the money gamble almost every
@@ -70,6 +71,14 @@ Readings:
 - So the claim "a money lottery can't screen advisory risk" holds for snap answers and for
   Sonnet in every arm, but not for Haiku with thinking or Opus. That is a finding to write
   up, not a failure: with extended thinking on, Haiku and Opus choose by expected value in every domain, while Sonnet does not. (Opus cannot run with thinking off, so its model and its thinking are confounded.)
+
+## Fable 5.1 (added Oct 20 afternoon)
+
+John approved the thinking + one-letter arm only (~$10-12). Cost $8.32 (probe $0.05, test
+slice $1.25, main grid $7.02; about 34 output tokens per call). Fable keeps the caution shift
+with lives (P(risky) down 0.21 to 0.40, all intervals clear of zero) and money only partly
+predicts lives (r 0.34-0.69). It looks like Sonnet, not Opus: so extended thinking erases
+the gap in Haiku and Opus, but not in Sonnet or Fable. Spend since Oct 19 is now $57.58.
 
 ## Not yet analyzed
 
