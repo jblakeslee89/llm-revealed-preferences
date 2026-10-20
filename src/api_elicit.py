@@ -73,7 +73,8 @@ _BARE = re.compile(r"^\W*(?:option|plan|route)?\s*\(?([AB])\b", re.IGNORECASE)
 
 def parse(text, reason):
     """Return 'A', 'B' or None. Reason-first: the last 'Answer: X'. Immediate: a leading
-    letter, else an 'Answer: X' line, else a lone A/B token anywhere."""
+    letter, else an 'Answer: X' line, else a letter alone on the last line, else a lone A/B
+    token anywhere."""
     text = (text or "").strip()
     hits = _ANSWER.findall(text)
     if reason:
@@ -83,6 +84,10 @@ def parse(text, reason):
         return m.group(1).upper()
     if hits:
         return hits[-1].upper()
+    # thinking-on Claude sometimes writes a line of working and then the bare letter last
+    m = _BARE.match(text.splitlines()[-1]) if text else None
+    if m:
+        return m.group(1).upper()
     lone = set(re.findall(r"\b([AB])\b", text))
     return lone.pop() if len(lone) == 1 else None
 
@@ -294,7 +299,7 @@ def main():
         out = {k: r[k] for k in OUT_FIELDS if k in r}
         out.update(model=args.model, fmt="api", induce="none", reason=int(args.reason),
                    reason_ended="answer" if valid else "unparsed",
-                   reasoning=json.dumps(texts) if args.reason else "",
+                   reasoning=json.dumps(texts) if args.reason or args.thinking == "on" else "",
                    p_gamble="" if pg != pg else round(pg, 5), ab_mass=round(ab, 5),
                    excluded=int(ab < args.mass_threshold or pg != pg),
                    note=json.dumps(dict(letters=letters, tok_in=tin, tok_out=tout, errors=errs,
