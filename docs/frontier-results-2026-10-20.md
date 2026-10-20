@@ -69,7 +69,7 @@ Readings:
   exception is detainees for Opus with reasoning (-0.13 to -0.15).
 - So the claim "a money lottery can't screen advisory risk" holds for snap answers and for
   Sonnet in every arm, but not for Haiku with thinking or Opus. That is a finding to write
-  up, not a failure: deliberation turns some models into EV calculators across domains.
+  up, not a failure: with extended thinking on, Haiku and Opus choose by expected value in every domain, while Sonnet does not. (Opus cannot run with thinking off, so its model and its thinking are confounded.)
 
 ## Not yet analyzed
 
