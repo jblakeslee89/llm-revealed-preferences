@@ -175,8 +175,10 @@ across matched questions, money/self against each domain (ranges over self and a
 | OLMo, immediate | 0.97 | 0.81-0.83 | 0.53-0.58 | 0.81-0.82 |
 
 Under reasoning, the regime that resembles real advice, the money answers say little about the
-lives answers. [Figure 1: P(risky) by EV ratio, money vs each people domain, one panel per
-model and regime. Script to write: `analysis/make_paper_figures.py`.]
+lives answers. Figure 1 (`writeups/figures/fig1_money_vs_lives.pdf`, from
+`analysis/make_paper_figures.py`) shows P(risky) against the gamble's value relative to the sure
+option: under reasoning, Qwen's money curve is a near step at zero while its lives curves stay
+flat and low.
 
 **How much can the money answers predict?** [Bounds table from `analysis/stage_a_bounds.py`
 (`results/stage_a_bounds.txt`): per model, regime and people domain, the cell-level correlation
