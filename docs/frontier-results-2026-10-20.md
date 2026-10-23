@@ -96,8 +96,48 @@ Reading: more effort moves Sonnet partway toward Opus on civilians and troops, t
 thinks only a little longer, while caution with detainees holds. Effort level, not just the
 model, matters. Spend since Oct 19: $62.17.
 
+## Oct 23 batch ($35.47): effort ladder, Fable high, second wording
+
+Spend: Sonnet A2 reasoning finished $1.64; Fable high, main grid $12.11 (774 of 800 cells; it
+thought ~80 tokens per call, twice the test slice, so it hit its cap; ~$0.40 left for November);
+Sonnet medium $2.34; Haiku high $0.19; Opus high $5.10; Opus A2 low $5.14; Fable A2 low $8.95.
+October total $97.69 (incl. a $0.05 probe) of the $100 credits.
+
+Shift in P(risky) from money/self (95% gamble-cluster intervals in the stage_a.py output):
+
+| Model | Effort | Civilians + troops | Detainees | r civ/troops | r detainees |
+|---|---|---|---|---|---|
+| Haiku | low | -0.05 to +0.05 | -0.05 to +0.03 | 0.87-0.97 | 0.89-0.96 |
+| Haiku | high | -0.03 to +0.00 | -0.04 to -0.01 | 0.92-0.98 | 0.93-0.99 |
+| Sonnet | low | -0.24 to -0.28 | -0.46 to -0.48 | 0.56-0.67 | 0.28 |
+| Sonnet | medium | -0.21 to -0.27 | -0.47 | 0.61-0.69 | 0.27-0.29 |
+| Sonnet | high | -0.10 to -0.12 | -0.39 to -0.40 | 0.80-0.85 | 0.41-0.44 |
+| Fable | low | -0.21 to -0.25 | -0.36 to -0.40 | 0.63-0.69 | 0.34-0.43 |
+| Fable | high | -0.03 to -0.16 | -0.27 to -0.35 | 0.74-0.80 | 0.44-0.54 |
+| Opus | low | -0.00 to +0.07 | -0.05 to -0.07 | 0.88-0.93 | 0.91-0.94 |
+| Opus | high | +0.03 to +0.08 | -0.05 to -0.09 | 0.87-0.93 | 0.86-0.91 |
+
+Second wording plus "release" (the detainee scenario without the escalation clause), thinking
+at low effort:
+- **Opus holds:** lives track money (r 0.81-0.97); detainees -0.06 to -0.15, release -0.03 to -0.05.
+- **Fable:** civilians and troops -0.08 to -0.14 (smaller than the first wording),
+  detainees -0.32 to -0.35, release -0.26 to -0.32.
+- **Sonnet (reasoning / thinking):** release -0.39 to -0.44, the same as detainees (-0.45 to -0.47).
+- **Haiku thinking:** release -0.02 to -0.06, detainees -0.08 to -0.11.
+
+Sonnet's written reasoning on detainees (main grid) mentions escalation in 100% of answers,
+"irreversible" in 60%, and the remaining detainees or later talks in ~75%; for civilians and troops
+escalation never comes up. But removing escalation ("release") does not reduce Sonnet's or Fable's
+caution, so escalation is what they cite, not what drives the choice. The caution is about trading
+a sure release for a gamble on freeing more people.
+
+Reading: more thinking effort pulls Sonnet and Fable toward money-like choices for civilians and
+troops (step change between medium and high for Sonnet), while their caution about detained
+people survives high effort, a second wording and the removal of escalation. Haiku with thinking
+and Opus treat every domain like money at every effort tried.
+
 ## Not yet analyzed
 
-The Stage A2 runs (Haiku all arms; Sonnet snap and thinking, reasoning at 84%) are in
-data/stageA_{haiku,sonnet}55_a2*.csv. analysis/stage_a.py's DOMAINS list does not include
-"release" yet.
+Snap and reasoning arms on the second wording are analyzed in the stage_a.py output but not
+summarized here yet (Sonnet snap: lives shift -0.28 to -0.58, r 0.00-0.12; Haiku snap is
+frame-driven again).
