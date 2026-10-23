@@ -98,10 +98,10 @@ model, matters. Spend since Oct 19: $62.17.
 
 ## Oct 23 batch ($35.47): effort ladder, Fable high, second wording
 
-Spend: Sonnet A2 reasoning finished $1.64; Fable high, main grid $12.11 (774 of 800 cells; it
-thought ~80 tokens per call, twice the test slice, so it hit its cap; ~$0.40 left for November);
+Spend: Sonnet A2 reasoning finished $1.64; Fable high, main grid $12.34 (it thought ~80 tokens per call, twice the test slice, so it hit
+its cap at 774 of 800 cells; the last 26 ran Oct 23 for $0.24 and changed no figure);
 Sonnet medium $2.34; Haiku high $0.19; Opus high $5.10; Opus A2 low $5.14; Fable A2 low $8.95.
-October total $97.69 (incl. a $0.05 probe) of the $100 credits.
+October total $97.92 (incl. a $0.05 probe) of the $100 credits.
 
 Shift in P(risky) from money/self (95% gamble-cluster intervals in the stage_a.py output):
 
