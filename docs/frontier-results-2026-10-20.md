@@ -114,7 +114,7 @@ Shift in P(risky) from money/self (95% gamble-cluster intervals in the stage_a.p
 | Sonnet | high | -0.10 to -0.12 | -0.39 to -0.40 | 0.80-0.85 | 0.41-0.44 |
 | Fable | low | -0.21 to -0.25 | -0.36 to -0.40 | 0.63-0.69 | 0.34-0.43 |
 | Fable | high | -0.03 to -0.16 | -0.27 to -0.35 | 0.74-0.80 | 0.44-0.54 |
-| Opus | low | -0.00 to +0.07 | -0.05 to -0.07 | 0.88-0.93 | 0.91-0.94 |
+| Opus | low | +0.01 to +0.07 | -0.05 to -0.07 | 0.88-0.93 | 0.91-0.94 |
 | Opus | high | +0.03 to +0.08 | -0.05 to -0.09 | 0.87-0.93 | 0.86-0.91 |
 
 Second wording plus "release" (the detainee scenario without the escalation clause), thinking
