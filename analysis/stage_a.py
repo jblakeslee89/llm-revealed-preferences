@@ -31,7 +31,7 @@ import pandas as pd
 DATA = Path(__file__).resolve().parent.parent / "data"
 MODELS = [("Qwen Instruct (chat)", "qwen-inst_chat"), ("Llama Instruct (chat)", "llama-inst_chat"),
           ("OLMo Instruct (few-shot)", "olmo-inst_fewshot")]
-DOMAINS = ["money", "civilians", "troops", "detainees"]
+DOMAINS = ["money", "civilians", "troops", "detainees", "release"]  # release: Stage A2 only
 ROLES = ["self", "advise"]
 KEY = ["gamble_id", "frame", "safe_first"]
 
@@ -77,7 +77,7 @@ def boot_diff(a, b, metric, B, rng):
 def report(label, d, B, rng):
     print(f"\n=== {label} ===")
     rows = []
-    for dom in DOMAINS:
+    for dom in [x for x in DOMAINS if x in set(d.domain)]:
         for role in ROLES:
             s = stats(d[(d.domain == dom) & (d.role == role)])
             rows.append(dict(domain=dom, role=role, **s))
@@ -87,7 +87,7 @@ def report(label, d, B, rng):
     base = d[(d.domain == "money") & (d.role == "self") & (d.excluded == 0) & d.frame.isin(["gain", "mixed"])]
     base_cells = base.groupby(KEY).p_gamble.mean()
     print("\n  vs money/self: cell correlation of P(risky); differences with 95% gamble-cluster intervals")
-    for dom in DOMAINS:
+    for dom in [x for x in DOMAINS if x in set(d.domain)]:
         for role in ROLES:
             if dom == "money" and role == "self":
                 continue
