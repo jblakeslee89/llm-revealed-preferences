@@ -1,5 +1,5 @@
 ---
-title: "Safe With Money, Cautious With Lives"
+title: "When AI Risk Benchmarks Fail to Transfer to Life or Death Stakes"
 subtitle: "Whether a language model's risk attitude on lotteries predicts its advice when lives are at stake depends on how the model is run"
 author: "John Blakeslee [affiliation]"
 date: "Full draft, November 14 2026. For Phil Armour and the TNL residency. Not for circulation."
