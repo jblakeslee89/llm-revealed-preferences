@@ -34,7 +34,7 @@ total $49.31
 ```
 
 Total $49.31, under the $50 John set. Opus finished inside the $50, so the $75 allowance
-was not used. Left for November: the last 16% of the Sonnet A2 reasoning run (~$1.40).
+was not used. The last 16% of the Sonnet A2 reasoning run was finished on Oct 23 ($1.64; all 1,000 cells now have 3 samples).
 
 Thinking length at effort low (output tokens per cell, n=3 samples, includes the visible
 answer): Haiku ~260, Sonnet ~216 (about 70 per call), Opus ~166 (about 55 per call).
