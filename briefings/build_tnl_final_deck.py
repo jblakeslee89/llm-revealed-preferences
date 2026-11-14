@@ -295,8 +295,9 @@ def main():
 
     # 1. First slide: motivation, research question, approach (one sentence each).
     s = frame(prs, 1)
-    text(s, 0.5, 1.15, 15.5, 1.0, "Safe with money, cautious with lives", 44, font="Georgia")
-    text(s, 0.5, 2.25, 15.5, 0.5,
+    text(s, 0.5, 1.05, 14.5, 1.5, ["When AI Risk Benchmarks Fail to Transfer", "to Life or Death Stakes"], 40,
+         font="Georgia", after=0, spacing=0.95)
+    text(s, 0.5, 2.6, 15.5, 0.5,
          "Does an AI's attitude to risk on money bets predict its advice when lives are at stake?",
          18, color=PURPLE)
     labeled_sentences(s, [
@@ -308,7 +309,7 @@ def main():
         ("Approach",
          "I restated 40 money bets, number for number, as choices about civilians, soldiers and "
          "detained aid workers, and put them to three open models and four Claude models."),
-    ], y0=3.25, heights=[1.1, 1.1, 1.5], size=23)
+    ], y0=3.4, heights=[1.05, 1.05, 1.45], size=23)
     text(s, 0.5, 8.25, 10, 0.4, "John Blakeslee", 14)
     text(s, 0.5, 8.6, 10, 0.4, "RAND School of Public Policy, TNL residency", 13, color=GREY)
     s.notes_slide.notes_text_frame.text = (
